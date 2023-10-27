@@ -1,10 +1,12 @@
 Package: versus
-Title: What the Package Does (One Line, Title Case)
+Title: Compare Data Frames
 Version: 0.0.0.9000
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+    person("Ryan", "Dickerson", , "fresh.tent5866@fastmail.com", role = c("aut", "cre"))
+Description: A toolbox for comparing two data frames with the aim of quick and 
+  simple functionality. Using a set of key-columns common to both tables, see which rows 
+  are common and highlight differing values by column. Also included are functions
+  validating keys and uniqueness of in-group values.
 License: MIT + file LICENSE
 Suggests: 
     testthat (>= 3.0.0)
@@ -12,3 +14,5 @@ Config/testthat/edition: 3
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.1
+Imports: 
+    rlang
