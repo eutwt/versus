@@ -2,4 +2,7 @@
 
 import(dplyr)
 import(duckplyr)
+import(glue)
 import(rlang)
+import(tidyselect)
+import(vctrs)
