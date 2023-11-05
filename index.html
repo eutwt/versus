@@ -64,39 +64,119 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="versus">versus<a class="anchor" aria-label="anchor" href="#versus"></a>
+<div class="page-header"><h1 id="versus-">versus <img id="logo" src="reference/figures/logo.png" align="right" width="17%" height="17%"><a class="anchor" aria-label="anchor" href="#versus-"></a>
 </h1></div>
 <!-- badges: start -->
 <!-- badges: end -->
-<p>The goal of versus is to …</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <p>You can install the development version of versus like so:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># FILL THIS IN! HOW CAN PEOPLE INSTALL YOUR DEV PACKAGE?</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"eutwt/versus"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
-<p>This is a basic example which shows you how to solve a common problem:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/eutwt/versus" class="external-link">versus</a></span><span class="op">)</span></span>
-<span><span class="co">## basic example code</span></span></code></pre></div>
-<p>What is special about using <code>README.Rmd</code> instead of just <code>README.md</code>? You can include R chunks like so:</p>
+<span></span>
+<span><span class="va">df_a</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span>text <span class="op">=</span> <span class="st">'</span></span>
+<span><span class="st">           car,  mpg, cyl,  disp,  hp, drat,    wt, vs, am</span></span>
+<span><span class="st">    Duster 360, 14.3,   8, 360.0, 245, 3.21, 3.570,  0,  0</span></span>
+<span><span class="st"> Mazda RX4 Wag, 21.0,   6, 160.0, 110, 3.90, 2.875,  0,  1</span></span>
+<span><span class="st">      Merc 230, 22.8,   4, 140.8,  95, 3.92, 3.150,  1,  0</span></span>
+<span><span class="st">    Datsun 710, 22.8,  NA, 109.0,  93, 3.85, 2.320,  1,  1</span></span>
+<span><span class="st">     Merc 240D, 24.4,   4, 146.7,  62, 3.69, 3.190,  1,  0</span></span>
+<span><span class="st">Hornet 4 Drive, 21.4,   6, 259.0, 110, 3.08, 3.215,  1,  0</span></span>
+<span><span class="st">     Mazda RX4, 21.0,   6, 160.0, 110, 3.90, 2.620,  0,  1</span></span>
+<span><span class="st">       Valiant, 18.1,   6, 225.0, 105, 2.76, 3.460,  1,  0</span></span>
+<span><span class="st">      Merc 280, 19.2,   6, 167.6, 123, 3.92, 3.440,  1,  0</span></span>
+<span><span class="st">'</span>, stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span>, strip.white <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">df_b</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span>text <span class="op">=</span> <span class="st">'</span></span>
+<span><span class="st">            car,    wt,  mpg,  hp, cyl,  disp, carb, drat, vs</span></span>
+<span><span class="st">      Merc 240D, 3.190, 26.4,  62,   4, 146.7,    2, 3.69,  1</span></span>
+<span><span class="st">        Valiant, 3.460, 18.1, 105,   6, 225.0,    1, 2.76,  1</span></span>
+<span><span class="st">     Duster 360, 3.570, 16.3, 245,   8, 360.0,    4, 3.21,  0</span></span>
+<span><span class="st">     Datsun 710, 2.320, 22.8,  93,  NA, 108.0,    1, 3.85,  1</span></span>
+<span><span class="st">      Merc 280C, 3.440, 17.8, 123,   6, 167.6,    4, 3.92,  1</span></span>
+<span><span class="st">       Merc 280, 3.440, 19.2, 123,   6, 167.6,    4, 3.92,  1</span></span>
+<span><span class="st"> Hornet 4 Drive, 3.215, 21.4, 110,   6, 258.0,    1, 3.08,  1</span></span>
+<span><span class="st">     Merc 450SE, 4.070, 16.4, 180,   8, 275.8,    3, 3.07,  0</span></span>
+<span><span class="st">       Merc 230, 3.150, 22.8,  95,   4, 140.8,    2, 3.92,  1</span></span>
+<span><span class="st">  Mazda RX4 Wag, 2.875, 21.0, 110,   6, 160.0,    4, 3.90,  0</span></span>
+<span><span class="st">'</span>, stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span>, strip.white <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<p>Use <code><a href="reference/versus-package.html">versus()</a></code> to see</p>
+<ul>
+<li>The number of differing values in each column - <code>versus()$summ</code>
+</li>
+<li>Which columns are in only one table - <code>versus()$unmatched_cols</code>
+</li>
+<li>Which rows are in only one table - <code>versus()$unmatched_rows</code>
+</li>
+</ul>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">cars</span><span class="op">)</span></span>
-<span><span class="co">#&gt;      speed           dist       </span></span>
-<span><span class="co">#&gt;  Min.   : 4.0   Min.   :  2.00  </span></span>
-<span><span class="co">#&gt;  1st Qu.:12.0   1st Qu.: 26.00  </span></span>
-<span><span class="co">#&gt;  Median :15.0   Median : 36.00  </span></span>
-<span><span class="co">#&gt;  Mean   :15.4   Mean   : 42.98  </span></span>
-<span><span class="co">#&gt;  3rd Qu.:19.0   3rd Qu.: 56.00  </span></span>
-<span><span class="co">#&gt;  Max.   :25.0   Max.   :120.00</span></span></code></pre></div>
-<p>You’ll still need to render <code>README.Rmd</code> regularly, to keep <code>README.md</code> up-to-date. <code>devtools::build_readme()</code> is handy for this. You could also use GitHub Actions to re-render <code>README.Rmd</code> every time you push. An example workflow can be found here: <a href="https://github.com/r-lib/actions/tree/v1/examples" class="external-link uri">https://github.com/r-lib/actions/tree/v1/examples</a>.</p>
-<p>You can also embed plots, for example:</p>
-<p><img src="reference/figures/README-pressure-1.png" width="100%"></p>
-<p>In that case, don’t forget to commit and push the resulting figure files, so they display on GitHub and CRAN.</p>
+<code class="sourceCode R"><span><span class="va">comp</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/versus-package.html">versus</a></span><span class="op">(</span><span class="va">df_a</span>, <span class="va">df_b</span>, by <span class="op">=</span> <span class="va">car</span><span class="op">)</span></span>
+<span><span class="va">comp</span></span>
+<span><span class="co">#&gt; $tables</span></span>
+<span><span class="co">#&gt; # A tibble: 2 × 4</span></span>
+<span><span class="co">#&gt;   table   expr   ncol  nrow</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;   &lt;chr&gt; &lt;int&gt; &lt;int&gt;</span></span>
+<span><span class="co">#&gt; 1 table_a df_a      9     9</span></span>
+<span><span class="co">#&gt; 2 table_b df_b      9    10</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $by</span></span>
+<span><span class="co">#&gt; # A tibble: 1 × 3</span></span>
+<span><span class="co">#&gt;   column class_a   class_b  </span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;  &lt;chr&gt;     &lt;chr&gt;    </span></span>
+<span><span class="co">#&gt; 1 car    character character</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $summ</span></span>
+<span><span class="co">#&gt; # A tibble: 7 × 5</span></span>
+<span><span class="co">#&gt;   column n_diffs class_a class_b value_diffs       </span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;    &lt;int&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;list&gt;            </span></span>
+<span><span class="co">#&gt; 1 mpg          2 numeric numeric &lt;dckplyr_ [2 × 3]&gt;</span></span>
+<span><span class="co">#&gt; 2 cyl          0 integer integer &lt;dckplyr_ [0 × 3]&gt;</span></span>
+<span><span class="co">#&gt; 3 disp         2 numeric numeric &lt;dckplyr_ [2 × 3]&gt;</span></span>
+<span><span class="co">#&gt; 4 hp           0 integer integer &lt;dckplyr_ [0 × 3]&gt;</span></span>
+<span><span class="co">#&gt; 5 drat         0 numeric numeric &lt;dckplyr_ [0 × 3]&gt;</span></span>
+<span><span class="co">#&gt; 6 wt           0 numeric numeric &lt;dckplyr_ [0 × 3]&gt;</span></span>
+<span><span class="co">#&gt; 7 vs           0 integer integer &lt;dckplyr_ [0 × 3]&gt;</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $unmatched_cols</span></span>
+<span><span class="co">#&gt; # A tibble: 2 × 2</span></span>
+<span><span class="co">#&gt;   table column</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt; </span></span>
+<span><span class="co">#&gt; 1 a     am    </span></span>
+<span><span class="co">#&gt; 2 b     carb  </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; $unmatched_rows</span></span>
+<span><span class="co">#&gt;   table        car</span></span>
+<span><span class="co">#&gt; 1     a  Mazda RX4</span></span>
+<span><span class="co">#&gt; 2     b  Merc 280C</span></span>
+<span><span class="co">#&gt; 3     b Merc 450SE</span></span></code></pre></div>
+<p>Use <code>value_diffs()</code> to see the specific values that are different.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">value_diffs</span><span class="op">(</span><span class="va">comp</span>, <span class="va">disp</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   disp_a disp_b            car</span></span>
+<span><span class="co">#&gt; 1    109    108     Datsun 710</span></span>
+<span><span class="co">#&gt; 2    259    258 Hornet 4 Drive</span></span>
+<span><span class="fu">value_diffs</span><span class="op">(</span><span class="va">comp</span>, <span class="va">mpg</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   mpg_a mpg_b        car</span></span>
+<span><span class="co">#&gt; 1  14.3  16.3 Duster 360</span></span>
+<span><span class="co">#&gt; 2  24.4  26.4  Merc 240D</span></span></code></pre></div>
+<p>Use <code>all_value_diffs()</code> to combine all <code>value_diffs()</code> output into one table</p>
+<ul>
+<li>
+<code>val_a</code> and <code>val_b</code> are coerced to character</li>
+</ul>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">all_value_diffs</span><span class="op">(</span><span class="va">comp</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   column val_a val_b            car</span></span>
+<span><span class="co">#&gt; 1    mpg  14.3  16.3     Duster 360</span></span>
+<span><span class="co">#&gt; 2    mpg  24.4  26.4      Merc 240D</span></span>
+<span><span class="co">#&gt; 3   disp   109   108     Datsun 710</span></span>
+<span><span class="co">#&gt; 4   disp   259   258 Hornet 4 Drive</span></span></code></pre></div>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
