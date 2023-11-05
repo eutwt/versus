@@ -28,3 +28,15 @@ contents <- function(table) {
     unlist %>%
     tibble(column = names(.), class = .)
 }
+
+utils::globalVariables(c(
+ ".",
+ "class_a",
+ "class_b",
+ "column",
+ "common",
+ "unmatched",
+ "versus_in_a",
+ "versus_in_b"
+))
+
