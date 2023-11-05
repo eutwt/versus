@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
 # versus <img id="logo" src="man/figures/logo.png" align="right" width="17%" height="17%" />
 
 <!-- badges: start -->
+[![R-CMD-check](https://github.com/eutwt/versus/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/eutwt/versus/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 ## Installation
