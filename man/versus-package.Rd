@@ -12,6 +12,7 @@ Compare two tables
 Useful links:
 \itemize{
   \item \url{https://github.com/eutwt/versus}
+  \item \url{https://eutwt.github.io/versus/}
   \item Report bugs at \url{https://github.com/eutwt/versus/issues}
 }
 

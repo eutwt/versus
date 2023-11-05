@@ -10,7 +10,7 @@
 #' @import tidyselect
 #' @import glue
 #' @importFrom vctrs vec_duplicate_any
-#' @importFrom tibble rownames_to_column
+#' @importFrom tibble tibble rownames_to_column
 "_PACKAGE"
 
 .onLoad <- function(libname, pkgname) {

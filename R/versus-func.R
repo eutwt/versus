@@ -1,4 +1,64 @@
+#' Compare two data frames
+#'
+#' @param table_a A data frame
+#' @param table_b A data frame
+#' @param by tidy-select. Selection of columns to use when matching rows between
+#' \code{.data_a} and \code{.data_b}. Both data frames must be unique on \code{by}.
+#' @param allow_both_NA Logical. If \code{TRUE} a missing value in both data frames is
+#' considered as equal
+#' @param comparison The output of a \code{versus::versus()} call
+#' @param coerce Logical. If \code{FALSE} only columns with the same class are compared.
+#' @param column tidy-select. A single column
+#' @param use_duckplyr Logical. Run \code{as_duckplyr_df()} on input tables before
+#' performing comparison
+#'
+#' @return
+#' \describe{
+#' \item{\code{versus()}}{A list of data frames having the following elements:
+#' \describe{
+#'   \item{tables}{
+#'     A data frame with one row per input table showing the number of rows
+#'     and columns in each.
+#'   }
+#'   \item{by}{
+#'     A data frame with one row per \code{by} column showing the class
+#'     of the column in each of the input tables.
+#'  }
+#'  \item{summ}{
+#'    A data frame with one row per column common to \code{table_a} and
+#'    \code{table_b} and columns "n_diffs" showing the number of values which
+#'    are different between the two tables, "class_a"/"class_b" the class of the
+#'    column in each table, and "value_diffs" a (nested) data frame showing
+#'    the the values in each table which are unequal, and the \code{by} columns
+#'  }
+#'  \item{unmatched_cols}{
+#'    A data frame with one row per column which is in one input table but
+#'    not the other and columns "table": which table the column appears in,
+#'    "column": the name of the column, and "class": the class of the
+#'    column.
+#'  }
+#'  \item{unmatched_rows}{
+#'    A data frame which, for each row present in one input table but not
+#'    the other, contains the column "table" showing which table the row appears
+#'    in and the \code{by} columns for that row.
+#'  }
+#' }
+#' }
+#' \item{\code{value_diffs()}}{A data frame with one row for each element
+#' of \code{col} found to be unequal between the input tables (
+#' \code{table_a} and \code{table_b} from the original \code{versus()} call)
+#' The output table has columns "val_a"/"val_b": the value of \code{col} in the
+#' input tables, and the \code{by} columns for the identified rows in the
+#' input tables.}
+#'
+#' \item{\code{all_value_diffs()}}{A data frame of the \code{value_diffs()}
+#' output for all columns having at least one value difference, combined row-wise
+#' into a single table. To facilitate this combination into a single table, the
+#' "val_a" and "val_b" columns are coerced to character.}
+#' }
 
+#' @rdname versus-function
+#' @export
 versus <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE,
                    use_duckplyr = TRUE) {
   check_required(by)
@@ -61,6 +121,8 @@ versus <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE,
     unmatched_rows = data$unmatched)
 }
 
+#' @rdname versus-function
+#' @export
 value_diffs <- function(comparison, column) {
   column <- as.character(substitute(column))
   compared_cols <- comparison$summ$column
@@ -81,6 +143,8 @@ value_diffs <- function(comparison, column) {
     `[[`(1)
 }
 
+#' @rdname versus-function
+#' @export
 all_value_diffs <- function(comparison) {
   conform <- function(value_diffs, col_name) {
     names(value_diffs)[seq(2)] <- paste0('val_', c('a', 'b'))

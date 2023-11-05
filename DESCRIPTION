@@ -20,7 +20,8 @@ Imports:
     duckplyr,
     glue,
     tidyselect,
-    vctrs
+    vctrs,
+    tibble
 URL: https://github.com/eutwt/versus,
     https://eutwt.github.io/versus/
 BugReports: https://github.com/eutwt/versus/issues

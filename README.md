@@ -1,53 +1,122 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# versus
+# versus <img id="logo" src="man/figures/logo.png" align="right" width="17%" height="17%" />
 
 <!-- badges: start -->
 <!-- badges: end -->
-
-The goal of versus is to …
 
 ## Installation
 
 You can install the development version of versus like so:
 
 ``` r
-# FILL THIS IN! HOW CAN PEOPLE INSTALL YOUR DEV PACKAGE?
+devtools::install_github("eutwt/versus")
 ```
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
-
 ``` r
 library(versus)
-## basic example code
+
+df_a <- read.csv(text = '
+           car,  mpg, cyl,  disp,  hp, drat,    wt, vs, am
+    Duster 360, 14.3,   8, 360.0, 245, 3.21, 3.570,  0,  0
+ Mazda RX4 Wag, 21.0,   6, 160.0, 110, 3.90, 2.875,  0,  1
+      Merc 230, 22.8,   4, 140.8,  95, 3.92, 3.150,  1,  0
+    Datsun 710, 22.8,  NA, 109.0,  93, 3.85, 2.320,  1,  1
+     Merc 240D, 24.4,   4, 146.7,  62, 3.69, 3.190,  1,  0
+Hornet 4 Drive, 21.4,   6, 259.0, 110, 3.08, 3.215,  1,  0
+     Mazda RX4, 21.0,   6, 160.0, 110, 3.90, 2.620,  0,  1
+       Valiant, 18.1,   6, 225.0, 105, 2.76, 3.460,  1,  0
+      Merc 280, 19.2,   6, 167.6, 123, 3.92, 3.440,  1,  0
+', stringsAsFactors = FALSE, strip.white = TRUE)
+df_b <- read.csv(text = '
+            car,    wt,  mpg,  hp, cyl,  disp, carb, drat, vs
+      Merc 240D, 3.190, 26.4,  62,   4, 146.7,    2, 3.69,  1
+        Valiant, 3.460, 18.1, 105,   6, 225.0,    1, 2.76,  1
+     Duster 360, 3.570, 16.3, 245,   8, 360.0,    4, 3.21,  0
+     Datsun 710, 2.320, 22.8,  93,  NA, 108.0,    1, 3.85,  1
+      Merc 280C, 3.440, 17.8, 123,   6, 167.6,    4, 3.92,  1
+       Merc 280, 3.440, 19.2, 123,   6, 167.6,    4, 3.92,  1
+ Hornet 4 Drive, 3.215, 21.4, 110,   6, 258.0,    1, 3.08,  1
+     Merc 450SE, 4.070, 16.4, 180,   8, 275.8,    3, 3.07,  0
+       Merc 230, 3.150, 22.8,  95,   4, 140.8,    2, 3.92,  1
+  Mazda RX4 Wag, 2.875, 21.0, 110,   6, 160.0,    4, 3.90,  0
+', stringsAsFactors = FALSE, strip.white = TRUE)
 ```
 
-What is special about using `README.Rmd` instead of just `README.md`?
-You can include R chunks like so:
+Use `versus()` to see
+
+- The number of differing values in each column - `versus()$summ`
+- Which columns are in only one table - `versus()$unmatched_cols`
+- Which rows are in only one table - `versus()$unmatched_rows`
 
 ``` r
-summary(cars)
-#>      speed           dist       
-#>  Min.   : 4.0   Min.   :  2.00  
-#>  1st Qu.:12.0   1st Qu.: 26.00  
-#>  Median :15.0   Median : 36.00  
-#>  Mean   :15.4   Mean   : 42.98  
-#>  3rd Qu.:19.0   3rd Qu.: 56.00  
-#>  Max.   :25.0   Max.   :120.00
+comp <- versus(df_a, df_b, by = car)
+comp
+#> $tables
+#> # A tibble: 2 × 4
+#>   table   expr   ncol  nrow
+#>   <chr>   <chr> <int> <int>
+#> 1 table_a df_a      9     9
+#> 2 table_b df_b      9    10
+#> 
+#> $by
+#> # A tibble: 1 × 3
+#>   column class_a   class_b  
+#>   <chr>  <chr>     <chr>    
+#> 1 car    character character
+#> 
+#> $summ
+#> # A tibble: 7 × 5
+#>   column n_diffs class_a class_b value_diffs       
+#>   <chr>    <int> <chr>   <chr>   <list>            
+#> 1 mpg          2 numeric numeric <dckplyr_ [2 × 3]>
+#> 2 cyl          0 integer integer <dckplyr_ [0 × 3]>
+#> 3 disp         2 numeric numeric <dckplyr_ [2 × 3]>
+#> 4 hp           0 integer integer <dckplyr_ [0 × 3]>
+#> 5 drat         0 numeric numeric <dckplyr_ [0 × 3]>
+#> 6 wt           0 numeric numeric <dckplyr_ [0 × 3]>
+#> 7 vs           0 integer integer <dckplyr_ [0 × 3]>
+#> 
+#> $unmatched_cols
+#> # A tibble: 2 × 2
+#>   table column
+#>   <chr> <chr> 
+#> 1 a     am    
+#> 2 b     carb  
+#> 
+#> $unmatched_rows
+#>   table        car
+#> 1     a  Mazda RX4
+#> 2     b  Merc 280C
+#> 3     b Merc 450SE
 ```
 
-You’ll still need to render `README.Rmd` regularly, to keep `README.md`
-up-to-date. `devtools::build_readme()` is handy for this. You could also
-use GitHub Actions to re-render `README.Rmd` every time you push. An
-example workflow can be found here:
-<https://github.com/r-lib/actions/tree/v1/examples>.
+Use `value_diffs()` to see the specific values that are different.
 
-You can also embed plots, for example:
+``` r
+value_diffs(comp, disp)
+#>   disp_a disp_b            car
+#> 1    109    108     Datsun 710
+#> 2    259    258 Hornet 4 Drive
+value_diffs(comp, mpg)
+#>   mpg_a mpg_b        car
+#> 1  14.3  16.3 Duster 360
+#> 2  24.4  26.4  Merc 240D
+```
 
-<img src="man/figures/README-pressure-1.png" width="100%" />
+Use `all_value_diffs()` to combine all `value_diffs()` output into one
+table
 
-In that case, don’t forget to commit and push the resulting figure
-files, so they display on GitHub and CRAN.
+- `val_a` and `val_b` are coerced to character
+
+``` r
+all_value_diffs(comp)
+#>   column val_a val_b            car
+#> 1    mpg  14.3  16.3     Duster 360
+#> 2    mpg  24.4  26.4      Merc 240D
+#> 3   disp   109   108     Datsun 710
+#> 4   disp   259   258 Hornet 4 Drive
+```
