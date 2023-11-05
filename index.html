@@ -90,31 +90,29 @@
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/eutwt/versus" class="external-link">versus</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">df_a</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span>text <span class="op">=</span> <span class="st">'</span></span>
-<span><span class="st">           car,  mpg, cyl,  disp,  hp, drat,    wt, vs, am</span></span>
-<span><span class="st">    Duster 360, 14.3,   8, 360.0, 245, 3.21, 3.570,  0,  0</span></span>
-<span><span class="st"> Mazda RX4 Wag, 21.0,   6, 160.0, 110, 3.90, 2.875,  0,  1</span></span>
-<span><span class="st">      Merc 230, 22.8,   4, 140.8,  95, 3.92, 3.150,  1,  0</span></span>
-<span><span class="st">    Datsun 710, 22.8,  NA, 109.0,  93, 3.85, 2.320,  1,  1</span></span>
-<span><span class="st">     Merc 240D, 24.4,   4, 146.7,  62, 3.69, 3.190,  1,  0</span></span>
-<span><span class="st">Hornet 4 Drive, 21.4,   6, 259.0, 110, 3.08, 3.215,  1,  0</span></span>
-<span><span class="st">     Mazda RX4, 21.0,   6, 160.0, 110, 3.90, 2.620,  0,  1</span></span>
-<span><span class="st">       Valiant, 18.1,   6, 225.0, 105, 2.76, 3.460,  1,  0</span></span>
-<span><span class="st">      Merc 280, 19.2,   6, 167.6, 123, 3.92, 3.440,  1,  0</span></span>
-<span><span class="st">'</span>, stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span>, strip.white <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="va">df_b</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span>text <span class="op">=</span> <span class="st">'</span></span>
-<span><span class="st">            car,    wt,  mpg,  hp, cyl,  disp, carb, drat, vs</span></span>
-<span><span class="st">      Merc 240D, 3.190, 26.4,  62,   4, 146.7,    2, 3.69,  1</span></span>
-<span><span class="st">        Valiant, 3.460, 18.1, 105,   6, 225.0,    1, 2.76,  1</span></span>
-<span><span class="st">     Duster 360, 3.570, 16.3, 245,   8, 360.0,    4, 3.21,  0</span></span>
-<span><span class="st">     Datsun 710, 2.320, 22.8,  93,  NA, 108.0,    1, 3.85,  1</span></span>
-<span><span class="st">      Merc 280C, 3.440, 17.8, 123,   6, 167.6,    4, 3.92,  1</span></span>
-<span><span class="st">       Merc 280, 3.440, 19.2, 123,   6, 167.6,    4, 3.92,  1</span></span>
-<span><span class="st"> Hornet 4 Drive, 3.215, 21.4, 110,   6, 258.0,    1, 3.08,  1</span></span>
-<span><span class="st">     Merc 450SE, 4.070, 16.4, 180,   8, 275.8,    3, 3.07,  0</span></span>
-<span><span class="st">       Merc 230, 3.150, 22.8,  95,   4, 140.8,    2, 3.92,  1</span></span>
-<span><span class="st">  Mazda RX4 Wag, 2.875, 21.0, 110,   6, 160.0,    4, 3.90,  0</span></span>
-<span><span class="st">'</span>, stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span>, strip.white <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">example_df_a</span></span>
+<span><span class="co">#&gt;              car  mpg cyl  disp  hp drat    wt vs am</span></span>
+<span><span class="co">#&gt; 1     Duster 360 14.3   8 360.0 245 3.21 3.570  0  0</span></span>
+<span><span class="co">#&gt; 2  Mazda RX4 Wag 21.0   6 160.0 110 3.90 2.875  0  1</span></span>
+<span><span class="co">#&gt; 3       Merc 230 22.8   4 140.8  95 3.92 3.150  1  0</span></span>
+<span><span class="co">#&gt; 4     Datsun 710 22.8  NA 109.0  93 3.85 2.320  1  1</span></span>
+<span><span class="co">#&gt; 5      Merc 240D 24.4   4 146.7  62 3.69 3.190  1  0</span></span>
+<span><span class="co">#&gt; 6 Hornet 4 Drive 21.4   6 259.0 110 3.08 3.215  1  0</span></span>
+<span><span class="co">#&gt; 7      Mazda RX4 21.0   6 160.0 110 3.90 2.620  0  1</span></span>
+<span><span class="co">#&gt; 8        Valiant 18.1   6 225.0 105 2.76 3.460  1  0</span></span>
+<span><span class="co">#&gt; 9       Merc 280 19.2   6 167.6 123 3.92 3.440  1  0</span></span>
+<span><span class="va">example_df_b</span></span>
+<span><span class="co">#&gt;               car    wt  mpg  hp cyl  disp carb drat vs</span></span>
+<span><span class="co">#&gt; 1       Merc 240D 3.190 26.4  62   4 146.7    2 3.69  1</span></span>
+<span><span class="co">#&gt; 2         Valiant 3.460 18.1 105   6 225.0    1 2.76  1</span></span>
+<span><span class="co">#&gt; 3      Duster 360 3.570 16.3 245   8 360.0    4 3.21  0</span></span>
+<span><span class="co">#&gt; 4      Datsun 710 2.320 22.8  93  NA 108.0    1 3.85  1</span></span>
+<span><span class="co">#&gt; 5       Merc 280C 3.440 17.8 123   6 167.6    4 3.92  1</span></span>
+<span><span class="co">#&gt; 6        Merc 280 3.440 19.2 123   6 167.6    4 3.92  1</span></span>
+<span><span class="co">#&gt; 7  Hornet 4 Drive 3.215 21.4 110   6 258.0    1 3.08  1</span></span>
+<span><span class="co">#&gt; 8      Merc 450SE 4.070 16.4 180   8 275.8    3 3.07  0</span></span>
+<span><span class="co">#&gt; 9        Merc 230 3.150 22.8  95   4 140.8    2 3.92  1</span></span>
+<span><span class="co">#&gt; 10  Mazda RX4 Wag 2.875 21.0 110   6 160.0    4 3.90  0</span></span></code></pre></div>
 <p>Use <code><a href="reference/versus-package.html">versus()</a></code> to see</p>
 <ul>
 <li>The number of differing values in each column - <code>compare()$summ</code>
@@ -125,14 +123,14 @@
 </li>
 </ul>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">comp</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/compare.html">compare</a></span><span class="op">(</span><span class="va">df_a</span>, <span class="va">df_b</span>, by <span class="op">=</span> <span class="va">car</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">comp</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/compare.html">compare</a></span><span class="op">(</span><span class="va">example_df_a</span>, <span class="va">example_df_b</span>, by <span class="op">=</span> <span class="va">car</span><span class="op">)</span></span>
 <span><span class="va">comp</span></span>
 <span><span class="co">#&gt; $tables</span></span>
 <span><span class="co">#&gt; # A tibble: 2 × 4</span></span>
-<span><span class="co">#&gt;   table   expr   ncol  nrow</span></span>
-<span><span class="co">#&gt;   &lt;chr&gt;   &lt;chr&gt; &lt;int&gt; &lt;int&gt;</span></span>
-<span><span class="co">#&gt; 1 table_a df_a      9     9</span></span>
-<span><span class="co">#&gt; 2 table_b df_b      9    10</span></span>
+<span><span class="co">#&gt;   table   expr          ncol  nrow</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;   &lt;chr&gt;        &lt;int&gt; &lt;int&gt;</span></span>
+<span><span class="co">#&gt; 1 table_a example_df_a     9     9</span></span>
+<span><span class="co">#&gt; 2 table_b example_df_b     9    10</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $by</span></span>
 <span><span class="co">#&gt; # A tibble: 1 × 3</span></span>
