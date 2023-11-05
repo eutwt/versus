@@ -4,16 +4,52 @@ versus <- function(table_a, table_b, by, allow_bothNA = TRUE, coerce = TRUE) {
   by <- enquo(by)
   table_a_chr <- as.character(substitute(table_a))
   table_b_chr <- as.character(substitute(table_b))
+
   by_vars <- get_by_vars(by_quo = by, table_a = table_a, table_b = table_b)
+  assert_unique(table_a, by_vars)
+  assert_unique(table_b, by_vars)
+
   table_summ <-
     tibble(
       table = c("table_a", "table_b"),
       expr = c(table_a_chr, table_b_chr),
       ncol = c(ncol(table_a), ncol(table_b)),
       nrow = c(nrow(table_a), nrow(table_b)))
-  assert_unique(table_a, by_vars)
-  assert_unique(table_b, by_vars)
-  table_summ
+
+  cols <- merge_split(contents(table_a), contents(table_b), by = 'column') %>%
+    {list(by = .$common %>% filter(column %in% by_vars),
+          compare = .$common %>% filter(!column %in% by_vars),
+          unmatched = .$unmatched)}
+
+  if (!coerce) {
+    diff_class <- cols$compare %>%
+      filter(class_a != class_b)
+    if (nrow(diff_class) > 0) {
+      diff_class_cols <- shorten(glue_collapse(diff_class$column, ', '))
+      msg <- c(x = "coerce = FALSE but some columns classes do not match",
+               i = shorten(glue_collapse(diff_class$column, ', '), 50))
+      abort(msg)
+    }
+  }
+
+  data <- merge_split(table_a, table_b, by = by_vars)
+
+  if (!nrow(data$common)) {
+    abort("No rows found in common. Check data and `by` argument.")
+  }
+
+  value_diffs <- cols$compare$column %>%
+    lapply(col_value_diffs, data = data$common, by = by_vars)
+
+  cols$compare <- cols$compare %>%
+    mutate(value_diffs = sapply(value_diffs, nrow), .after = column)
+
+  list(
+    tables = table_summ,
+    by = cols$by,
+    summ = cols$compare,
+    unmatched_cols = cols$unmatched,
+    unmatched_rows = data$unmatched)
 }
 
 # Helpers ---------
@@ -21,7 +57,7 @@ versus <- function(table_a, table_b, by, allow_bothNA = TRUE, coerce = TRUE) {
 merge_split <- function(table_a, table_b, by) {
   table_a$versus_in_a <- TRUE
   table_b$versus_in_b <- TRUE
-  data <- full_join(table_a, table_b, by = by) %>%
+  data <- full_join(table_a, table_b, by = by, suffix = c('_a', '_b')) %>%
     mutate(across(starts_with('versus_in'), \(x) coalesce(x, FALSE)),
            common = versus_in_a & versus_in_b)
   common <- data %>%
@@ -33,3 +69,12 @@ merge_split <- function(table_a, table_b, by) {
     select(table, all_of(by))
   list(common = common, unmatched = unmatched)
 }
+
+col_value_diffs <- function(data, col, by) {
+  col_a <- sym(paste0(col, '_a'))
+  col_b <- sym(paste0(col, '_b'))
+  data %>%
+    filter(!!col_a != !!col_b) %>%
+    select(!!col_a, !!col_b, all_of(by))
+}
+
