@@ -21,5 +21,6 @@ Imports:
     glue,
     tidyselect,
     vctrs
-URL: https://github.com/eutwt/versus
+URL: https://github.com/eutwt/versus,
+    https://eutwt.github.io/versus/
 BugReports: https://github.com/eutwt/versus/issues
