@@ -36,7 +36,7 @@ example_df_a
 example_df_b
 ```
 
-Use `versus()` to see 
+Use `compare()` to see 
 
 * The number of differing values in each column - `compare()$summ`
 * Which columns are in only one table - `compare()$unmatched_cols`

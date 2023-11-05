@@ -46,7 +46,7 @@ example_df_b
 #> 10  Mazda RX4 Wag 2.875 21.0 110   6 160.0    4 3.90  0
 ```
 
-Use `versus()` to see
+Use `compare()` to see
 
 - The number of differing values in each column - `compare()$summ`
 - Which columns are in only one table - `compare()$unmatched_cols`
