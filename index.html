@@ -115,17 +115,17 @@
 <span><span class="st">       Merc 230, 3.150, 22.8,  95,   4, 140.8,    2, 3.92,  1</span></span>
 <span><span class="st">  Mazda RX4 Wag, 2.875, 21.0, 110,   6, 160.0,    4, 3.90,  0</span></span>
 <span><span class="st">'</span>, stringsAsFactors <span class="op">=</span> <span class="cn">FALSE</span>, strip.white <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p>Use <code><a href="https://eutwt.github.io/versus/reference/versus-function.html">versus()</a></code> to see</p>
+<p>Use <code><a href="reference/versus-package.html">versus()</a></code> to see</p>
 <ul>
-<li>The number of differing values in each column - <code>versus()$summ</code>
+<li>The number of differing values in each column - <code>compare()$summ</code>
 </li>
-<li>Which columns are in only one table - <code>versus()$unmatched_cols</code>
+<li>Which columns are in only one table - <code>compare()$unmatched_cols</code>
 </li>
-<li>Which rows are in only one table - <code>versus()$unmatched_rows</code>
+<li>Which rows are in only one table - <code>compare()$unmatched_rows</code>
 </li>
 </ul>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">comp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://eutwt.github.io/versus/reference/versus-function.html">versus</a></span><span class="op">(</span><span class="va">df_a</span>, <span class="va">df_b</span>, by <span class="op">=</span> <span class="va">car</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">comp</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/compare.html">compare</a></span><span class="op">(</span><span class="va">df_a</span>, <span class="va">df_b</span>, by <span class="op">=</span> <span class="va">car</span><span class="op">)</span></span>
 <span><span class="va">comp</span></span>
 <span><span class="co">#&gt; $tables</span></span>
 <span><span class="co">#&gt; # A tibble: 2 × 4</span></span>
@@ -164,23 +164,23 @@
 <span><span class="co">#&gt; 1     a  Mazda RX4</span></span>
 <span><span class="co">#&gt; 2     b  Merc 280C</span></span>
 <span><span class="co">#&gt; 3     b Merc 450SE</span></span></code></pre></div>
-<p>Use <code><a href="reference/versus-function.html">value_diffs()</a></code> to see the specific values that are different.</p>
+<p>Use <code><a href="reference/compare.html">value_diffs()</a></code> to see the specific values that are different.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/versus-function.html">value_diffs</a></span><span class="op">(</span><span class="va">comp</span>, <span class="va">disp</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/compare.html">value_diffs</a></span><span class="op">(</span><span class="va">comp</span>, <span class="va">disp</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   disp_a disp_b            car</span></span>
 <span><span class="co">#&gt; 1    109    108     Datsun 710</span></span>
 <span><span class="co">#&gt; 2    259    258 Hornet 4 Drive</span></span>
-<span><span class="fu"><a href="reference/versus-function.html">value_diffs</a></span><span class="op">(</span><span class="va">comp</span>, <span class="va">mpg</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/compare.html">value_diffs</a></span><span class="op">(</span><span class="va">comp</span>, <span class="va">mpg</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   mpg_a mpg_b        car</span></span>
 <span><span class="co">#&gt; 1  14.3  16.3 Duster 360</span></span>
 <span><span class="co">#&gt; 2  24.4  26.4  Merc 240D</span></span></code></pre></div>
-<p>Use <code><a href="reference/versus-function.html">all_value_diffs()</a></code> to combine all <code><a href="reference/versus-function.html">value_diffs()</a></code> output into one table</p>
+<p>Use <code><a href="reference/compare.html">all_value_diffs()</a></code> to combine all <code><a href="reference/compare.html">value_diffs()</a></code> output into one table</p>
 <ul>
 <li>
 <code>val_a</code> and <code>val_b</code> are coerced to character</li>
 </ul>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/versus-function.html">all_value_diffs</a></span><span class="op">(</span><span class="va">comp</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/compare.html">all_value_diffs</a></span><span class="op">(</span><span class="va">comp</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   column val_a val_b            car</span></span>
 <span><span class="co">#&gt; 1    mpg  14.3  16.3     Duster 360</span></span>
 <span><span class="co">#&gt; 2    mpg  24.4  26.4      Merc 240D</span></span>
