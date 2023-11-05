@@ -6,6 +6,8 @@ versus <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE,
   table_a_chr <- as.character(substitute(table_a))
   table_b_chr <- as.character(substitute(table_b))
   if (use_duckplyr) {
+    rownames(table_a) <- NULL
+    rownames(table_b) <- NULL
     table_a <- as_duckplyr_df(table_a)
     table_b <- as_duckplyr_df(table_b)
   }

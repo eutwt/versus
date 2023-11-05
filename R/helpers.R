@@ -29,6 +29,22 @@ contents <- function(table) {
     tibble(column = names(.), class = .)
 }
 
+test_df_a <-mtcars %>%
+  rownames_to_column("car") %>%
+  mutate(disp = replace(disp, 3:4, disp[3:4] + 1),
+         cyl = replace(cyl, 3, NA),
+         extracol_a = 1) %>%
+  head(10) %>%
+  bind_rows(., head(., 1) %>% mutate(car = "extra_a"))
+
+test_df_b <- mtcars %>%
+  rownames_to_column("car") %>%
+  mutate(mpg = replace(mpg, 7:8, mpg[7:8] + 2),
+         cyl = replace(cyl, 3, NA),
+         wt = as.character(wt)) %>%
+  filter(row_number() %in% seq(2, 12)) %>%
+  bind_rows(., head(., 1) %>% mutate(car = "extra_b"))
+
 utils::globalVariables(c(
  ".",
  "class_a",
