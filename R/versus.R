@@ -7,7 +7,7 @@
 #' @import duckplyr
 #' @import tidyselect
 #' @import glue
-#' @import vctrs
+#' @importFrom vctrs vec_duplicate_any
 "_PACKAGE"
 
 .onLoad <- function(libname, pkgname) {
