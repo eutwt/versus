@@ -18,6 +18,9 @@ devtools::install_github("eutwt/versus")
 
 ## Example
 
+We will use the two data frames below as an example to demonstrate
+functionality
+
 ``` r
 library(versus)
 
