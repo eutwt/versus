@@ -55,9 +55,10 @@ versus <- function(table_a, table_b, by, allow_bothNA = TRUE, coerce = TRUE) {
 # Helpers ---------
 
 merge_split <- function(table_a, table_b, by) {
-  table_a$versus_in_a <- TRUE
-  table_b$versus_in_b <- TRUE
-  data <- full_join(table_a, table_b, by = by, suffix = c('_a', '_b')) %>%
+  data <- full_join(
+    table_a %>% mutate(versus_in_a = TRUE),
+    table_b %>% mutate(versus_in_b = TRUE),
+    by = by, suffix = c('_a', '_b')) %>%
     mutate(across(starts_with('versus_in'), \(x) coalesce(x, FALSE)),
            common = versus_in_a & versus_in_b)
   common <- data %>%
