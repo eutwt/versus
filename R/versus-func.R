@@ -16,7 +16,7 @@ versus <- function(table_a, table_b, by, allow_bothNA = TRUE, coerce = TRUE) {
       ncol = c(ncol(table_a), ncol(table_b)),
       nrow = c(nrow(table_a), nrow(table_b)))
 
-  cols <- merge_split(contents(table_a), contents(table_b), by = 'column') %>%
+  cols <- join_split(contents(table_a), contents(table_b), by = 'column') %>%
     {list(by = .$common %>% filter(column %in% by_vars),
           compare = .$common %>% filter(!column %in% by_vars),
           unmatched = .$unmatched)}
@@ -32,7 +32,7 @@ versus <- function(table_a, table_b, by, allow_bothNA = TRUE, coerce = TRUE) {
     }
   }
 
-  data <- merge_split(table_a, table_b, by = by_vars)
+  data <- join_split(table_a, table_b, by = by_vars)
 
   if (!nrow(data$common)) {
     abort("No rows found in common. Check data and `by` argument.")
@@ -54,7 +54,8 @@ versus <- function(table_a, table_b, by, allow_bothNA = TRUE, coerce = TRUE) {
 
 # Helpers ---------
 
-merge_split <- function(table_a, table_b, by) {
+join_split <- function(table_a, table_b, by) {
+  # full_join output split into common and unmatched
   data <- full_join(
     table_a %>% mutate(versus_in_a = TRUE),
     table_b %>% mutate(versus_in_b = TRUE),
