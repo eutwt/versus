@@ -17,9 +17,9 @@ versus <- function(table_a, table_b, by, allow_bothNA = TRUE, coerce = TRUE) {
       nrow = c(nrow(table_a), nrow(table_b)))
 
   cols <- join_split(contents(table_a), contents(table_b), by = 'column') %>%
-    {list(by = .$common %>% filter(column %in% by_vars),
-          compare = .$common %>% filter(!column %in% by_vars),
-          unmatched = .$unmatched)}
+    with(list(by = common %>% filter(column %in% by_vars),
+              compare = common %>% filter(!column %in% by_vars),
+              unmatched = unmatched))
 
   if (!coerce) {
     diff_class <- cols$compare %>%
