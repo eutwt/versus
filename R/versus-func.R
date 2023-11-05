@@ -1,5 +1,5 @@
 
-versus <- function(table_a, table_b, by, allow_bothNA = TRUE, coerce = TRUE) {
+versus <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE) {
   check_required(by)
   by <- enquo(by)
   table_a_chr <- as.character(substitute(table_a))
@@ -37,9 +37,13 @@ versus <- function(table_a, table_b, by, allow_bothNA = TRUE, coerce = TRUE) {
     abort("No rows found in common. Check data and `by` argument.")
   }
 
+  cols$compare$value_diffs <- cols$compare$column %>%
+    lapply(col_value_diffs,
+           data = data$common,
+           by = by_vars,
+           allow_both_NA = allow_both_NA)
+
   cols$compare <- cols$compare %>%
-    mutate(value_diffs = column %>%
-             lapply(col_value_diffs, data = data$common, by = by_vars)) %>%
     mutate(n_diffs = sapply(value_diffs, nrow), .after = column)
 
   list(
@@ -101,11 +105,17 @@ join_split <- function(table_a, table_b, by) {
   list(common = common, unmatched = unmatched)
 }
 
-col_value_diffs <- function(data, col, by) {
+col_value_diffs <- function(data, col, by, allow_both_NA = TRUE) {
   col_a <- sym(paste0(col, '_a'))
   col_b <- sym(paste0(col, '_b'))
+  if (allow_both_NA) {
+    filter_expr <- expr(!!col_a != !!col_b)
+  } else {
+    filter_expr <-
+      expr(coalesce(!!col_a != !!col_b, is.na(!!col_a), is.na(!!col_b)))
+  }
   data %>%
-    filter(!!col_a != !!col_b) %>%
+    filter(!!filter_expr) %>%
     select(!!col_a, !!col_b, all_of(by))
 }
 

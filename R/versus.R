@@ -9,3 +9,7 @@
 #' @import glue
 #' @import vctrs
 "_PACKAGE"
+
+.onLoad <- function(libname, pkgname) {
+  options(duckdb.materialize_message = FALSE)
+}
