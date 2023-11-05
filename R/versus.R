@@ -1,6 +1,8 @@
 #' @description Compare two tables
 #' @keywords internal
 #'
+#' @importFrom stats setNames
+#' @importFrom utils adist
 #' @import rlang
 #' @import dplyr
 #' @import duckplyr
