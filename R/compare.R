@@ -6,7 +6,7 @@
 #' \code{.data_a} and \code{.data_b}. Both data frames must be unique on \code{by}.
 #' @param allow_both_NA Logical. If \code{TRUE} a missing value in both data frames is
 #' considered as equal
-#' @param comparison The output of a \code{versus::versus()} call
+#' @param comparison The output of a \code{versus::compare()} call
 #' @param coerce Logical. If \code{FALSE} only columns with the same class are compared.
 #' @param column tidy-select. A single column
 #' @param use_duckplyr Logical. Run \code{as_duckplyr_df()} on input tables before
@@ -14,7 +14,7 @@
 #'
 #' @return
 #' \describe{
-#' \item{\code{versus()}}{A list of data frames having the following elements:
+#' \item{\code{compare()}}{A list of data frames having the following elements:
 #' \describe{
 #'   \item{tables}{
 #'     A data frame with one row per input table showing the number of rows
@@ -46,7 +46,7 @@
 #' }
 #' \item{\code{value_diffs()}}{A data frame with one row for each element
 #' of \code{col} found to be unequal between the input tables (
-#' \code{table_a} and \code{table_b} from the original \code{versus()} call)
+#' \code{table_a} and \code{table_b} from the original \code{compare()} call)
 #' The output table has columns "val_a"/"val_b": the value of \code{col} in the
 #' input tables, and the \code{by} columns for the identified rows in the
 #' input tables.}
@@ -57,9 +57,9 @@
 #' "val_a" and "val_b" columns are coerced to character.}
 #' }
 
-#' @rdname versus-function
+#' @rdname compare
 #' @export
-versus <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE,
+compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE,
                    use_duckplyr = TRUE) {
   check_required(by)
   by <- enquo(by)
@@ -121,7 +121,7 @@ versus <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE,
     unmatched_rows = data$unmatched)
 }
 
-#' @rdname versus-function
+#' @rdname compare
 #' @export
 value_diffs <- function(comparison, column) {
   column <- as.character(substitute(column))
@@ -143,7 +143,7 @@ value_diffs <- function(comparison, column) {
     `[[`(1)
 }
 
-#' @rdname versus-function
+#' @rdname compare
 #' @export
 all_value_diffs <- function(comparison) {
   conform <- function(value_diffs, col_name) {

@@ -1,14 +1,14 @@
 # Error on input with duplicates
 
     Code
-      versus(mtcars, mtcars, by = c(disp, cyl))
+      compare(mtcars, mtcars, by = c(disp, cyl))
     Error <rlang_error>
       `table_a` must be unique on `by` vars (`disp`, `cyl`)
 
 # Error on empty `by`
 
     Code
-      versus(a, b, by = where(is.character))
+      compare(a, b, by = where(is.character))
     Error <rlang_error>
       x Issue with `table_a`
       i No columns matching supplied `by`
@@ -16,7 +16,7 @@
 # Error when `by` columns don't match
 
     Code
-      versus(a, b, by = where(is.numeric))
+      compare(a, b, by = where(is.numeric))
     Error <rlang_error>
       x Column names of `by` variables must be the same in both data frames
       i table_a names: x
@@ -25,7 +25,7 @@
 # Error when columns in `by` aren't present
 
     Code
-      versus(a, b, by = x)
+      compare(a, b, by = x)
     Error <rlang_error>
       Issue with `table_b`
       Can't subset columns that don't exist.
@@ -34,14 +34,14 @@
 # Error on named `by`
 
     Code
-      versus(a, b, by = c(y = x))
+      compare(a, b, by = c(y = x))
     Error <rlang_error>
       Can't rename variables in this context.
 
 # Error on different classes with coerce = FALSE
 
     Code
-      versus(test_df_a, test_df_b, by = car, coerce = FALSE)
+      compare(test_df_a, test_df_b, by = car, coerce = FALSE)
     Error <rlang_error>
       x coerce = FALSE but some columns classes do not match
       i wt

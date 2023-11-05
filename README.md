@@ -48,12 +48,12 @@ df_b <- read.csv(text = '
 
 Use `versus()` to see
 
-- The number of differing values in each column - `versus()$summ`
-- Which columns are in only one table - `versus()$unmatched_cols`
-- Which rows are in only one table - `versus()$unmatched_rows`
+- The number of differing values in each column - `compare()$summ`
+- Which columns are in only one table - `compare()$unmatched_cols`
+- Which rows are in only one table - `compare()$unmatched_rows`
 
 ``` r
-comp <- versus(df_a, df_b, by = car)
+comp <- compare(df_a, df_b, by = car)
 comp
 #> $tables
 #> # A tibble: 2 × 4
