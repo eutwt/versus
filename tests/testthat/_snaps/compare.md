@@ -2,23 +2,26 @@
 
     Code
       compare(mtcars, mtcars, by = c(disp, cyl))
-    Error <rlang_error>
-      `table_a` must be unique on `by` vars (`disp`, `cyl`)
+    Condition
+      Error in `compare()`:
+      ! `table_a` must be unique on `by` vars (`disp`, `cyl`)
 
 # Error on empty `by`
 
     Code
       compare(a, b, by = where(is.character))
-    Error <rlang_error>
-      x Issue with `table_a`
+    Condition
+      Error in `compare()`:
+      ! x Issue with `table_a`
       i No columns matching supplied `by`
 
 # Error when `by` columns don't match
 
     Code
       compare(a, b, by = where(is.numeric))
-    Error <rlang_error>
-      x Column names of `by` variables must be the same in both data frames
+    Condition
+      Error in `compare()`:
+      ! x Column names of `by` variables must be the same in both data frames
       i table_a names: x
       i table_b names: g
 
@@ -26,8 +29,9 @@
 
     Code
       compare(a, b, by = x)
-    Error <rlang_error>
-      Issue with `table_b`
+    Condition
+      Error in `compare()`:
+      ! Issue with `table_b`
       Can't subset columns that don't exist.
       x Column `x` doesn't exist.
 
@@ -35,15 +39,17 @@
 
     Code
       compare(a, b, by = c(y = x))
-    Error <rlang_error>
-      Can't rename variables in this context.
+    Condition
+      Error in `compare()`:
+      ! Can't rename variables in this context.
 
 # Error on different classes with coerce = FALSE
 
     Code
       compare(test_df_a, test_df_b, by = car, coerce = FALSE)
-    Error <rlang_error>
-      x coerce = FALSE but some columns classes do not match
+    Condition
+      Error in `compare()`:
+      ! x coerce = FALSE but some columns classes do not match
       i wt
 
 # example comparison
