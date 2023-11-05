@@ -25,9 +25,8 @@ versus <- function(table_a, table_b, by, allow_bothNA = TRUE, coerce = TRUE) {
     diff_class <- cols$compare %>%
       filter(class_a != class_b)
     if (nrow(diff_class) > 0) {
-      diff_class_cols <- shorten(glue_collapse(diff_class$column, ', '))
       msg <- c(x = "coerce = FALSE but some columns classes do not match",
-               i = shorten(glue_collapse(diff_class$column, ', '), 50))
+               i = char_vec_display(diff_class$column, 50))
       abort(msg)
     }
   }
@@ -59,7 +58,7 @@ value_diffs <- function(comparison, column) {
       setNames(compared_cols) %>%
       sort %>%
       names
-    col_list_str <- shorten(glue_collapse(cols_adist_ordered, ', '), 30)
+    col_list_str <- char_vec_display(cols_adist_ordered, 30)
     msg <- c(
       x = glue("Column `{column}` is not part of the supplied comparison"),
       i = paste0("comparison includes: ", col_list_str))
