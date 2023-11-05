@@ -8,6 +8,12 @@
 [![R-CMD-check](https://github.com/eutwt/versus/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/eutwt/versus/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
+## Overview
+
+versus is a package for comparing two data frames. All output is
+provided as a data frame or list of data frames. By default, comparisons
+are done using {duckplyr} for speed.
+
 ## Installation
 
 You can install the development version of versus like so:
