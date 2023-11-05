@@ -51,6 +51,26 @@ versus <- function(table_a, table_b, by, allow_bothNA = TRUE, coerce = TRUE) {
     unmatched_rows = data$unmatched)
 }
 
+value_diffs <- function(comparison, column) {
+  column <- as.character(substitute(column))
+  compared_cols <- comparison$summ$column
+  if (!column %in% compared_cols) {
+    cols_adist_ordered <- c(adist(column, compared_cols)) %>%
+      setNames(compared_cols) %>%
+      sort %>%
+      names
+    col_list_str <- shorten(glue_collapse(cols_adist_ordered, ', '), 30)
+    msg <- c(
+      x = glue("Column `{column}` is not part of the supplied comparison"),
+      i = paste0("comparison includes: ", col_list_str))
+    abort(msg)
+  }
+  comparison$summ %>%
+    filter(column == .env$column) %>%
+    select(value_diffs) %>%
+    unlist(recursive = FALSE)
+}
+
 # Helpers ---------
 
 join_split <- function(table_a, table_b, by) {
@@ -78,4 +98,5 @@ col_value_diffs <- function(data, col, by) {
     filter(!!col_a != !!col_b) %>%
     select(!!col_a, !!col_b, all_of(by))
 }
+
 
