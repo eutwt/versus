@@ -25,3 +25,6 @@ Imports:
 URL: https://github.com/eutwt/versus,
     https://eutwt.github.io/versus/
 BugReports: https://github.com/eutwt/versus/issues
+Depends: 
+    R (>= 2.10)
+LazyData: true
