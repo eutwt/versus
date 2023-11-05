@@ -66,8 +66,19 @@ value_diffs <- function(comparison, column) {
   }
   comparison$summ %>%
     filter(column == .env$column) %>%
-    select(value_diffs) %>%
-    unlist(recursive = FALSE)
+    pull(value_diffs) %>%
+    `[[`(1)
+}
+
+all_value_diffs <- function(comparison) {
+  conform <- function(value_diffs, col_name) {
+    names(value_diffs)[seq(2)] <- paste0('val_', c('a', 'b'))
+    value_diffs %>%
+      mutate(across(seq(2), as.character)) %>%
+      mutate(column = col_name, .before = 1)
+  }
+  Map(conform, comparison$summ$value_diffs, comparison$summ$column) %>%
+    bind_rows
 }
 
 # Helpers ---------
