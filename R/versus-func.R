@@ -1,11 +1,14 @@
 
-versus <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE) {
+versus <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE,
+                   use_duckplyr = TRUE) {
   check_required(by)
   by <- enquo(by)
   table_a_chr <- as.character(substitute(table_a))
   table_b_chr <- as.character(substitute(table_b))
-  table_a <- as_duckplyr_df(table_a)
-  table_b <- as_duckplyr_df(table_b)
+  if (use_duckplyr) {
+    table_a <- as_duckplyr_df(table_a)
+    table_b <- as_duckplyr_df(table_b)
+  }
 
   by_vars <- get_by_vars(by_quo = by, table_a = table_a, table_b = table_b)
   assert_unique(table_a, by_vars)
