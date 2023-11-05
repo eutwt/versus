@@ -16,7 +16,7 @@ assert_unique <- function(table, cols, call = caller_env()) {
     return(TRUE)
   }
   table_name <- substitute(table)
-  cols_char <- shorten(glue_collapse(glue("`{cols}`"), ', '), 30)
+  cols_char <- char_vec_display(glue("`{cols}`"), 30)
   abort(glue("`{table_name}` must be unique on `by` vars ({cols_char})"),
         call = call)
 }
