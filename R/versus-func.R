@@ -38,11 +38,10 @@ versus <- function(table_a, table_b, by, allow_bothNA = TRUE, coerce = TRUE) {
     abort("No rows found in common. Check data and `by` argument.")
   }
 
-  value_diffs <- cols$compare$column %>%
-    lapply(col_value_diffs, data = data$common, by = by_vars)
-
   cols$compare <- cols$compare %>%
-    mutate(value_diffs = sapply(value_diffs, nrow), .after = column)
+    mutate(value_diffs = column %>%
+             lapply(col_value_diffs, data = data$common, by = by_vars)) %>%
+    mutate(n_diffs = sapply(value_diffs, nrow), .after = column)
 
   list(
     tables = table_summ,
