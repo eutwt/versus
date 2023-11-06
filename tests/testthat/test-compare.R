@@ -2,7 +2,8 @@
 test_that("Error on input with duplicates", {
   expect_snapshot(
     compare(mtcars, mtcars, by = c(disp, cyl)),
-    error = TRUE)
+    error = TRUE
+  )
 })
 
 test_that("Error on empty `by`", {
@@ -31,7 +32,8 @@ test_that("Error on named `by`", {
 
 test_that("Error on different classes with coerce = FALSE", {
   expect_snapshot(compare(test_df_a, test_df_b, by = car, coerce = FALSE),
-                  error = TRUE)
+    error = TRUE
+  )
 })
 
 test_that("example comparison", {

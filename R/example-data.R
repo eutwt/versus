@@ -1,5 +1,5 @@
 
-example_df_a <- read.csv(text = '
+example_df_a <- read.csv(text = "
            car,  mpg, cyl,  disp,  hp, drat,    wt, vs, am
     Duster 360, 14.3,   8, 360.0, 245, 3.21, 3.570,  0,  0
  Mazda RX4 Wag, 21.0,   6, 160.0, 110, 3.90, 2.875,  0,  1
@@ -10,9 +10,9 @@ Hornet 4 Drive, 21.4,   6, 259.0, 110, 3.08, 3.215,  1,  0
      Mazda RX4, 21.0,   6, 160.0, 110, 3.90, 2.620,  0,  1
        Valiant, 18.1,   6, 225.0, 105, 2.76, 3.460,  1,  0
       Merc 280, 19.2,   6, 167.6, 123, 3.92, 3.440,  1,  0
-', stringsAsFactors = FALSE, strip.white = TRUE)
+", stringsAsFactors = FALSE, strip.white = TRUE)
 
-example_df_b <- read.csv(text = '
+example_df_b <- read.csv(text = "
             car,    wt,  mpg,  hp, cyl,  disp, carb, drat, vs
       Merc 240D, 3.190, 26.4,  62,   4, 146.7,    2, 3.69,  1
         Valiant, 3.460, 18.1, 105,   6, 225.0,    1, 2.76,  1
@@ -24,4 +24,4 @@ example_df_b <- read.csv(text = '
      Merc 450SE, 4.070, 16.4, 180,   8, 275.8,    3, 3.07,  0
        Merc 230, 3.150, 22.8,  95,   4, 140.8,    2, 3.92,  1
   Mazda RX4 Wag, 2.875, 21.0, 110,   6, 160.0,    4, 3.90,  0
-', stringsAsFactors = FALSE, strip.white = TRUE)
+", stringsAsFactors = FALSE, strip.white = TRUE)

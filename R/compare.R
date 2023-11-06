@@ -61,7 +61,7 @@
 #' @rdname compare
 #' @export
 compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE,
-                   use_duckplyr = FALSE) {
+                    use_duckplyr = FALSE) {
   check_required(by)
   by <- enquo(by)
   table_a_chr <- as.character(substitute(table_a))
@@ -85,19 +85,24 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE,
       table = c("table_a", "table_b"),
       expr = c(table_a_chr, table_b_chr),
       ncol = c(ncol(table_a), ncol(table_b)),
-      nrow = c(nrow(table_a), nrow(table_b)))
+      nrow = c(nrow(table_a), nrow(table_b))
+    )
 
-  cols <- join_split(contents(table_a), contents(table_b), by = 'column') %>%
-    with(list(by = common %>% filter(column %in% by_vars),
-              compare = common %>% filter(!column %in% by_vars),
-              unmatched = unmatched))
+  cols <- join_split(contents(table_a), contents(table_b), by = "column") %>%
+    with(list(
+      by = common %>% filter(column %in% by_vars),
+      compare = common %>% filter(!column %in% by_vars),
+      unmatched = unmatched
+    ))
 
   if (!coerce) {
     diff_class <- cols$compare %>%
       filter(class_a != class_b)
     if (nrow(diff_class) > 0) {
-      msg <- c(x = "coerce = FALSE but some columns classes do not match",
-               i = char_vec_display(diff_class$column, 50))
+      msg <- c(
+        x = "coerce = FALSE but some columns classes do not match",
+        i = char_vec_display(diff_class$column, 50)
+      )
       abort(msg)
     }
   }
@@ -110,9 +115,10 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE,
 
   cols$compare$value_diffs <- cols$compare$column %>%
     lapply(col_value_diffs,
-           data = data$common,
-           by = by_vars,
-           allow_both_NA = allow_both_NA)
+      data = data$common,
+      by = by_vars,
+      allow_both_NA = allow_both_NA
+    )
 
   cols$compare <- cols$compare %>%
     mutate(n_diffs = sapply(value_diffs, nrow), .after = column)
@@ -122,7 +128,8 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE,
     by = cols$by,
     summ = cols$compare,
     unmatched_cols = cols$unmatched,
-    unmatched_rows = data$unmatched)
+    unmatched_rows = data$unmatched
+  )
 }
 
 #' @rdname compare
@@ -133,12 +140,13 @@ value_diffs <- function(comparison, column) {
   if (!column %in% compared_cols) {
     cols_adist_ordered <- c(adist(column, compared_cols)) %>%
       setNames(compared_cols) %>%
-      sort %>%
-      names
+      sort() %>%
+      names()
     col_list_str <- char_vec_display(cols_adist_ordered, 30)
     msg <- c(
       x = glue("Column `{column}` is not part of the supplied comparison"),
-      i = paste0("comparison includes: ", col_list_str))
+      i = paste0("comparison includes: ", col_list_str)
+    )
     abort(msg)
   }
   comparison$summ %>%
@@ -151,13 +159,13 @@ value_diffs <- function(comparison, column) {
 #' @export
 all_value_diffs <- function(comparison) {
   conform <- function(value_diffs, col_name) {
-    names(value_diffs)[seq(2)] <- paste0('val_', c('a', 'b'))
+    names(value_diffs)[seq(2)] <- paste0("val_", c("a", "b"))
     value_diffs %>%
       mutate(across(seq(2), as.character)) %>%
       mutate(column = col_name, .before = 1)
   }
   Map(conform, comparison$summ$value_diffs, comparison$summ$column) %>%
-    bind_rows
+    bind_rows()
 }
 
 # Helpers ---------
@@ -167,22 +175,24 @@ join_split <- function(table_a, table_b, by) {
   data <- full_join(
     table_a %>% mutate(versus_in_a = TRUE),
     table_b %>% mutate(versus_in_b = TRUE),
-    by = by, suffix = c('_a', '_b')) %>%
-    mutate(across(starts_with('versus_in'), \(x) coalesce(x, FALSE)),
-           common = versus_in_a & versus_in_b)
+    by = by, suffix = c("_a", "_b")
+  ) %>%
+    mutate(across(starts_with("versus_in"), \(x) coalesce(x, FALSE)),
+      common = versus_in_a & versus_in_b
+    )
   common <- data %>%
     filter(common) %>%
-    select(-starts_with('versus_in'), -common)
+    select(-starts_with("versus_in"), -common)
   unmatched <- data %>%
     filter(!common) %>%
-    mutate(table = if_else(versus_in_a, 'a', 'b'), .before = 1) %>%
+    mutate(table = if_else(versus_in_a, "a", "b"), .before = 1) %>%
     select(table, all_of(by))
   list(common = common, unmatched = unmatched)
 }
 
 col_value_diffs <- function(data, col, by, allow_both_NA = TRUE) {
-  col_a <- sym(paste0(col, '_a'))
-  col_b <- sym(paste0(col, '_b'))
+  col_a <- sym(paste0(col, "_a"))
+  col_b <- sym(paste0(col, "_b"))
   if (allow_both_NA) {
     filter_expr <- expr(!!col_a != !!col_b)
   } else {
@@ -193,5 +203,3 @@ col_value_diffs <- function(data, col, by, allow_both_NA = TRUE) {
     filter(!!filter_expr) %>%
     select(!!col_a, !!col_b, all_of(by))
 }
-
-
