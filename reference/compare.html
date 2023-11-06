@@ -54,7 +54,7 @@
 <span>  <span class="va">by</span>,</span>
 <span>  allow_both_NA <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  coerce <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  use_duckplyr <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  use_duckplyr <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">value_diffs</span><span class="op">(</span><span class="va">comparison</span>, <span class="va">column</span><span class="op">)</span></span>
@@ -88,7 +88,8 @@ considered as equal</p></dd>
 
 <dt>use_duckplyr</dt>
 <dd><p>Logical. Run <code>as_duckplyr_df()</code> on input tables before
-performing comparison</p></dd>
+performing comparison. This is useful when the tables are large because it makes
+the comparison faster. If TRUE, the outputs will also be duckplyr_df objects.</p></dd>
 
 
 <dt>comparison</dt>
