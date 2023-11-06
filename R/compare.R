@@ -10,7 +10,8 @@
 #' @param coerce Logical. If \code{FALSE} only columns with the same class are compared.
 #' @param column tidy-select. A single column
 #' @param use_duckplyr Logical. Run \code{as_duckplyr_df()} on input tables before
-#' performing comparison
+#' performing comparison. This is useful when the tables are large because it makes
+#' the comparison faster. If TRUE, the outputs will also be duckplyr_df objects.
 #'
 #' @return
 #' \describe{
@@ -60,16 +61,19 @@
 #' @rdname compare
 #' @export
 compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE,
-                   use_duckplyr = TRUE) {
+                   use_duckplyr = FALSE) {
   check_required(by)
   by <- enquo(by)
   table_a_chr <- as.character(substitute(table_a))
   table_b_chr <- as.character(substitute(table_b))
   if (use_duckplyr) {
+    if (!requireNamespace("duckplyr", quietly = TRUE)) {
+      abort("Please install duckplyr to use this feature")
+    }
     rownames(table_a) <- NULL
     rownames(table_b) <- NULL
-    table_a <- as_duckplyr_df(table_a)
-    table_b <- as_duckplyr_df(table_b)
+    table_a <- duckplyr::as_duckplyr_df(table_a)
+    table_b <- duckplyr::as_duckplyr_df(table_b)
   }
 
   by_vars <- get_by_vars(by_quo = by, table_a = table_a, table_b = table_b)

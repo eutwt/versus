@@ -72,19 +72,19 @@
       
       $summ
       # A tibble: 11 x 5
-         column n_diffs class_a class_b   value_diffs       
-         <chr>    <int> <chr>   <chr>     <list>            
-       1 mpg          2 numeric numeric   <dckplyr_ [2 x 3]>
-       2 cyl          0 numeric numeric   <dckplyr_ [0 x 3]>
-       3 disp         2 numeric numeric   <dckplyr_ [2 x 3]>
-       4 hp           0 numeric numeric   <dckplyr_ [0 x 3]>
-       5 drat         0 numeric numeric   <dckplyr_ [0 x 3]>
-       6 wt           0 numeric character <dckplyr_ [0 x 3]>
-       7 qsec         0 numeric numeric   <dckplyr_ [0 x 3]>
-       8 vs           0 numeric numeric   <dckplyr_ [0 x 3]>
-       9 am           0 numeric numeric   <dckplyr_ [0 x 3]>
-      10 gear         0 numeric numeric   <dckplyr_ [0 x 3]>
-      11 carb         0 numeric numeric   <dckplyr_ [0 x 3]>
+         column n_diffs class_a class_b   value_diffs 
+         <chr>    <int> <chr>   <chr>     <list>      
+       1 mpg          2 numeric numeric   <df [2 x 3]>
+       2 cyl          0 numeric numeric   <df [0 x 3]>
+       3 disp         2 numeric numeric   <df [2 x 3]>
+       4 hp           0 numeric numeric   <df [0 x 3]>
+       5 drat         0 numeric numeric   <df [0 x 3]>
+       6 wt           0 numeric character <df [0 x 3]>
+       7 qsec         0 numeric numeric   <df [0 x 3]>
+       8 vs           0 numeric numeric   <df [0 x 3]>
+       9 am           0 numeric numeric   <df [0 x 3]>
+      10 gear         0 numeric numeric   <df [0 x 3]>
+      11 carb         0 numeric numeric   <df [0 x 3]>
       
       $unmatched_cols
       # A tibble: 1 x 2
@@ -132,19 +132,19 @@
       
       $summ
       # A tibble: 11 x 5
-         column n_diffs class_a class_b   value_diffs       
-         <chr>    <int> <chr>   <chr>     <list>            
-       1 mpg          2 numeric numeric   <dckplyr_ [2 x 3]>
-       2 cyl          1 numeric numeric   <dckplyr_ [1 x 3]>
-       3 disp         2 numeric numeric   <dckplyr_ [2 x 3]>
-       4 hp           0 numeric numeric   <dckplyr_ [0 x 3]>
-       5 drat         0 numeric numeric   <dckplyr_ [0 x 3]>
-       6 wt           0 numeric character <dckplyr_ [0 x 3]>
-       7 qsec         0 numeric numeric   <dckplyr_ [0 x 3]>
-       8 vs           0 numeric numeric   <dckplyr_ [0 x 3]>
-       9 am           0 numeric numeric   <dckplyr_ [0 x 3]>
-      10 gear         0 numeric numeric   <dckplyr_ [0 x 3]>
-      11 carb         0 numeric numeric   <dckplyr_ [0 x 3]>
+         column n_diffs class_a class_b   value_diffs 
+         <chr>    <int> <chr>   <chr>     <list>      
+       1 mpg          2 numeric numeric   <df [2 x 3]>
+       2 cyl          1 numeric numeric   <df [1 x 3]>
+       3 disp         2 numeric numeric   <df [2 x 3]>
+       4 hp           0 numeric numeric   <df [0 x 3]>
+       5 drat         0 numeric numeric   <df [0 x 3]>
+       6 wt           0 numeric character <df [0 x 3]>
+       7 qsec         0 numeric numeric   <df [0 x 3]>
+       8 vs           0 numeric numeric   <df [0 x 3]>
+       9 am           0 numeric numeric   <df [0 x 3]>
+      10 gear         0 numeric numeric   <df [0 x 3]>
+      11 carb         0 numeric numeric   <df [0 x 3]>
       
       $unmatched_cols
       # A tibble: 1 x 2

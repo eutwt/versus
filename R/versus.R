@@ -5,8 +5,6 @@
 #' @importFrom utils adist
 #' @import rlang
 #' @import dplyr
-#' @import duckplyr
-#' @import duckplyr
 #' @import tidyselect
 #' @import glue
 #' @importFrom vctrs vec_duplicate_any

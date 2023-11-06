@@ -21,7 +21,7 @@ knitr::opts_chunk$set(
 
 ## Overview
 
-versus is a package for comparing two data frames. All output is provided as a data frame or list of data frames. By default, comparisons are done using {duckplyr} for speed.
+versus is a package for comparing two data frames. All output is provided as a data frame or list of data frames.
 
 ## Installation
 

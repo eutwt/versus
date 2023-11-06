@@ -11,8 +11,7 @@
 ## Overview
 
 versus is a package for comparing two data frames. All output is
-provided as a data frame or list of data frames. By default, comparisons
-are done using {duckplyr} for speed.
+provided as a data frame or list of data frames.
 
 ## Installation
 
@@ -79,15 +78,15 @@ comp
 #> 
 #> $summ
 #> # A tibble: 7 × 5
-#>   column n_diffs class_a class_b value_diffs       
-#>   <chr>    <int> <chr>   <chr>   <list>            
-#> 1 mpg          2 numeric numeric <dckplyr_ [2 × 3]>
-#> 2 cyl          0 integer integer <dckplyr_ [0 × 3]>
-#> 3 disp         2 numeric numeric <dckplyr_ [2 × 3]>
-#> 4 hp           0 integer integer <dckplyr_ [0 × 3]>
-#> 5 drat         0 numeric numeric <dckplyr_ [0 × 3]>
-#> 6 wt           0 numeric numeric <dckplyr_ [0 × 3]>
-#> 7 vs           0 integer integer <dckplyr_ [0 × 3]>
+#>   column n_diffs class_a class_b value_diffs 
+#>   <chr>    <int> <chr>   <chr>   <list>      
+#> 1 mpg          2 numeric numeric <df [2 × 3]>
+#> 2 cyl          0 integer integer <df [0 × 3]>
+#> 3 disp         2 numeric numeric <df [2 × 3]>
+#> 4 hp           0 integer integer <df [0 × 3]>
+#> 5 drat         0 numeric numeric <df [0 × 3]>
+#> 6 wt           0 numeric numeric <df [0 × 3]>
+#> 7 vs           0 integer integer <df [0 × 3]>
 #> 
 #> $unmatched_cols
 #> # A tibble: 2 × 2

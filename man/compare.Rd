@@ -12,7 +12,7 @@ compare(
   by,
   allow_both_NA = TRUE,
   coerce = TRUE,
-  use_duckplyr = TRUE
+  use_duckplyr = FALSE
 )
 
 value_diffs(comparison, column)
@@ -33,7 +33,8 @@ considered as equal}
 \item{coerce}{Logical. If \code{FALSE} only columns with the same class are compared.}
 
 \item{use_duckplyr}{Logical. Run \code{as_duckplyr_df()} on input tables before
-performing comparison}
+performing comparison. This is useful when the tables are large because it makes
+the comparison faster. If TRUE, the outputs will also be duckplyr_df objects.}
 
 \item{comparison}{The output of a \code{versus::compare()} call}
 
