@@ -181,8 +181,11 @@ all_value_diffs <- function(comparison) {
 get_cols_from_comparison <- function(comparison, column) {
   # simulate a data frame with the same classes as table_a to eval_select from
   cols_class_list <- strsplit(comparison$summ$class_a, ", ")
-  fake_df <- simulate_df(comparison$summ$column, cols_class_list)
-  names(eval_select(column, fake_df))
+  empty_lists <- replicate(length(cols_class_list), list())
+  fake_table_a <- Map(`class<-`, empty_lists, cols_class_list) %>%
+    setNames(comparison$summ$column) %>%
+    as.data.frame
+  names(eval_select(column, fake_table_a))
 }
 
 join_split <- function(table_a, table_b, by) {

@@ -31,13 +31,6 @@ contents <- function(table) {
     tibble(column = names(.), class = .)
 }
 
-simulate_df <- function(col_names, classes) {
-  empty_lists <- replicate(length(col_names), list())
-  fake_df <- Map(`class<-`, empty_lists, classes) %>%
-    setNames(col_names) %>%
-    as.data.frame
-}
-
 test_df_a <- mtcars %>%
   rownames_to_column("car") %>%
   mutate(
