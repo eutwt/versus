@@ -12,7 +12,7 @@
       compare(a, b, by = where(is.character))
     Condition
       Error in `compare()`:
-      ! x Issue with `table_a`
+      ! Issue with `table_a`
       i No columns matching supplied `by`
 
 # Error when `by` columns don't match
@@ -21,7 +21,7 @@
       compare(a, b, by = where(is.numeric))
     Condition
       Error in `compare()`:
-      ! x Column names of `by` variables must be the same in both data frames
+      ! Column names of `by` variables must be the same in both data frames
       i table_a names: x
       i table_b names: g
 
@@ -49,7 +49,7 @@
       compare(test_df_a, test_df_b, by = car, coerce = FALSE)
     Condition
       Error in `compare()`:
-      ! x coerce = FALSE but some columns classes do not match
+      ! coerce = FALSE but some columns classes do not match
       i wt
 
 # example comparison
@@ -172,4 +172,45 @@
       3    cyl  <NA>  <NA>     Datsun 710
       4   disp   109   108     Datsun 710
       5   disp   259   258 Hornet 4 Drive
+
+# value_diffs with a single column works
+
+    Code
+      value_diffs(comp, mpg)
+    Output
+        mpg_a mpg_b        car
+      1  14.3  16.3 Duster 360
+      2  24.4  26.4  Merc 240D
+
+# value_diffs with multiple columns errors
+
+    Code
+      value_diffs(comp, c(mpg, disp))
+    Condition
+      Error in `value_diffs()`:
+      ! Must select only one column.
+      i Columns selected: mpg, disp
+      i For multiple columns, use `value_diffs_stacked()`
+
+# value_diffs_stacked works
+
+    Code
+      value_diffs_stacked(comp, c(mpg, disp))
+    Output
+        column val_a val_b            car
+      1    mpg  14.3  16.3     Duster 360
+      2    mpg  24.4  26.4      Merc 240D
+      3   disp   109   108     Datsun 710
+      4   disp   259   258 Hornet 4 Drive
+
+---
+
+    Code
+      value_diffs_stacked(comp, where(is.numeric))
+    Output
+        column val_a val_b            car
+      1    mpg  14.3  16.3     Duster 360
+      2    mpg  24.4  26.4      Merc 240D
+      3   disp   109   108     Datsun 710
+      4   disp   259   258 Hornet 4 Drive
 
