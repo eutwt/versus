@@ -10,8 +10,8 @@
 
 ## Overview
 
-versus is a package for comparing two data frames. All output is
-provided as a data frame or list of data frames.
+versus is designed to help explore the differences between two data
+frames.
 
 ## Installation
 
