@@ -3,6 +3,7 @@
 export(all_value_diffs)
 export(compare)
 export(value_diffs)
+export(value_diffs_stacked)
 import(dplyr)
 import(glue)
 import(rlang)

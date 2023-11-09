@@ -3,6 +3,7 @@
 \name{compare}
 \alias{compare}
 \alias{value_diffs}
+\alias{value_diffs_stacked}
 \alias{all_value_diffs}
 \title{Compare two data frames}
 \usage{
@@ -16,6 +17,8 @@ compare(
 )
 
 value_diffs(comparison, column)
+
+value_diffs_stacked(comparison, column)
 
 all_value_diffs(comparison)
 }

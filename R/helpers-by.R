@@ -13,7 +13,7 @@ get_by_vars <- function(by_quo, table_a, table_b, call = caller_env()) {
     a_names <- shorten(glue_collapse(names(cols_a), ", "), 50)
     b_names <- shorten(glue_collapse(names(cols_b), ", "), 50)
     msg <- c(
-      x = msg,
+      msg,
       i = glue("table_a names: {a_names}"),
       i = glue("table_b names: {b_names}")
     )
@@ -34,7 +34,7 @@ try_select <- function(eval_select_call, arg_name, call) {
   cols <- eval_select_call
   if (is_empty(cols)) {
     msg <- c(
-      x = glue("Issue with `{arg_name}`"),
+      glue("Issue with `{arg_name}`"),
       i = "No columns matching supplied `by`"
     )
     abort(msg, call = call)

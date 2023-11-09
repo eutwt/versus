@@ -100,7 +100,7 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE,
       filter(class_a != class_b)
     if (nrow(diff_class) > 0) {
       msg <- c(
-        x = "coerce = FALSE but some columns classes do not match",
+        "coerce = FALSE but some columns classes do not match",
         i = char_vec_display(diff_class$column, 50)
       )
       abort(msg)
@@ -135,40 +135,58 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE,
 #' @rdname compare
 #' @export
 value_diffs <- function(comparison, column) {
-  column <- as.character(substitute(column))
-  compared_cols <- comparison$summ$column
-  if (!column %in% compared_cols) {
-    cols_adist_ordered <- c(adist(column, compared_cols)) %>%
-      setNames(compared_cols) %>%
-      sort() %>%
-      names()
-    col_list_str <- char_vec_display(cols_adist_ordered, 30)
-    msg <- c(
-      x = glue("Column `{column}` is not part of the supplied comparison"),
-      i = paste0("comparison includes: ", col_list_str)
-    )
-    abort(msg)
+  column <- enquo(column)
+  column_char <- get_cols_from_comparison(comparison, column)
+  if (length(column_char) != 1) {
+    cols_selected <- char_vec_display(column_char, 30)
+    abort(c("Must select only one column.",
+            i = glue("Columns selected: {cols_selected}"),
+            i = "For multiple columns, use `value_diffs_stacked()`"))
   }
   comparison$summ %>%
-    filter(column == .env$column) %>%
+    filter(column == column_char) %>%
     pull(value_diffs) %>%
     `[[`(1)
 }
 
 #' @rdname compare
 #' @export
-all_value_diffs <- function(comparison) {
+value_diffs_stacked <- function(comparison, column) {
+  column <- enquo(column)
+  column_char <- get_cols_from_comparison(comparison, column)
+  has_value_diffs <- comparison$summ$n_diffs > 0
+  to_stack <- has_value_diffs & comparison$summ$column %in% column_char
+
   conform <- function(value_diffs, col_name) {
     names(value_diffs)[seq(2)] <- paste0("val_", c("a", "b"))
     value_diffs %>%
       mutate(across(seq(2), as.character)) %>%
       mutate(column = col_name, .before = 1)
   }
-  Map(conform, comparison$summ$value_diffs, comparison$summ$column) %>%
+
+  Map(conform,
+      comparison$summ$value_diffs[to_stack],
+      comparison$summ$column[to_stack]) %>%
     bind_rows()
 }
 
+#' @rdname compare
+#' @export
+all_value_diffs <- function(comparison) {
+  value_diffs_stacked(comparison, everything())
+}
+
 # Helpers ---------
+
+get_cols_from_comparison <- function(comparison, column) {
+  # simulate a data frame with the same classes as table_a to eval_select from
+  cols_class_list <- strsplit(comparison$summ$class_a, ", ")
+  empty_lists <- replicate(length(cols_class_list), list())
+  fake_table_a <- Map(`class<-`, empty_lists, cols_class_list) %>%
+    setNames(comparison$summ$column) %>%
+    as.data.frame
+  names(eval_select(column, fake_table_a))
+}
 
 join_split <- function(table_a, table_b, by) {
   # full_join output split into common and unmatched
