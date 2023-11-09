@@ -8,7 +8,8 @@
 #' considered as equal
 #' @param comparison The output of a \code{versus::compare()} call
 #' @param coerce Logical. If \code{FALSE} only columns with the same class are compared.
-#' @param column tidy-select. A single column
+#' @param column tidy-select. value_diffs functions will show the differing values
+#' for the provided columns.
 #' @param use_duckplyr Logical. Run \code{as_duckplyr_df()} on input tables before
 #' performing comparison. This is useful when the tables are large because it makes
 #' the comparison faster. If TRUE, the outputs will also be duckplyr_df objects.
@@ -153,9 +154,6 @@ value_diffs <- function(comparison, column) {
 #' @export
 value_diffs_stacked <- function(comparison, column) {
   column <- enquo(column)
-  column_char <- get_cols_from_comparison(comparison, column)
-  has_value_diffs <- comparison$summ$n_diffs > 0
-  to_stack <- has_value_diffs & comparison$summ$column %in% column_char
 
   conform <- function(value_diffs, col_name) {
     value_diffs %>%
@@ -163,11 +161,7 @@ value_diffs_stacked <- function(comparison, column) {
       mutate(across(seq(2), as.character)) %>%
       mutate(column = col_name, .before = 1)
   }
-
-  Map(conform,
-      comparison$summ$value_diffs[to_stack],
-      comparison$summ$column[to_stack]) %>%
-    bind_rows()
+  stack_value_diffs(comparison, column, pre_stack_fun = conform)
 }
 
 #' @rdname compare

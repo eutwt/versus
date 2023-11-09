@@ -41,7 +41,8 @@ the comparison faster. If TRUE, the outputs will also be duckplyr_df objects.}
 
 \item{comparison}{The output of a \code{versus::compare()} call}
 
-\item{column}{tidy-select. A single column}
+\item{column}{tidy-select. value_diffs functions will show the differing values
+for the provided columns.}
 }
 \value{
 \describe{

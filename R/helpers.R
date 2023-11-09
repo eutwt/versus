@@ -31,6 +31,17 @@ contents <- function(table) {
     tibble(column = names(.), class = .)
 }
 
+stack_value_diffs <- function(comparison, column, pre_stack_fun) {
+  column_char <- get_cols_from_comparison(comparison, column)
+  has_value_diffs <- comparison$summ$n_diffs > 0
+  to_stack <- has_value_diffs & comparison$summ$column %in% column_char
+
+  Map(pre_stack_fun,
+      comparison$summ$value_diffs[to_stack],
+      comparison$summ$column[to_stack]) %>%
+    bind_rows()
+}
+
 test_df_a <- mtcars %>%
   rownames_to_column("car") %>%
   mutate(
