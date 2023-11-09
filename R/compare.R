@@ -158,8 +158,8 @@ value_diffs_stacked <- function(comparison, column) {
   to_stack <- has_value_diffs & comparison$summ$column %in% column_char
 
   conform <- function(value_diffs, col_name) {
-    names(value_diffs)[seq(2)] <- paste0("val_", c("a", "b"))
     value_diffs %>%
+      rename_with(\(x) replace(x, seq(2), paste0('val_', c('a', 'b')))) %>%
       mutate(across(seq(2), as.character)) %>%
       mutate(column = col_name, .before = 1)
   }
