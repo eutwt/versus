@@ -29,7 +29,7 @@ slice_diffs <- function(table, comparison, column) {
     out <- table %>% slice(c())
   } else {
     out <- table %>%
-      semi_join(indices_having_diffs, by = all_of(comparison$by$column))
+      semi_join(indices_having_diffs, by = comparison$by$column)
   }
   out
 }

@@ -1,4 +1,14 @@
 
+get_cols_from_comparison <- function(comparison, column) {
+  # simulate a data frame with the same classes as table_a to eval_select from
+  cols_class_list <- strsplit(comparison$summ$class_a, ", ")
+  empty_lists <- replicate(length(cols_class_list), list())
+  fake_table_a <- Map(`class<-`, empty_lists, cols_class_list) %>%
+    setNames(comparison$summ$column) %>%
+    as.data.frame
+  names(eval_select(column, fake_table_a))
+}
+
 shorten <- function(x, max_char = 10) {
   if_else(
     nchar(x) > max_char,

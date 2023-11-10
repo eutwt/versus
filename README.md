@@ -115,13 +115,13 @@ value_diffs(comp, mpg)
 #> 2  24.4  26.4  Merc 240D
 ```
 
-Use `all_value_diffs()` to combine all `value_diffs()` output into one
+Use `value_diffs_all()` to combine all `value_diffs()` output into one
 table
 
 - `val_a` and `val_b` are coerced to character
 
 ``` r
-all_value_diffs(comp)
+value_diffs_all(comp)
 #>   column val_a val_b            car
 #> 1    mpg  14.3  16.3     Duster 360
 #> 2    mpg  24.4  26.4      Merc 240D

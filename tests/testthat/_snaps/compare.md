@@ -104,7 +104,7 @@
 ---
 
     Code
-      all_value_diffs(comp)
+      value_diffs_all(comp)
     Output
         column val_a val_b            car
       1    mpg  14.3  16.3     Duster 360
@@ -164,7 +164,7 @@
 ---
 
     Code
-      all_value_diffs(comp)
+      value_diffs_all(comp)
     Output
         column val_a val_b            car
       1    mpg  14.3  16.3     Duster 360

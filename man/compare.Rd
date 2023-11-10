@@ -2,9 +2,6 @@
 % Please edit documentation in R/compare.R
 \name{compare}
 \alias{compare}
-\alias{value_diffs}
-\alias{value_diffs_stacked}
-\alias{all_value_diffs}
 \title{Compare two data frames}
 \usage{
 compare(
@@ -15,12 +12,6 @@ compare(
   coerce = TRUE,
   use_duckplyr = FALSE
 )
-
-value_diffs(comparison, column)
-
-value_diffs_stacked(comparison, column)
-
-all_value_diffs(comparison)
 }
 \arguments{
 \item{table_a}{A data frame}
@@ -38,11 +29,6 @@ considered as equal}
 \item{use_duckplyr}{Logical. Run \code{as_duckplyr_df()} on input tables before
 performing comparison. This is useful when the tables are large because it makes
 the comparison faster. If TRUE, the outputs will also be duckplyr_df objects.}
-
-\item{comparison}{The output of a \code{versus::compare()} call}
-
-\item{column}{tidy-select. value_diffs functions will show the differing values
-for the provided columns.}
 }
 \value{
 \describe{
@@ -76,17 +62,6 @@ in and the \code{by} columns for that row.
 }
 }
 }
-\item{\code{value_diffs()}}{A data frame with one row for each element
-of \code{col} found to be unequal between the input tables (
-\code{table_a} and \code{table_b} from the original \code{compare()} call)
-The output table has columns "val_a"/"val_b": the value of \code{col} in the
-input tables, and the \code{by} columns for the identified rows in the
-input tables.}
-
-\item{\code{all_value_diffs()}}{A data frame of the \code{value_diffs()}
-output for all columns having at least one value difference, combined row-wise
-into a single table. To facilitate this combination into a single table, the
-"val_a" and "val_b" columns are coerced to character.}
 }
 }
 \description{

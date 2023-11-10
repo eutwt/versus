@@ -39,13 +39,13 @@ test_that("Error on different classes with coerce = FALSE", {
 test_that("example comparison", {
   comp <- compare(test_df_a, test_df_b, by = car)
   expect_snapshot(comp)
-  expect_snapshot(all_value_diffs(comp))
+  expect_snapshot(value_diffs_all(comp))
 })
 
 test_that("example comparison with allow_bothNA = FALSE", {
   comp <- compare(test_df_a, test_df_b, by = car, allow_both_NA = FALSE)
   expect_snapshot(comp)
-  expect_snapshot(all_value_diffs(comp))
+  expect_snapshot(value_diffs_all(comp))
 })
 
 test_that("value_diffs with a single column works", {
