@@ -55,13 +55,7 @@
 <span>  allow_both_NA <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  coerce <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  use_duckplyr <span class="op">=</span> <span class="cn">FALSE</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">value_diffs</span><span class="op">(</span><span class="va">comparison</span>, <span class="va">column</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">value_diffs_stacked</span><span class="op">(</span><span class="va">comparison</span>, <span class="va">column</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">all_value_diffs</span><span class="op">(</span><span class="va">comparison</span><span class="op">)</span></span></code></pre></div>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -92,15 +86,6 @@ considered as equal</p></dd>
 <dd><p>Logical. Run <code>as_duckplyr_df()</code> on input tables before
 performing comparison. This is useful when the tables are large because it makes
 the comparison faster. If TRUE, the outputs will also be duckplyr_df objects.</p></dd>
-
-
-<dt>comparison</dt>
-<dd><p>The output of a <code>versus::compare()</code> call</p></dd>
-
-
-<dt>column</dt>
-<dd><p>tidy-select. value_diffs functions will show the differing values
-for the provided columns.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -136,21 +121,6 @@ in and the <code>by</code> columns for that row.</p></dd>
 
 
 </dl></dd>
-
-<dt><code>value_diffs()</code></dt>
-<dd><p>A data frame with one row for each element
-of <code>col</code> found to be unequal between the input tables (
-<code>table_a</code> and <code>table_b</code> from the original <code>compare()</code> call)
-The output table has columns "val_a"/"val_b": the value of <code>col</code> in the
-input tables, and the <code>by</code> columns for the identified rows in the
-input tables.</p></dd>
-
-
-<dt><code>all_value_diffs()</code></dt>
-<dd><p>A data frame of the <code>value_diffs()</code>
-output for all columns having at least one value difference, combined row-wise
-into a single table. To facilitate this combination into a single table, the
-"val_a" and "val_b" columns are coerced to character.</p></dd>
 
 
 </dl></div>
