@@ -76,6 +76,21 @@ the comparison shows differing values for any columns matching this argument</p>
 <code>column</code> argument</p>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">comp</span> <span class="op">&lt;-</span> <span class="fu"><a href="compare.html">compare</a></span><span class="op">(</span><span class="va">example_df_a</span>, <span class="va">example_df_b</span>, by <span class="op">=</span> <span class="va">car</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">example_df_a</span> <span class="op">|&gt;</span> <span class="fu">slice_diffs</span><span class="op">(</span><span class="va">comp</span>, <span class="va">disp</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              car  mpg cyl disp  hp drat    wt vs am</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     Datsun 710 22.8  NA  109  93 3.85 2.320  1  1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 Hornet 4 Drive 21.4   6  259 110 3.08 3.215  1  0</span>
+<span class="r-in"><span><span class="va">example_df_a</span> <span class="op">|&gt;</span> <span class="fu">slice_diffs</span><span class="op">(</span><span class="va">comp</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">disp</span>, <span class="va">mpg</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>              car  mpg cyl  disp  hp drat    wt vs am</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     Duster 360 14.3   8 360.0 245 3.21 3.570  0  0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2     Datsun 710 22.8  NA 109.0  93 3.85 2.320  1  1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3      Merc 240D 24.4   4 146.7  62 3.69 3.190  1  0</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 Hornet 4 Drive 21.4   6 259.0 110 3.08 3.215  1  0</span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
 

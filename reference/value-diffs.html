@@ -80,10 +80,27 @@ input tables, plus the <code>by</code> columns.</p></dd>
 <dd><p>A data frame containing
 the <code>value_diffs()</code> outputs for the specified columns combined row-wise
 using <code><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">dplyr::bind_rows()</a></code>. If <code><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">dplyr::bind_rows()</a></code> is not possible
-due to incompatible types, values are converted to character first.</p></dd>
+due to incompatible types, values are converted to character first.
+<code>value_diffs_all()</code> is the same as <code>value_diffs_stacked()</code> with
+<code>column = everything()</code></p></dd>
 
 </dl></div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">comp</span> <span class="op">&lt;-</span> <span class="fu"><a href="compare.html">compare</a></span><span class="op">(</span><span class="va">example_df_a</span>, <span class="va">example_df_b</span>, by <span class="op">=</span> <span class="va">car</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">value_diffs</span><span class="op">(</span><span class="va">comp</span>, <span class="va">disp</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   disp_a disp_b            car</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    109    108     Datsun 710</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    259    258 Hornet 4 Drive</span>
+<span class="r-in"><span><span class="fu">value_diffs_stacked</span><span class="op">(</span><span class="va">comp</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">disp</span>, <span class="va">mpg</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   column val_a val_b            car</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    mpg  14.3  16.3     Duster 360</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    mpg  24.4  26.4      Merc 240D</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   disp 109.0 108.0     Datsun 710</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   disp 259.0 258.0 Hornet 4 Drive</span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
 
