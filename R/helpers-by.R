@@ -26,15 +26,8 @@ try_select <- function(eval_select_call, arg_name, call) {
   if (!is_null(cnd)) {
     abort_on_by_select_error(cnd, arg_name, call)
   }
-  cols <- eval_select_call
-  if (is_empty(cols)) {
-    msg <- c(
-      glue("Issue with `{arg_name}`"),
-      i = "No columns matching supplied `by`"
-    )
-    abort(msg, call = call)
-  }
-  cols
+
+  eval_select_call
 }
 
 abort_on_by_select_error <- function(cnd, arg_name, call) {
