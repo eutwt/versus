@@ -102,7 +102,7 @@ comp
 #> 3     b Merc 450SE
 ```
 
-Use `value_diffs()` to see the specific values that are different.
+Use `value_diffs()` to see the values that are different.
 
 ``` r
 value_diffs(comp, disp)
