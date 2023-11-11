@@ -72,17 +72,15 @@ for the provided columns.</p></dd>
 <dd><p>A data frame with one row for each element
 of <code>col</code> found to be unequal between the input tables (
 <code>table_a</code> and <code>table_b</code> from the original <code><a href="compare.html">compare()</a></code> call)
-The output table has columns "val_a"/"val_b": the value of <code>col</code> in the
-input tables, and the <code>by</code> columns for the identified rows in the
-input tables.</p></dd>
+The output table has the column specified by <code>column</code> from each of the
+input tables, plus the <code>by</code> columns.</p></dd>
 
 
 <dt><code>value_diffs_stacked()</code>, <code>value_diffs_all()</code></dt>
-<dd><p>A data frame of
-the <code>value_diffs()</code> output for the specified columns (or all columns if
-<code>value_diffs_all()</code>)
-combined row-wise into a single table. To facilitate this combination into a
-single table, the "val_a" and "val_b" columns are coerced to character.</p></dd>
+<dd><p>A data frame containing
+the <code>value_diffs()</code> outputs for the specified columns combined row-wise
+using <code><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">dplyr::bind_rows()</a></code>. If <code><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">dplyr::bind_rows()</a></code> is not possible
+due to incompatible types, values are converted to character first.</p></dd>
 
 </dl></div>
 
