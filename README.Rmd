@@ -25,10 +25,18 @@ versus is designed to help explore the differences between two data frames.
 
 ## Installation
 
-You can install the development version of versus like so:
+```{r, eval = FALSE}
+install.packages("versus")
+```
 
-``` r 
-devtools::install_github("eutwt/versus")
+### Development version
+
+To get a bug fix or to use a feature from the development version, you can install 
+the development version of dplyr from GitHub.
+
+```{r, eval = FALSE}
+# install.packages("pak")
+pak::pak("eutwt/versus")
 ```
 
 ## Example

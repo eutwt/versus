@@ -15,10 +15,18 @@ frames.
 
 ## Installation
 
-You can install the development version of versus like so:
+``` r
+install.packages("versus")
+```
+
+### Development version
+
+To get a bug fix or to use a feature from the development version, you
+can install the development version of dplyr from GitHub.
 
 ``` r
-devtools::install_github("eutwt/versus")
+# install.packages("pak")
+pak::pak("eutwt/versus")
 ```
 
 ## Example
