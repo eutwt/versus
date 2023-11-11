@@ -67,3 +67,6 @@ in and the \code{by} columns for that row.
 \description{
 Compare two data frames
 }
+\examples{
+compare(example_df_a, example_df_b, by = car)
+}

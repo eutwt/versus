@@ -44,6 +44,8 @@
 #' }
 #' }
 #' }
+#' @examples
+#' compare(example_df_a, example_df_b, by = car)
 
 #' @rdname compare
 #' @export

@@ -18,7 +18,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Ryan Dickerson \email{fresh.tent5866@fastmail.com}
+\strong{Maintainer}: Ryan Dickerson \email{fresh.tent5866@fastmail.com} [copyright holder]
 
 }
 \keyword{internal}
