@@ -26,8 +26,9 @@ value_diffs <- function(comparison, column) {
   if (length(column_char) != 1) {
     cols_selected <- char_vec_display(column_char, 30)
     abort(c("Must select only one column.",
-            i = glue("Columns selected: {cols_selected}"),
-            i = "For multiple columns, use `value_diffs_stacked()`"))
+      i = glue("Columns selected: {cols_selected}"),
+      i = "For multiple columns, use `value_diffs_stacked()`"
+    ))
   }
   comparison$summ %>%
     filter(column == column_char) %>%
@@ -42,7 +43,7 @@ value_diffs_stacked <- function(comparison, column) {
 
   conform <- function(value_diffs, col_name) {
     value_diffs %>%
-      rename_with(\(x) replace(x, seq(2), paste0('val_', c('a', 'b')))) %>%
+      rename_with(\(x) replace(x, seq(2), paste0("val_", c("a", "b")))) %>%
       mutate(across(seq(2), as.character)) %>%
       mutate(column = col_name, .before = 1)
   }

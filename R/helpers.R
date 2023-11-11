@@ -1,11 +1,10 @@
-
 get_cols_from_comparison <- function(comparison, column) {
   # simulate a data frame with the same classes as table_a to eval_select from
   cols_class_list <- strsplit(comparison$summ$class_a, ", ")
   empty_lists <- replicate(length(cols_class_list), list())
   fake_table_a <- Map(`class<-`, empty_lists, cols_class_list) %>%
     setNames(comparison$summ$column) %>%
-    as.data.frame
+    as.data.frame()
   names(eval_select(column, fake_table_a))
 }
 
@@ -46,9 +45,11 @@ stack_value_diffs <- function(comparison, column, pre_stack_fun) {
   has_value_diffs <- comparison$summ$n_diffs > 0
   to_stack <- has_value_diffs & comparison$summ$column %in% column_char
 
-  Map(pre_stack_fun,
-      comparison$summ$value_diffs[to_stack],
-      comparison$summ$column[to_stack]) %>%
+  Map(
+    pre_stack_fun,
+    comparison$summ$value_diffs[to_stack],
+    comparison$summ$column[to_stack]
+  ) %>%
     bind_rows()
 }
 

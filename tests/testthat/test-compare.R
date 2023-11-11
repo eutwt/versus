@@ -1,4 +1,3 @@
-
 test_that("Error on input with duplicates", {
   expect_snapshot(
     compare(mtcars, mtcars, by = c(disp, cyl)),

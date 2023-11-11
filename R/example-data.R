@@ -1,4 +1,3 @@
-
 example_df_a <- read.csv(text = "
            car,  mpg, cyl,  disp,  hp, drat,    wt, vs, am
     Duster 360, 14.3,   8, 360.0, 245, 3.21, 3.570,  0,  0

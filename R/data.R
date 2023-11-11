@@ -1,4 +1,3 @@
-
 #' Modified version of \code{datasets::mtcars} - version a
 #'
 #' A version of mtcars with some values altered and some rows/columns removed. Not for

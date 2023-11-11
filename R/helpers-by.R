@@ -1,4 +1,3 @@
-
 get_by_vars <- function(by_quo, table_a, table_b, call = caller_env()) {
   cols_a <- try_select(
     eval_select(by_quo, table_a, allow_rename = FALSE),
@@ -10,8 +9,8 @@ get_by_vars <- function(by_quo, table_a, table_b, call = caller_env()) {
   )
   if (!identical(names(cols_a), names(cols_b))) {
     msg <- "Column names of `by` variables must be the same in both data frames"
-    a_names <- shorten(glue_collapse(names(cols_a), ", "), 50)
-    b_names <- shorten(glue_collapse(names(cols_b), ", "), 50)
+    a_names <- char_vec_display(names(cols_a), 50)
+    b_names <- char_vec_display(names(cols_b), 50)
     msg <- c(
       msg,
       i = glue("table_a names: {a_names}"),
