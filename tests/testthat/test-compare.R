@@ -29,6 +29,12 @@ test_that("Error on named `by`", {
   expect_snapshot(compare(a, b, by = c(y = x)), error = TRUE)
 })
 
+test_that("Error when `by` uses `join_by`", {
+  a <- data.frame(x = 1)
+  b <- data.frame(x = 1)
+  expect_snapshot(compare(a, b, by = join_by(x)), error = TRUE)
+})
+
 test_that("Error on different classes with coerce = FALSE", {
   expect_snapshot(compare(test_df_a, test_df_b, by = car, coerce = FALSE),
     error = TRUE

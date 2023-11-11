@@ -12,8 +12,8 @@
       compare(a, b, by = where(is.character))
     Condition
       Error in `compare()`:
-      ! Issue with `table_a`
-      i No columns matching supplied `by`
+      ! Must select at least one column with `by`
+      i No matching columns found in `table_a`
 
 # Error when `by` columns don't match
 
@@ -32,7 +32,7 @@
     Condition
       Error in `compare()`:
       ! Issue with `table_b`
-      Can't subset columns that don't exist.
+      * Can't subset columns that don't exist.
       x Column `x` doesn't exist.
 
 # Error on named `by`
@@ -42,6 +42,15 @@
     Condition
       Error in `compare()`:
       ! Can't rename variables in this context.
+
+# Error when `by` uses `join_by`
+
+    Code
+      compare(a, b, by = join_by(x))
+    Condition
+      Error in `compare()`:
+      ! `join_by()` is not supported
+      i provide `by` columns with tidy-select, as in `dplyr::across()`
 
 # Error on different classes with coerce = FALSE
 
