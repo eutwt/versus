@@ -8,15 +8,13 @@
 #' \item{\code{value_diffs()}}{A data frame with one row for each element
 #' of \code{col} found to be unequal between the input tables (
 #' \code{table_a} and \code{table_b} from the original \code{compare()} call)
-#' The output table has columns "val_a"/"val_b": the value of \code{col} in the
-#' input tables, and the \code{by} columns for the identified rows in the
-#' input tables.}
+#' The output table has the column specified by \code{column} from each of the
+#' input tables, plus the \code{by} columns. }
 #'
-#' \item{\code{value_diffs_stacked()}, \code{value_diffs_all()}}{A data frame of
-#' the \code{value_diffs()} output for the specified columns (or all columns if
-#' \code{value_diffs_all()})
-#' combined row-wise into a single table. To facilitate this combination into a
-#' single table, the "val_a" and "val_b" columns are coerced to character.}
+#' \item{\code{value_diffs_stacked()}, \code{value_diffs_all()}}{A data frame containing
+#' the \code{value_diffs()} outputs for the specified columns combined row-wise
+#' using \code{dplyr::bind_rows()}. If \code{dplyr::bind_rows()} is not possible
+#' due to incompatible types, values are converted to character first.}
 
 #' @rdname value-diffs
 #' @export
@@ -42,12 +40,27 @@ value_diffs_stacked <- function(comparison, column) {
   column <- enquo(column)
 
   conform <- function(value_diffs, col_name) {
-    value_diffs %>%
+    out <- value_diffs %>%
       rename_with(\(x) replace(x, seq(2), paste0("val_", c("a", "b")))) %>%
-      mutate(across(seq(2), as.character)) %>%
       mutate(column = col_name, .before = 1)
   }
-  stack_value_diffs(comparison, column, pre_stack_fun = conform)
+  conform_with_coerce <- function(...) {
+    conform(...) %>% mutate(across(c(val_a, val_b), as.character))
+  }
+
+  call <- caller_env()
+  tryCatch(
+    stack_value_diffs(comparison, column, pre_stack_fun = conform),
+    error = function(e) {
+      # if we can't bind_rows() due to incompatible ptypes, convert to character first
+      if (inherits(e, "vctrs_error_ptype2")) {
+        inform(c(i = "values converted to character"), call = call)
+        stack_value_diffs(comparison, column, pre_stack_fun = conform_with_coerce)
+      } else {
+        abort(e)
+      }
+    }
+  )
 }
 
 #' @rdname value-diffs

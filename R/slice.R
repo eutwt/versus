@@ -7,9 +7,9 @@
 #' @param comparison The output of a \code{versus::compare()} call
 #'
 #' @return
-#' \item{\code{slice_diffs()}}{A data frame. The input \code{table} is filtered
-#' to only the rows for which \code{comparison} shows differing values for one
-#' of the columns in the supplied \code{column} argument}
+#' A data frame. The input \code{table} is filtered to only the rows for which
+#' \code{comparison} shows differing values for one of the columns in the supplied
+#' \code{column} argument
 
 #' @rdname slice_diffs
 #' @export

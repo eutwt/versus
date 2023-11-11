@@ -61,7 +61,6 @@ value_diffs(comp, mpg)
 
 Use `value_diffs_all()` to combine all `value_diffs()` output into one table 
 
-* `val_a` and `val_b` are coerced to character
 ```{r}
 value_diffs_all(comp)
 ```

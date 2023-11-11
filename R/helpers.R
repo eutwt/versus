@@ -80,5 +80,7 @@ utils::globalVariables(c(
   "common",
   "unmatched",
   "versus_in_a",
-  "versus_in_b"
+  "versus_in_b",
+  "val_a",
+  "val_b"
 ))

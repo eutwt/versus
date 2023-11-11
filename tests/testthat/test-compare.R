@@ -70,3 +70,10 @@ test_that("value_diffs_stacked works", {
   # using where()
   expect_snapshot(value_diffs_stacked(comp, where(is.numeric)))
 })
+
+test_that("value_diffs_all coerces to char on incompatible ptypes", {
+  test_df_a_char_mpg <- test_df_a %>%
+    mutate(mpg = as.character(mpg))
+  comp <- compare(test_df_a_char_mpg, test_df_b, by = car)
+  expect_snapshot(as_tibble(value_diffs_all(comp)))
+})

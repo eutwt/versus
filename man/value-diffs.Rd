@@ -22,15 +22,13 @@ for the provided columns.}
 \item{\code{value_diffs()}}{A data frame with one row for each element
 of \code{col} found to be unequal between the input tables (
 \code{table_a} and \code{table_b} from the original \code{compare()} call)
-The output table has columns "val_a"/"val_b": the value of \code{col} in the
-input tables, and the \code{by} columns for the identified rows in the
-input tables.}
+The output table has the column specified by \code{column} from each of the
+input tables, plus the \code{by} columns. }
 
-\item{\code{value_diffs_stacked()}, \code{value_diffs_all()}}{A data frame of
-the \code{value_diffs()} output for the specified columns (or all columns if
-\code{value_diffs_all()})
-combined row-wise into a single table. To facilitate this combination into a
-single table, the "val_a" and "val_b" columns are coerced to character.}
+\item{\code{value_diffs_stacked()}, \code{value_diffs_all()}}{A data frame containing
+the \code{value_diffs()} outputs for the specified columns combined row-wise
+using \code{dplyr::bind_rows()}. If \code{dplyr::bind_rows()} is not possible
+due to incompatible types, values are converted to character first.}
 }
 \description{
 Show the differing values from a comparison
