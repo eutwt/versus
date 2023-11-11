@@ -3,7 +3,7 @@ Title: Compare Data Frames
 Version: 0.1.0
 Authors@R: 
     person("Ryan", "Dickerson", , "fresh.tent5866@fastmail.com", role = c("aut", "cre", "cph"))
-Description: An interactive toolset for interactively exploring the differences between two data frames.
+Description: A toolset for interactively exploring the differences between two data frames.
 License: MIT + file LICENSE
 Suggests: 
     testthat (>= 3.0.0),
