@@ -15,7 +15,7 @@ value_diffs_all(comparison)
 \arguments{
 \item{comparison}{The output of a \code{versus::compare()} call}
 
-\item{column}{tidy-select.The output will show the differing values
+\item{column}{<\code{\link[=versus_tidy_select]{tidy-select}}>. The output will show the differing values
 for the provided columns.}
 }
 \value{

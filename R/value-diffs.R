@@ -1,7 +1,7 @@
 #' Show the differing values from a comparison
 
 #' @param comparison The output of a \code{versus::compare()} call
-#' @param column tidy-select.The output will show the differing values
+#' @param column <[`tidy-select`][versus_tidy_select]>. The output will show the differing values
 #' for the provided columns.
 #'
 #' @return

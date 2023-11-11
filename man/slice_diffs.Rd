@@ -12,7 +12,7 @@ create \code{comparison}}
 
 \item{comparison}{The output of a \code{versus::compare()} call}
 
-\item{column}{tidy-select. A row will be in the output of slice functions if
+\item{column}{<\code{\link[=versus_tidy_select]{tidy-select}}>. A row will be in the output of slice functions if
 the comparison shows differing values for any columns matching this argument}
 }
 \value{

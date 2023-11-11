@@ -18,7 +18,7 @@ compare(
 
 \item{table_b}{A data frame}
 
-\item{by}{tidy-select. Selection of columns to use when matching rows between
+\item{by}{<\code{\link[=versus_tidy_select]{tidy-select}}>. Selection of columns to use when matching rows between
 \code{.data_a} and \code{.data_b}. Both data frames must be unique on \code{by}.}
 
 \item{allow_both_NA}{Logical. If \code{TRUE} a missing value in both data frames is

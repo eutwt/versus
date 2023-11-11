@@ -2,7 +2,7 @@
 #'
 #' @param table_a A data frame
 #' @param table_b A data frame
-#' @param by tidy-select. Selection of columns to use when matching rows between
+#' @param by <[`tidy-select`][versus_tidy_select]>. Selection of columns to use when matching rows between
 #' \code{.data_a} and \code{.data_b}. Both data frames must be unique on \code{by}.
 #' @param allow_both_NA Logical. If \code{TRUE} a missing value in both data frames is
 #' considered as equal
