@@ -10,6 +10,10 @@
 #' A data frame. The input \code{table} is filtered to only the rows for which
 #' \code{comparison} shows differing values for one of the columns in the supplied
 #' \code{column} argument
+#' @examples
+#' comp <- compare(example_df_a, example_df_b, by = car)
+#' example_df_a |> slice_diffs(comp, disp)
+#' example_df_a |> slice_diffs(comp, c(disp, mpg))
 
 #' @rdname slice_diffs
 #' @export

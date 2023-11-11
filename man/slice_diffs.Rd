@@ -23,3 +23,8 @@ A data frame. The input \code{table} is filtered to only the rows for which
 \description{
 Show rows which have differing values in a comparison
 }
+\examples{
+comp <- compare(example_df_a, example_df_b, by = car)
+example_df_a |> slice_diffs(comp, disp)
+example_df_a |> slice_diffs(comp, c(disp, mpg))
+}
