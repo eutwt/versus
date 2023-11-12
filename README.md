@@ -6,6 +6,8 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/eutwt/versus/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/eutwt/versus/actions/workflows/R-CMD-check.yaml)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/versus)](https://CRAN.R-project.org/package=versus)
 <!-- badges: end -->
 
 ## Overview
