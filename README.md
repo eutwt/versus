@@ -12,7 +12,7 @@ status](https://www.r-pkg.org/badges/version/versus)](https://CRAN.R-project.org
 
 ## Overview
 
-versus is designed to help explore the differences between two data
+A toolset for interactively exploring the differences between two data
 frames.
 
 ## Installation
