@@ -8,6 +8,8 @@
 #' @import tidyselect
 #' @import glue
 #' @importFrom vctrs vec_duplicate_any
+#' @importFrom vctrs vec_interleave vec_ptype_common
+#' @importFrom purrr map_lgl map2_lgl
 #' @importFrom tibble tibble rownames_to_column
 "_PACKAGE"
 

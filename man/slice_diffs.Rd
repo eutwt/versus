@@ -2,9 +2,12 @@
 % Please edit documentation in R/slice.R
 \name{slice_diffs}
 \alias{slice_diffs}
+\alias{slice_diffs_both}
 \title{Show rows which have differing values in a comparison}
 \usage{
 slice_diffs(table, comparison, column)
+
+slice_diffs_both(table_a, table_b, comparison, column)
 }
 \arguments{
 \item{table}{A data frame. One of \code{table_a} or \code{table_b} used to
@@ -14,6 +17,10 @@ create \code{comparison}}
 
 \item{column}{<\code{\link[=versus_tidy_select]{tidy-select}}>. A row will be in the output of slice functions if
 the comparison shows differing values for any columns matching this argument}
+
+\item{table_a}{The data frame\code{table_a} used to create \code{comparison}}
+
+\item{table_b}{The data frame\code{table_b} used to create \code{comparison}}
 }
 \value{
 A data frame. The input \code{table} is filtered to only the rows for which
