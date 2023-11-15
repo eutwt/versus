@@ -56,8 +56,8 @@ slice_diffs_both <- function(table_a, table_b, comparison, column) {
 
   # if the column-types are incompatible, convert them to character first
   is_incompatible <- map2_lgl(diffs_a, diffs_b, \(col_a, col_b) {
-    try_ptype_common <- try(vec_ptype_common(col_a, col_b), silent = TRUE)
-    inherits(attr(try_ptype_common, "condition"), "vctrs_error_ptype2")
+    cnd <- catch_cnd(vec_ptype_common(col_a, col_b))
+    inherits(cnd, "vctrs_error_ptype2")
   })
   if (any(is_incompatible)) {
     incompatible_cols <- names(is_incompatible)[is_incompatible]
