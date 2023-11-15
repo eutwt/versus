@@ -18,7 +18,8 @@ Imports:
     glue,
     tidyselect (>= 1.2.0),
     vctrs (>= 0.6.4),
-    tibble
+    tibble,
+    purrr
 URL: https://eutwt.github.io/versus/, https://github.com/eutwt/versus
 BugReports: https://github.com/eutwt/versus/issues
 Depends: 
