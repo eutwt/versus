@@ -56,14 +56,10 @@ value_diffs_stacked <- function(comparison, column) {
 
   tryCatch(
     stack_value_diffs(comparison, column, pre_stack_fun = conform),
-    error = function(e) {
+    vctrs_error_ptype2 = \(e) {
       # if we can't bind_rows() due to incompatible ptypes, convert to character first
-      if (inherits(e, "vctrs_error_ptype2")) {
-        inform(c(i = "values converted to character"))
-        stack_value_diffs(comparison, column, pre_stack_fun = conform_with_coerce)
-      } else {
-        abort(e)
-      }
+      inform(c(i = "values converted to character"))
+      stack_value_diffs(comparison, column, pre_stack_fun = conform_with_coerce)
     }
   )
 }
