@@ -13,7 +13,7 @@ value_diffs_stacked(comparison, column)
 value_diffs_all(comparison)
 }
 \arguments{
-\item{comparison}{The output of a \code{versus::compare()} call}
+\item{comparison}{The output of \code{compare()}}
 
 \item{column}{<\code{\link[=versus_tidy_select]{tidy-select}}>. The output will show the differing values
 for the provided columns.}
@@ -21,7 +21,7 @@ for the provided columns.}
 \value{
 \item{\code{value_diffs()}}{A data frame with one row for each element
 of \code{col} found to be unequal between the input tables (
-\code{table_a} and \code{table_b} from the original \code{compare()} call)
+\code{table_a} and \code{table_b} from the original \code{compare()} output)
 The output table has the column specified by \code{column} from each of the
 input tables, plus the \code{by} columns. }
 

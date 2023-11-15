@@ -13,7 +13,7 @@ slice_diffs_both(table_a, table_b, comparison, column)
 \item{table}{A data frame. One of \code{table_a} or \code{table_b} used to
 create \code{comparison}}
 
-\item{comparison}{The output of a \code{versus::compare()} call}
+\item{comparison}{The output of \code{compare()}}
 
 \item{column}{<\code{\link[=versus_tidy_select]{tidy-select}}>. A row will be in the output of slice functions if
 the comparison shows differing values for any columns matching this argument}

@@ -1,13 +1,13 @@
 #' Show the differing values from a comparison
 
-#' @param comparison The output of a \code{versus::compare()} call
+#' @param comparison The output of \code{compare()}
 #' @param column <[`tidy-select`][versus_tidy_select]>. The output will show the differing values
 #' for the provided columns.
 #'
 #' @return
 #' \item{\code{value_diffs()}}{A data frame with one row for each element
 #' of \code{col} found to be unequal between the input tables (
-#' \code{table_a} and \code{table_b} from the original \code{compare()} call)
+#' \code{table_a} and \code{table_b} from the original \code{compare()} output)
 #' The output table has the column specified by \code{column} from each of the
 #' input tables, plus the \code{by} columns. }
 #'

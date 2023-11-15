@@ -6,7 +6,7 @@
 #' @param table_b The data frame\code{table_b} used to create \code{comparison}
 #' @param column <[`tidy-select`][versus_tidy_select]>. A row will be in the output of slice functions if
 #' the comparison shows differing values for any columns matching this argument
-#' @param comparison The output of a \code{versus::compare()} call
+#' @param comparison The output of \code{compare()}
 #'
 #' @return
 #' \item{\code{slice_diffs()}}{The input \code{table} is filtered to only the rows for which
