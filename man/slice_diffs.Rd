@@ -23,9 +23,12 @@ the comparison shows differing values for any columns matching this argument}
 \item{table_b}{The data frame\code{table_b} used to create \code{comparison}}
 }
 \value{
-A data frame. The input \code{table} is filtered to only the rows for which
+\item{\code{slice_diffs()}}{The input \code{table} is filtered to only the rows for which
 \code{comparison} shows differing values for one of the columns in the supplied
-\code{column} argument
+\code{column} argument}
+\item{\code{slice_diffs_both()}}{The output of \code{slice_diffs()} for both input
+tables with the rows interleaved and a column \code{table} indicating which table the row
+is from. The output contains only those columns present in both tables.}
 }
 \description{
 Show rows which have differing values in a comparison
@@ -34,4 +37,5 @@ Show rows which have differing values in a comparison
 comp <- compare(example_df_a, example_df_b, by = car)
 example_df_a |> slice_diffs(comp, disp)
 example_df_a |> slice_diffs(comp, c(disp, mpg))
+slice_diffs_both(example_df_a, example_df_b, comp, column = disp)
 }
