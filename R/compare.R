@@ -53,8 +53,8 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE,
                     use_duckplyr = FALSE) {
   check_required(by)
   by <- enquo(by)
-  table_a_chr <- as.character(substitute(table_a))
-  table_b_chr <- as.character(substitute(table_b))
+  table_a_chr <- as_label(enexpr(table_a))
+  table_b_chr <- as_label(enexpr(table_b))
   if (use_duckplyr) {
     if (!requireNamespace("duckplyr", quietly = TRUE)) {
       abort("Please install duckplyr to use this feature")
