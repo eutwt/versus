@@ -82,12 +82,17 @@ the comparison shows differing values for any columns matching this argument</p>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    
-
-<p>A data frame. The input <code>table</code> is filtered to only the rows for which
+    <dl><dt><code>slice_diffs()</code></dt>
+<dd><p>The input <code>table</code> is filtered to only the rows for which
 <code>comparison</code> shows differing values for one of the columns in the supplied
-<code>column</code> argument</p>
-    </div>
+<code>column</code> argument</p></dd>
+
+<dt><code>slice_diffs_both</code></dt>
+<dd><p>The output of <code>slice_diffs()</code> for both input
+tables with the rows interleaved and a column <code>table</code> indicating which table the row
+is from</p></dd>
+
+</dl></div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
@@ -102,6 +107,12 @@ the comparison shows differing values for any columns matching this argument</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2     Datsun 710 22.8  NA 109.0  93 3.85 2.320  1  1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3      Merc 240D 24.4   4 146.7  62 3.69 3.190  1  0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4 Hornet 4 Drive 21.4   6 259.0 110 3.08 3.215  1  0</span>
+<span class="r-in"><span><span class="fu">slice_diffs_both</span><span class="op">(</span><span class="va">example_df_a</span>, <span class="va">example_df_b</span>, <span class="va">comp</span>, column <span class="op">=</span> <span class="va">disp</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   table            car  mpg cyl disp  hp drat    wt vs</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     a     Datsun 710 22.8  NA  109  93 3.85 2.320  1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2     b     Datsun 710 22.8  NA  108  93 3.85 2.320  1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3     a Hornet 4 Drive 21.4   6  259 110 3.08 3.215  1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4     b Hornet 4 Drive 21.4   6  258 110 3.08 3.215  1</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
