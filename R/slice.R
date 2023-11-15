@@ -48,7 +48,7 @@ slice_diffs_both <- function(table_a, table_b, comparison, column) {
     df %>%
       select(all_of(output_cols)) %>%
       slice_diffs(comparison, {{ column }}) %>%
-      arrange(pick(all_of(comparison$by$column))) %>%
+      arrange(comparison$by$column) %>%
       mutate(table = name, .before = 1)
   }
   diffs_a <- slice_diffs_for_interleave(table_a, "a")
