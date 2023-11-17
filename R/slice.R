@@ -24,7 +24,7 @@
 
 #' @rdname slice_diffs
 #' @export
-slice_diffs <- function(table, comparison, column) {
+slice_diffs <- function(table, comparison, column = everything()) {
   column <- enquo(column)
   select_by_vars <- function(value_diffs, col_name) {
     value_diffs %>%
@@ -47,7 +47,7 @@ slice_diffs <- function(table, comparison, column) {
 
 #' @rdname slice_diffs
 #' @export
-slice_diffs_both <- function(table_a, table_b, comparison, column) {
+slice_diffs_both <- function(table_a, table_b, comparison, column = everything()) {
   output_cols <- c(comparison$by$column, comparison$summ$column)
   slice_diffs_for_interleave <- function(df, name) {
     df %>%
