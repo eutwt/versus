@@ -5,3 +5,4 @@
 .DS_Store
 .pre-commit-config.yaml
 docs
+todo.txt
