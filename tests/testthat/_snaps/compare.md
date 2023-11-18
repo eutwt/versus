@@ -1,10 +1,18 @@
 # Error on input with duplicates
 
     Code
-      compare(mtcars, mtcars, by = c(disp, cyl))
+      compare(with_dupe, without_dupe, by = c(x, y))
+    Condition
+      Error:
+      ! `table_a` must be unique on `by` vars (`x`, `y`)
+
+---
+
+    Code
+      compare(without_dupe, with_dupe, by = c(x, y))
     Condition
       Error in `compare()`:
-      ! `table_a` must be unique on `by` vars (`disp`, `cyl`)
+      ! `table_b` must be unique on `by` vars (`x`, `y`)
 
 # Error on empty `by`
 

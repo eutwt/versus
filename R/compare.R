@@ -66,7 +66,6 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE,
   }
 
   by_vars <- get_by_vars(by_quo = by, table_a = table_a, table_b = table_b)
-  assert_unique(table_a, by_vars)
   assert_unique(table_b, by_vars)
 
   table_summ <-
@@ -96,7 +95,11 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE,
     }
   }
 
-  matches <- locate_matches(table_a, table_b, by = by_vars)
+  matches <- tryCatch(
+    locate_matches(table_a, table_b, by = by_vars),
+    vctrs_error_matches_relationship_one_to_one =
+      abort_on_table_a_dupes(by_vars)
+  )
 
   unmatched_rows <- get_unmatched_rows(
     table_a,
@@ -217,4 +220,14 @@ not_equal <- function(col_a, col_b, allow_both_NA) {
     out <- fcoalesce(neq, is.na(col_a), is.na(col_b))
   }
   out
+}
+
+abort_on_table_a_dupes <- function(by, call = caller_env()) {
+  cols_char <- char_vec_display(glue("`{by}`"), 30)
+  function(e) {
+    abort(
+      glue("`table_a` must be unique on `by` vars ({cols_char})"),
+      call = call
+    )
+  }
 }
