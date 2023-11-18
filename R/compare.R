@@ -202,14 +202,13 @@ abort_duplicates <- function(by, table_a, table_b) {
     cols_char <- char_vec_display(glue("`{by}`"), 20)
     top_msg <- glue("`{tbl}` must be unique on `by` vars ({cols_char})")
 
-    row <- e$i
     if (tbl == "table_a") {
-      tbl_row <- fsubset(table_a, row, by)
+      tbl_row <- fsubset(table_b, e$i, by)
     } else {
-      tbl_row <- fsubset(table_b, row, by)
+      tbl_row <- fsubset(table_a, e$i, by)
     }
     tbl_char <- capture.output(as_tibble(tbl_row))[-1]
-    info <- c(i = glue("Row {row} shown below is duplicated."), tbl_char)
+    info <- c(i = glue("The row shown below is duplicated."), tbl_char)
 
     abort(message = top_msg, body = info, call = expr(compare()))
   }

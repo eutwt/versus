@@ -1,6 +1,6 @@
 test_that("Error on input with duplicates", {
-  without_dupe <- tibble(x = 1:2, y = 1:2, z = 1:2)
-  with_dupe <- slice(without_dupe, c(1, 1, 2))
+  without_dupe <- tibble(x = -5:2, y = -6:1, z = x)
+  with_dupe <- slice(without_dupe, c(4, 4, 1))
   # for table_a
   expect_snapshot(
     compare(with_dupe, without_dupe, by = c(x, y)),
