@@ -73,17 +73,7 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE,
       unmatched = unmatched
     ))
 
-  if (!coerce) {
-    diff_class <- cols$compare %>%
-      filter(class_a != class_b)
-    if (nrow(diff_class) > 0) {
-      msg <- c(
-        "coerce = FALSE but some columns classes do not match",
-        i = char_vec_display(diff_class$column, 50)
-      )
-      abort(msg)
-    }
-  }
+  abort_on_differing_class(cols, coerce)
 
   matches <- tryCatch(
     locate_matches(table_a, table_b, by = by_vars),
@@ -219,5 +209,18 @@ abort_on_table_a_dupes <- function(by, call = caller_env()) {
       glue("`table_a` must be unique on `by` vars ({cols_char})"),
       call = call
     )
+  }
+}
+
+abort_on_differing_class <- function(cols, coerce, call = caller_env()) {
+  if (!coerce) {
+    diff_class <- cols$compare %>%
+      filter(class_a != class_b)
+    if (nrow(diff_class) > 0) {
+      abort(c(
+        "coerce = FALSE but some columns classes do not match",
+        i = char_vec_display(diff_class$column, 50)
+      ), call = call)
+    }
   }
 }
