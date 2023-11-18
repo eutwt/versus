@@ -2,15 +2,16 @@
 #' @keywords internal
 #'
 #' @importFrom stats setNames
-#' @importFrom utils adist
 #' @import rlang
 #' @import dplyr
 #' @import tidyselect
 #' @import glue
-#' @importFrom vctrs vec_duplicate_any
+#' @importFrom vctrs vec_locate_matches
 #' @importFrom vctrs vec_interleave vec_ptype_common
-#' @importFrom purrr map_lgl map2_lgl
+#' @importFrom purrr map_int map_lgl map2_lgl
 #' @importFrom tibble tibble rownames_to_column
+#' @importFrom collapse ss qF rowbind add_vars frename
+#' @importFrom data.table fcase fcoalesce
 "_PACKAGE"
 
 .onLoad <- function(libname, pkgname) {
