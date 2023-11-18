@@ -55,16 +55,6 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE,
   by <- enquo(by)
   table_a_chr <- as_label(enexpr(table_a))
   table_b_chr <- as_label(enexpr(table_b))
-  if (use_duckplyr) {
-    if (!requireNamespace("duckplyr", quietly = TRUE)) {
-      abort("Please install duckplyr to use this feature")
-    }
-    rownames(table_a) <- NULL
-    rownames(table_b) <- NULL
-    table_a <- duckplyr::as_duckplyr_df(table_a)
-    table_b <- duckplyr::as_duckplyr_df(table_b)
-  }
-
   by_vars <- get_by_vars(by_quo = by, table_a = table_a, table_b = table_b)
   assert_unique(table_b, by_vars)
 
