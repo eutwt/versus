@@ -150,15 +150,15 @@
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $summ</span></span>
 <span><span class="co">#&gt; # A tibble: 7 × 5</span></span>
-<span><span class="co">#&gt;   column n_diffs class_a class_b value_diffs </span></span>
-<span><span class="co">#&gt;   &lt;chr&gt;    &lt;int&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;list&gt;      </span></span>
-<span><span class="co">#&gt; 1 mpg          2 numeric numeric &lt;df [2 × 3]&gt;</span></span>
-<span><span class="co">#&gt; 2 cyl          0 integer integer &lt;df [0 × 3]&gt;</span></span>
-<span><span class="co">#&gt; 3 disp         2 numeric numeric &lt;df [2 × 3]&gt;</span></span>
-<span><span class="co">#&gt; 4 hp           0 integer integer &lt;df [0 × 3]&gt;</span></span>
-<span><span class="co">#&gt; 5 drat         0 numeric numeric &lt;df [0 × 3]&gt;</span></span>
-<span><span class="co">#&gt; 6 wt           0 numeric numeric &lt;df [0 × 3]&gt;</span></span>
-<span><span class="co">#&gt; 7 vs           0 integer integer &lt;df [0 × 3]&gt;</span></span>
+<span><span class="co">#&gt;   column n_diffs class_a class_b value_diffs     </span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;    &lt;int&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;list&gt;          </span></span>
+<span><span class="co">#&gt; 1 mpg          2 numeric numeric &lt;tibble [2 × 3]&gt;</span></span>
+<span><span class="co">#&gt; 2 cyl          0 integer integer &lt;tibble [0 × 3]&gt;</span></span>
+<span><span class="co">#&gt; 3 disp         2 numeric numeric &lt;tibble [2 × 3]&gt;</span></span>
+<span><span class="co">#&gt; 4 hp           0 integer integer &lt;tibble [0 × 3]&gt;</span></span>
+<span><span class="co">#&gt; 5 drat         0 numeric numeric &lt;tibble [0 × 3]&gt;</span></span>
+<span><span class="co">#&gt; 6 wt           0 numeric numeric &lt;tibble [0 × 3]&gt;</span></span>
+<span><span class="co">#&gt; 7 vs           0 integer integer &lt;tibble [0 × 3]&gt;</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $unmatched_cols</span></span>
 <span><span class="co">#&gt; # A tibble: 2 × 2</span></span>
@@ -168,28 +168,36 @@
 <span><span class="co">#&gt; 2 b     carb  </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $unmatched_rows</span></span>
-<span><span class="co">#&gt;   table        car</span></span>
-<span><span class="co">#&gt; 1     a  Mazda RX4</span></span>
-<span><span class="co">#&gt; 2     b  Merc 280C</span></span>
-<span><span class="co">#&gt; 3     b Merc 450SE</span></span></code></pre></div>
+<span><span class="co">#&gt; # A tibble: 3 × 2</span></span>
+<span><span class="co">#&gt;   table car       </span></span>
+<span><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;     </span></span>
+<span><span class="co">#&gt; 1 a     Mazda RX4 </span></span>
+<span><span class="co">#&gt; 2 b     Merc 280C </span></span>
+<span><span class="co">#&gt; 3 b     Merc 450SE</span></span></code></pre></div>
 <p>Use <code><a href="reference/value-diffs.html">value_diffs()</a></code> to see the values that are different.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/value-diffs.html">value_diffs</a></span><span class="op">(</span><span class="va">comp</span>, <span class="va">disp</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   disp_a disp_b            car</span></span>
-<span><span class="co">#&gt; 1    109    108     Datsun 710</span></span>
+<span><span class="co">#&gt; # A tibble: 2 × 3</span></span>
+<span><span class="co">#&gt;   disp_a disp_b car           </span></span>
+<span><span class="co">#&gt;    &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;         </span></span>
+<span><span class="co">#&gt; 1    109    108 Datsun 710    </span></span>
 <span><span class="co">#&gt; 2    259    258 Hornet 4 Drive</span></span>
 <span><span class="fu"><a href="reference/value-diffs.html">value_diffs</a></span><span class="op">(</span><span class="va">comp</span>, <span class="va">mpg</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   mpg_a mpg_b        car</span></span>
+<span><span class="co">#&gt; # A tibble: 2 × 3</span></span>
+<span><span class="co">#&gt;   mpg_a mpg_b car       </span></span>
+<span><span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;     </span></span>
 <span><span class="co">#&gt; 1  14.3  16.3 Duster 360</span></span>
-<span><span class="co">#&gt; 2  24.4  26.4  Merc 240D</span></span></code></pre></div>
+<span><span class="co">#&gt; 2  24.4  26.4 Merc 240D</span></span></code></pre></div>
 <p>Use <code><a href="reference/value-diffs.html">value_diffs_all()</a></code> to combine all <code><a href="reference/value-diffs.html">value_diffs()</a></code> output into one table</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/value-diffs.html">value_diffs_all</a></span><span class="op">(</span><span class="va">comp</span><span class="op">)</span></span>
-<span><span class="co">#&gt;   column val_a val_b            car</span></span>
-<span><span class="co">#&gt; 1    mpg  14.3  16.3     Duster 360</span></span>
-<span><span class="co">#&gt; 2    mpg  24.4  26.4      Merc 240D</span></span>
-<span><span class="co">#&gt; 3   disp 109.0 108.0     Datsun 710</span></span>
-<span><span class="co">#&gt; 4   disp 259.0 258.0 Hornet 4 Drive</span></span></code></pre></div>
+<span><span class="co">#&gt; # A tibble: 4 × 4</span></span>
+<span><span class="co">#&gt;   column val_a val_b car           </span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;         </span></span>
+<span><span class="co">#&gt; 1 mpg     14.3  16.3 Duster 360    </span></span>
+<span><span class="co">#&gt; 2 mpg     24.4  26.4 Merc 240D     </span></span>
+<span><span class="co">#&gt; 3 disp   109   108   Datsun 710    </span></span>
+<span><span class="co">#&gt; 4 disp   259   258   Hornet 4 Drive</span></span></code></pre></div>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
