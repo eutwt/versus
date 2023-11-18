@@ -66,8 +66,6 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE,
   }
 
   by_vars <- get_by_vars(by_quo = by, table_a = table_a, table_b = table_b)
-  assert_unique(table_a, by_vars)
-  assert_unique(table_b, by_vars)
 
   table_summ <-
     tibble(
@@ -96,18 +94,13 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE,
     }
   }
 
-  data <- join_split(table_a, table_b, by = by_vars)
+  value_diffs <- get_value_diffs(table_a, table_b,
+    by = by_vars,
+    allow_both_NA = allow_both_NA,
+    common_cols = cols$compare$column
+  )
 
-  if (!nrow(data$common)) {
-    abort("No rows found in common. Check data and `by` argument.")
-  }
-
-  cols$compare$value_diffs <- cols$compare$column %>%
-    lapply(col_value_diffs,
-      data = data$common,
-      by = by_vars,
-      allow_both_NA = allow_both_NA
-    )
+  cols$compare$value_diffs <- value_diffs$value_diffs
 
   cols$compare <- cols$compare %>%
     mutate(n_diffs = sapply(value_diffs, nrow), .after = column)
@@ -117,11 +110,67 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE,
     by = cols$by,
     summ = cols$compare,
     unmatched_cols = cols$unmatched,
-    unmatched_rows = data$unmatched
+    unmatched_rows = value_diffs$unmatched
   )
 }
 
 # Helpers ---------
+
+get_value_diffs <- function(table_a, table_b, by, allow_both_NA, common_cols) {
+  matches <- vec_locate_matches(
+    table_a[by],
+    table_b[by],
+    relationship = "one-to-one",
+    multiple = "first",
+    no_match = -1L,
+    remaining = -2L
+  ) %>%
+    split(case_when(
+      .$haystack == -1 ~ "a",
+      .$needles == -2 ~ "b",
+      .default = "common"
+    ))
+
+  not_equal <- function(col_a, col_b, allow_both_NA) {
+    neq <- col_a != col_b
+    if (allow_both_NA) {
+      return(coalesce(neq, is.na(col_a) != is.na(col_b)))
+    } else {
+      return(neq)
+    }
+  }
+
+  value_diffs <- lapply(common_cols, function(col) {
+    col_a <- table_a[[col]][matches$common$needles]
+    col_b <- table_b[[col]][matches$common$haystack]
+    is_not_equal <- not_equal(col_a, col_b, allow_both_NA)
+    diffs <- tibble(
+      !!paste0(col, "_a") := col_a[is_not_equal],
+      !!paste0(col, "_b") := col_b[is_not_equal],
+    )
+    by <- table_a %>%
+      select(all_of(by)) %>%
+      slice(matches$common$needles[is_not_equal])
+    bind_cols(diffs, by)
+  })
+
+  unmatched_a <- table_a %>%
+    select(all_of(by)) %>%
+    slice(matches$a$needles) %>%
+    mutate(table = "a", .before = 1)
+  unmatched_b <- table_b %>%
+    select(all_of(by)) %>%
+    slice(matches$b$haystack) %>%
+    mutate(table = "a", .before = 1)
+
+  list(
+    value_diffs = value_diffs,
+    unmatched = bind_rows(unmatched_a, unmatched_b)
+  )
+}
+
+
+
 
 join_split <- function(table_a, table_b, by) {
   # full_join output split into common and unmatched
