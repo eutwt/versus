@@ -96,7 +96,7 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE,
     )
 
   cols$compare <- cols$compare %>%
-    mutate(n_diffs = sapply(value_diffs, nrow), .after = column)
+    mutate(n_diffs = map_int(value_diffs, nrow), .after = column)
 
   list(
     tables = table_summ,
