@@ -88,15 +88,15 @@ comp
 #> 
 #> $summ
 #> # A tibble: 7 × 5
-#>   column n_diffs class_a class_b value_diffs 
-#>   <chr>    <int> <chr>   <chr>   <list>      
-#> 1 mpg          2 numeric numeric <df [2 × 3]>
-#> 2 cyl          0 integer integer <df [0 × 3]>
-#> 3 disp         2 numeric numeric <df [2 × 3]>
-#> 4 hp           0 integer integer <df [0 × 3]>
-#> 5 drat         0 numeric numeric <df [0 × 3]>
-#> 6 wt           0 numeric numeric <df [0 × 3]>
-#> 7 vs           0 integer integer <df [0 × 3]>
+#>   column n_diffs class_a class_b value_diffs     
+#>   <chr>    <int> <chr>   <chr>   <list>          
+#> 1 mpg          2 numeric numeric <tibble [2 × 3]>
+#> 2 cyl          0 integer integer <tibble [0 × 3]>
+#> 3 disp         2 numeric numeric <tibble [2 × 3]>
+#> 4 hp           0 integer integer <tibble [0 × 3]>
+#> 5 drat         0 numeric numeric <tibble [0 × 3]>
+#> 6 wt           0 numeric numeric <tibble [0 × 3]>
+#> 7 vs           0 integer integer <tibble [0 × 3]>
 #> 
 #> $unmatched_cols
 #> # A tibble: 2 × 2
@@ -106,23 +106,29 @@ comp
 #> 2 b     carb  
 #> 
 #> $unmatched_rows
-#>   table        car
-#> 1     a  Mazda RX4
-#> 2     b  Merc 280C
-#> 3     b Merc 450SE
+#> # A tibble: 3 × 2
+#>   table car       
+#>   <chr> <chr>     
+#> 1 a     Mazda RX4 
+#> 2 b     Merc 280C 
+#> 3 b     Merc 450SE
 ```
 
 Use `value_diffs()` to see the values that are different.
 
 ``` r
 value_diffs(comp, disp)
-#>   disp_a disp_b            car
-#> 1    109    108     Datsun 710
+#> # A tibble: 2 × 3
+#>   disp_a disp_b car           
+#>    <dbl>  <dbl> <chr>         
+#> 1    109    108 Datsun 710    
 #> 2    259    258 Hornet 4 Drive
 value_diffs(comp, mpg)
-#>   mpg_a mpg_b        car
+#> # A tibble: 2 × 3
+#>   mpg_a mpg_b car       
+#>   <dbl> <dbl> <chr>     
 #> 1  14.3  16.3 Duster 360
-#> 2  24.4  26.4  Merc 240D
+#> 2  24.4  26.4 Merc 240D
 ```
 
 Use `value_diffs_all()` to combine all `value_diffs()` output into one
@@ -130,9 +136,11 @@ table
 
 ``` r
 value_diffs_all(comp)
-#>   column val_a val_b            car
-#> 1    mpg  14.3  16.3     Duster 360
-#> 2    mpg  24.4  26.4      Merc 240D
-#> 3   disp 109.0 108.0     Datsun 710
-#> 4   disp 259.0 258.0 Hornet 4 Drive
+#> # A tibble: 4 × 4
+#>   column val_a val_b car           
+#>   <chr>  <dbl> <dbl> <chr>         
+#> 1 mpg     14.3  16.3 Duster 360    
+#> 2 mpg     24.4  26.4 Merc 240D     
+#> 3 disp   109   108   Datsun 710    
+#> 4 disp   259   258   Hornet 4 Drive
 ```

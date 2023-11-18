@@ -7,9 +7,6 @@
 #' @param allow_both_NA Logical. If \code{TRUE} a missing value in both data frames is
 #' considered as equal
 #' @param coerce Logical. If \code{FALSE} only columns with the same class are compared.
-#' @param use_duckplyr Logical. Run \code{as_duckplyr_df()} on input tables before
-#' performing comparison. This is useful when the tables are large because it makes
-#' the comparison faster. If TRUE, the outputs will also be duckplyr_df objects.
 #'
 #' @return
 #' \describe{
@@ -49,8 +46,7 @@
 
 #' @rdname compare
 #' @export
-compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE,
-                    use_duckplyr = FALSE) {
+compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE) {
   check_required(by)
   by <- enquo(by)
   table_a_chr <- as_label(enexpr(table_a))
@@ -155,7 +151,7 @@ get_common_rows <- function(table_a, table_b, by, matches) {
 
   by_a <- sss(table_a, matches$common$needles, by)
   common_a <- sss(table_a, matches$common$needles, common_cols)
-  common_b <- sss(table_b, matches$common$needles, common_cols)
+  common_b <- sss(table_b, matches$common$haystack, common_cols)
 
   add_vars(
     by_a,

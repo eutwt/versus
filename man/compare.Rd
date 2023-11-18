@@ -4,14 +4,7 @@
 \alias{compare}
 \title{Compare two data frames}
 \usage{
-compare(
-  table_a,
-  table_b,
-  by,
-  allow_both_NA = TRUE,
-  coerce = TRUE,
-  use_duckplyr = FALSE
-)
+compare(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE)
 }
 \arguments{
 \item{table_a}{A data frame}
@@ -25,10 +18,6 @@ compare(
 considered as equal}
 
 \item{coerce}{Logical. If \code{FALSE} only columns with the same class are compared.}
-
-\item{use_duckplyr}{Logical. Run \code{as_duckplyr_df()} on input tables before
-performing comparison. This is useful when the tables are large because it makes
-the comparison faster. If TRUE, the outputs will also be duckplyr_df objects.}
 }
 \value{
 \describe{
