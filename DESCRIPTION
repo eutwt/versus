@@ -19,7 +19,9 @@ Imports:
     tidyselect (>= 1.2.0),
     vctrs (>= 0.6.4),
     tibble,
-    purrr
+    purrr,
+    collapse,
+    data.table
 URL: https://eutwt.github.io/versus/, https://github.com/eutwt/versus
 BugReports: https://github.com/eutwt/versus/issues
 Depends: 
