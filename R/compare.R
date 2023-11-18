@@ -135,11 +135,13 @@ join_split <- function(table_a, table_b, by) {
     )
   common <- data %>%
     filter(common) %>%
-    select(-starts_with("versus_in"), -common)
+    select(-starts_with("versus_in"), -common) %>%
+    as_tibble()
   unmatched <- data %>%
     filter(!common) %>%
     mutate(table = if_else(versus_in_a, "a", "b"), .before = 1) %>%
-    select(table, all_of(by))
+    select(table, all_of(by)) %>%
+    as_tibble()
   list(common = common, unmatched = unmatched)
 }
 
