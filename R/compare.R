@@ -96,16 +96,20 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE,
     }
   }
 
-  data <- join_split(table_a, table_b, by = by_vars)
+  matches <- locate_matches(table_a, table_b, by = by_vars)
 
-  if (!nrow(data$common)) {
-    abort("No rows found in common. Check data and `by` argument.")
-  }
-
+  unmatched_rows <- get_unmatched_rows(
+    table_a,
+    table_b,
+    by = by_vars,
+    matches = matches
+  )
   cols$compare$value_diffs <- cols$compare$column %>%
-    lapply(col_value_diffs,
-      data = data$common,
+    lapply(get_value_diffs,
+      table_a = table_a,
+      table_b = table_b,
       by = by_vars,
+      matches = matches,
       allow_both_NA = allow_both_NA
     )
 
@@ -117,46 +121,100 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE,
     by = cols$by,
     summ = cols$compare,
     unmatched_cols = cols$unmatched,
-    unmatched_rows = data$unmatched
+    unmatched_rows = unmatched_rows
   )
 }
 
 # Helpers ---------
 
-join_split <- function(table_a, table_b, by) {
-  # full_join output split into common and unmatched
-  data <- full_join(
-    table_a %>% mutate(versus_in_a = TRUE),
-    table_b %>% mutate(versus_in_b = TRUE),
-    by = by, suffix = c("_a", "_b")
-  ) %>%
-    mutate(across(starts_with("versus_in"), \(x) coalesce(x, FALSE)),
-      common = versus_in_a & versus_in_b
-    )
-  common <- data %>%
-    filter(common) %>%
-    select(-starts_with("versus_in"), -common) %>%
-    as_tibble()
-  unmatched <- data %>%
-    filter(!common) %>%
-    mutate(table = if_else(versus_in_a, "a", "b"), .before = 1) %>%
-    select(table, all_of(by)) %>%
-    as_tibble()
+sss <- function(x, i, j) {
+  check <- function(i) {
+    length(i) == 1 && i == 0
+  }
+  ss(x, i, j, check = check(i))
+}
+
+locate_matches <- function(table_a, table_b, by) {
+  matches <- vec_locate_matches(
+    table_a[by],
+    table_b[by],
+    relationship = "one-to-one",
+    multiple = "first",
+    no_match = -1L,
+    remaining = -2L
+  )
+  match_group <- fcase(
+    matches$haystack == -1, "a",
+    matches$needles == -2, "b",
+    default = "common"
+  )
+  out <- split(matches, qF(match_group))
+  if (!"a" %in% names(out)) {
+    out$a <- tibble(needles = 0, haystack = 0)
+  }
+  if (!"b" %in% names(out)) {
+    out$b <- tibble(needles = 0, haystack = 0)
+  }
+  if (!"common" %in% names(out)) {
+    abort("nothing in common")
+  }
+  out
+}
+
+get_unmatched_rows <- function(table_a, table_b, by, matches) {
+  unmatched <- list(
+    a = sss(table_a, matches$a$needles, by),
+    b = sss(table_b, matches$b$haystack, by)
+  )
+  as_tibble(rowbind(unmatched, idcol = "table", id.factor = FALSE))
+}
+
+get_common_rows <- function(table_a, table_b, by, matches) {
+  common_cols <- setdiff(intersect(names(table_a), names(table_b)), by)
+
+  by_a <- sss(table_a, matches$common$needles, by)
+  common_a <- sss(table_a, matches$common$needles, common_cols)
+  common_b <- sss(table_b, matches$common$needles, common_cols)
+
+  add_vars(
+    by_a,
+    frename(common_a, \(nm) paste0(nm, "_a")),
+    frename(common_b, \(nm) paste0(nm, "_b"))
+  )
+}
+
+join_split <- function(table_a, table_b, by, matches) {
+  matches <- locate_matches(table_a, table_b, by)
+  unmatched <- get_unmatched_rows(table_a, table_b, by, matches)
+  common <- get_common_rows(table_a, table_b, by, matches)
   list(common = common, unmatched = unmatched)
 }
 
-col_value_diffs <- function(data, col, by, allow_both_NA = TRUE) {
-  col_a <- sym(paste0(col, "_a"))
-  col_b <- sym(paste0(col, "_b"))
-  filter_neq <- function(df, a, b, allow_both_NA) {
-    if (allow_both_NA) {
-      neq <- expr(coalesce(!!a != !!b, is.na(!!a) != is.na(!!b)))
-    } else {
-      neq <- expr(coalesce(!!a != !!b, is.na(!!a), is.na(!!b)))
-    }
-    filter(df, !!neq)
+get_value_diffs <- function(col, table_a, table_b, by, matches, allow_both_NA) {
+  col_a <- sss(table_a, matches$common$needles, col)[[1]]
+  col_b <- sss(table_b, matches$common$haystack, col)[[1]]
+  is_not_equal <- not_equal(col_a, col_b, allow_both_NA)
+
+  if (any(is_not_equal)) {
+    vals <- tibble(a = col_a[is_not_equal], b = col_b[is_not_equal]) %>%
+      frename(paste0(col, c("_a", "_b")))
+    by_cols <- sss(table_a, matches$common$needles[is_not_equal], by)
+  } else {
+    vals_a <- sss(table_a, 0, col)
+    vals_b <- sss(table_b, 0, col)
+    vals <- add_vars(vals_a, vals_b) %>%
+      frename(paste0(col, c("_a", "_b")))
+    by_cols <- sss(table_a, 0, by)
   }
-  data %>%
-    filter_neq(col_a, col_b, allow_both_NA) %>%
-    select(!!col_a, !!col_b, all_of(by))
+  as_tibble(add_vars(vals, by_cols))
+}
+
+not_equal <- function(col_a, col_b, allow_both_NA) {
+  neq <- col_a != col_b
+  if (allow_both_NA) {
+    out <- fcoalesce(neq, is.na(col_a) != is.na(col_b))
+  } else {
+    out <- fcoalesce(neq, is.na(col_a), is.na(col_b))
+  }
+  out
 }
