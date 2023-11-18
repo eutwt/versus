@@ -77,7 +77,7 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE,
   matches <- tryCatch(
     locate_matches(table_a, table_b, by = by_vars),
     vctrs_error_matches_relationship_one_to_one =
-      abort_duplicates(by_vars)
+      abort_duplicates(by_vars, table_a, table_b)
   )
 
   unmatched_rows <- get_unmatched_rows(
@@ -200,18 +200,23 @@ not_equal <- function(col_a, col_b, allow_both_NA) {
   out
 }
 
-abort_duplicates <- function(by) {
+abort_duplicates <- function(by, table_a, table_b) {
   function(e) {
-    cnd_msg <- cnd_message(e)
-    table_name <- if_else(grepl("at most 1 value from `needles`", cnd_msg),
-      "table_a",
-      "table_b"
-    )
-    cols_char <- char_vec_display(glue("`{by}`"), 30)
-    abort(
-      glue("`{table_name}` must be unique on `by` vars ({cols_char})"),
-      call = expr(compare())
-    )
+    tbl <- if_else(e$which == "haystack", "table_a", "table_b")
+
+    cols_char <- char_vec_display(glue("`{by}`"), 20)
+    top_msg <- glue("`{tbl}` must be unique on `by` vars ({cols_char})")
+
+    row <- e$i
+    if (tbl == "table_a") {
+      tbl_row <- sss(table_a, row, by)
+    } else {
+      tbl_row <- sss(table_b, row, by)
+    }
+    tbl_char <- capture.output(as_tibble(tbl_row))[-1]
+    info <- c(i = glue("Row {row} shown below is duplicated."), tbl_char)
+
+    abort(message = top_msg, body = info, call = expr(compare()))
   }
 }
 

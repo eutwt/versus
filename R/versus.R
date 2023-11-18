@@ -6,6 +6,7 @@
 #' @import dplyr
 #' @import tidyselect
 #' @import glue
+#' @importFrom utils capture.output
 #' @importFrom vctrs vec_locate_matches
 #' @importFrom vctrs vec_interleave vec_ptype_common
 #' @importFrom purrr map_int map_lgl map2_lgl

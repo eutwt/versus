@@ -5,6 +5,10 @@
     Condition
       Error in `compare()`:
       ! `table_a` must be unique on `by` vars (`x`, `y`)
+      i Row 1 shown below is duplicated.
+            x     y
+        <int> <int>
+      1     1     1
 
 ---
 
@@ -13,6 +17,10 @@
     Condition
       Error in `compare()`:
       ! `table_b` must be unique on `by` vars (`x`, `y`)
+      i Row 1 shown below is duplicated.
+            x     y
+        <int> <int>
+      1     1     1
 
 # Error on empty `by`
 
