@@ -3,7 +3,7 @@
     Code
       compare(with_dupe, without_dupe, by = c(x, y))
     Condition
-      Error:
+      Error in `compare()`:
       ! `table_a` must be unique on `by` vars (`x`, `y`)
 
 ---

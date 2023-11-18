@@ -56,7 +56,6 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE,
   table_a_chr <- as_label(enexpr(table_a))
   table_b_chr <- as_label(enexpr(table_b))
   by_vars <- get_by_vars(by_quo = by, table_a = table_a, table_b = table_b)
-  assert_unique(table_b, by_vars)
 
   table_summ <-
     tibble(
@@ -73,12 +72,12 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE,
       unmatched = unmatched
     ))
 
-  abort_on_differing_class(cols, coerce)
+  abort_differing_class(cols, coerce)
 
   matches <- tryCatch(
     locate_matches(table_a, table_b, by = by_vars),
     vctrs_error_matches_relationship_one_to_one =
-      abort_on_table_a_dupes(by_vars)
+      abort_duplicates(by_vars)
   )
 
   unmatched_rows <- get_unmatched_rows(
@@ -122,7 +121,6 @@ locate_matches <- function(table_a, table_b, by) {
     table_a[by],
     table_b[by],
     relationship = "one-to-one",
-    multiple = "first",
     no_match = -1L,
     remaining = -2L
   )
@@ -202,17 +200,22 @@ not_equal <- function(col_a, col_b, allow_both_NA) {
   out
 }
 
-abort_on_table_a_dupes <- function(by, call = caller_env()) {
-  cols_char <- char_vec_display(glue("`{by}`"), 30)
+abort_duplicates <- function(by) {
   function(e) {
+    cnd_msg <- cnd_message(e)
+    table_name <- if_else(grepl("at most 1 value from `needles`", cnd_msg),
+      "table_a",
+      "table_b"
+    )
+    cols_char <- char_vec_display(glue("`{by}`"), 30)
     abort(
-      glue("`table_a` must be unique on `by` vars ({cols_char})"),
-      call = call
+      glue("`{table_name}` must be unique on `by` vars ({cols_char})"),
+      call = expr(compare())
     )
   }
 }
 
-abort_on_differing_class <- function(cols, coerce, call = caller_env()) {
+abort_differing_class <- function(cols, coerce, call = caller_env()) {
   if (!coerce) {
     diff_class <- cols$compare %>%
       filter(class_a != class_b)
