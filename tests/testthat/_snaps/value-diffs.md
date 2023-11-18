@@ -5,7 +5,7 @@
     Output
       # A tibble: 2 x 3
         mpg_a mpg_b car       
-        <dbl> <dbl> <chr>     
+      * <dbl> <dbl> <chr>     
       1  14.3  16.3 Duster 360
       2  24.4  26.4 Merc 240D 
 

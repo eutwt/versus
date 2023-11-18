@@ -134,25 +134,28 @@ get_value_diffs <- function(table_a, table_b, by, allow_both_NA, common_cols) {
   not_equal <- function(col_a, col_b, allow_both_NA) {
     neq <- col_a != col_b
     if (allow_both_NA) {
-      return(coalesce(neq, is.na(col_a) != is.na(col_b)))
+      return(data.table::fcoalesce(neq, is.na(col_a) != is.na(col_b)))
     } else {
       return(neq)
     }
   }
-
-  value_diffs <- lapply(common_cols, function(col) {
-    col_a <- table_a[[col]][matches$common$needles]
-    col_b <- table_b[[col]][matches$common$haystack]
+  get_value_diffs <- function(col) {
+    col_a <- collapse::ss(table_a, matches$common$needles, col, check = FALSE)[[1]]
+    col_b <- collapse::ss(table_b, matches$common$haystack, col, check = FALSE)[[1]]
     is_not_equal <- not_equal(col_a, col_b, allow_both_NA)
-    diffs <- tibble(
+
+    tibble(
       !!paste0(col, "_a") := col_a[is_not_equal],
       !!paste0(col, "_b") := col_b[is_not_equal],
-    )
-    by <- table_a %>%
-      select(all_of(by)) %>%
-      slice(matches$common$needles[is_not_equal])
-    bind_cols(diffs, by)
-  })
+    ) %>%
+      add_vars(collapse::ss(
+        table_a,
+        matches$common$needles[is_not_equal],
+        by
+      ))
+  }
+
+  value_diffs <- lapply(common_cols, get_value_diffs)
 
   unmatched_a <- table_a %>%
     select(all_of(by)) %>%
@@ -161,7 +164,7 @@ get_value_diffs <- function(table_a, table_b, by, allow_both_NA, common_cols) {
   unmatched_b <- table_b %>%
     select(all_of(by)) %>%
     slice(matches$b$haystack) %>%
-    mutate(table = "a", .before = 1)
+    mutate(table = "b", .before = 1)
 
   list(
     value_diffs = value_diffs,

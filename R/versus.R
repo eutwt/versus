@@ -7,6 +7,7 @@
 #' @import dplyr
 #' @import tidyselect
 #' @import glue
+#' @import collapse
 #' @importFrom vctrs vec_duplicate_any
 #' @importFrom vctrs vec_interleave vec_ptype_common vec_locate_matches
 #' @importFrom purrr map_lgl map2_lgl
