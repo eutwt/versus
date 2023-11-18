@@ -125,11 +125,11 @@ get_value_diffs <- function(table_a, table_b, by, allow_both_NA, common_cols) {
     no_match = -1L,
     remaining = -2L
   ) %>%
-    split(case_when(
-      .$haystack == -1 ~ "a",
-      .$needles == -2 ~ "b",
-      .default = "common"
-    ))
+    split(collapse::qF(data.table::fcase(
+      .$haystack == -1, "a",
+      .$needles == -2, "b",
+      default = "common"
+    )))
 
   not_equal <- function(col_a, col_b, allow_both_NA) {
     neq <- col_a != col_b
