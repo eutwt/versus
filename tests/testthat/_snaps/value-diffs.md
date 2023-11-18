@@ -36,8 +36,9 @@
         column val_a val_b            car
       1    mpg  14.3  16.3     Duster 360
       2    mpg  24.4  26.4      Merc 240D
-      3   disp 109.0 108.0     Datsun 710
-      4   disp 259.0 258.0 Hornet 4 Drive
+      3    cyl   6.0    NA Hornet 4 Drive
+      4   disp 109.0 108.0     Datsun 710
+      5   disp 259.0 258.0 Hornet 4 Drive
 
 # value_diffs_all() works
 
@@ -47,8 +48,9 @@
         column val_a val_b            car
       1    mpg  14.3  16.3     Duster 360
       2    mpg  24.4  26.4      Merc 240D
-      3   disp 109.0 108.0     Datsun 710
-      4   disp 259.0 258.0 Hornet 4 Drive
+      3    cyl   6.0    NA Hornet 4 Drive
+      4   disp 109.0 108.0     Datsun 710
+      5   disp 259.0 258.0 Hornet 4 Drive
 
 # value_diffs_all coerces to char on incompatible ptypes
 
@@ -57,11 +59,12 @@
     Message
       i values converted to character
     Output
-      # A tibble: 4 x 4
+      # A tibble: 5 x 4
         column val_a val_b car           
         <chr>  <chr> <chr> <chr>         
       1 mpg    14.3  16.3  Duster 360    
       2 mpg    24.4  26.4  Merc 240D     
-      3 disp   109   108   Datsun 710    
-      4 disp   259   258   Hornet 4 Drive
+      3 cyl    6     <NA>  Hornet 4 Drive
+      4 disp   109   108   Datsun 710    
+      5 disp   259   258   Hornet 4 Drive
 

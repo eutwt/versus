@@ -66,7 +66,7 @@ test_df_b <- mtcars %>%
   rownames_to_column("car") %>%
   mutate(
     mpg = replace(mpg, 7:8, mpg[7:8] + 2),
-    cyl = replace(cyl, 3, NA),
+    cyl = replace(cyl, 3:4, NA),
     wt = as.character(wt)
   ) %>%
   filter(row_number() %in% seq(2, 12)) %>%

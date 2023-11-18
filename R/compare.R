@@ -146,13 +146,15 @@ join_split <- function(table_a, table_b, by) {
 col_value_diffs <- function(data, col, by, allow_both_NA = TRUE) {
   col_a <- sym(paste0(col, "_a"))
   col_b <- sym(paste0(col, "_b"))
-  if (allow_both_NA) {
-    filter_expr <- expr(!!col_a != !!col_b)
-  } else {
-    filter_expr <-
-      expr(coalesce(!!col_a != !!col_b, is.na(!!col_a), is.na(!!col_b)))
+  filter_neq <- function(df, a, b, allow_both_NA) {
+    if (allow_both_NA) {
+      neq <- expr(coalesce(!!a != !!b, is.na(!!a) != is.na(!!b)))
+    } else {
+      neq <- expr(coalesce(!!a != !!b, is.na(!!a), is.na(!!b)))
+    }
+    filter(df, !!neq)
   }
   data %>%
-    filter(!!filter_expr) %>%
+    filter_neq(col_a, col_b, allow_both_NA) %>%
     select(!!col_a, !!col_b, all_of(by))
 }
