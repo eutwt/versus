@@ -22,6 +22,28 @@
         <int> <int>
       1    -2    -3
 
+# Error on input with duplicated names
+
+    Code
+      compare(one, two, by = mpg)
+    Condition
+      Error in `compare()`:
+      ! Issue with `table_b`
+      * Names must be unique.
+      x These names are duplicated:
+        * "x" at locations 1 and 2.
+
+---
+
+    Code
+      compare(one, two, by = "mpg")
+    Condition
+      Error in `compare()`:
+      ! Issue with `table_b`
+      * Names must be unique.
+      x These names are duplicated:
+        * "x" at locations 1 and 2.
+
 # Error on empty `by`
 
     Code

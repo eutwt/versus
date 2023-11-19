@@ -51,6 +51,7 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE) {
   by <- enquo(by)
   table_a_chr <- as_label(enexpr(table_a))
   table_b_chr <- as_label(enexpr(table_b))
+  ensure_well_named(table_a, table_b)
   by_vars <- get_by_vars(by_quo = by, table_a = table_a, table_b = table_b)
 
   table_summ <- tibble(
@@ -226,6 +227,25 @@ abort_differing_class <- function(cols, coerce, call = caller_env()) {
       "coerce = FALSE but some column classes do not match",
       i = char_vec_display(diff_class$column, 50)
     )
+    abort(message, call = call)
+  }
+}
+
+ensure_well_named <- function(table_a, table_b, call = caller_env()) {
+  try_fetch(
+    vec_as_names(names(table_a), repair = "check_unique"),
+    error = rethrow_with_arg_name("table_a", call)
+  )
+  try_fetch(
+    vec_as_names(names(table_b), repair = "check_unique"),
+    error = rethrow_with_arg_name("table_b", call)
+  )
+}
+
+rethrow_with_arg_name <- function(arg_name, call) {
+  function(cnd) {
+    cnd_msg <- cnd_message(cnd)
+    message <- c(glue("Issue with `{arg_name}`"), cnd_msg)
     abort(message, call = call)
   }
 }

@@ -13,6 +13,15 @@ test_that("Error on input with duplicates", {
   )
 })
 
+test_that("Error on input with duplicated names", {
+  one <- data.frame(x = 1)
+  two <- setNames(data.frame(x = 1, x = 1), c("x", "x"))
+
+  expect_snapshot(compare(one, two, by = mpg), error = TRUE)
+  # even when by is character (tidyselect doesn't handle this case)
+  expect_snapshot(compare(one, two, by = "mpg"), error = TRUE)
+})
+
 test_that("Error on empty `by`", {
   a <- data.frame(x = 1)
   b <- data.frame(g = 2)
