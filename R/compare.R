@@ -196,6 +196,7 @@ not_equal <- function(col_a, col_b, allow_both_NA) {
 }
 
 abort_duplicates <- function(table_a, table_b, by) {
+  call <- caller_env()
   function(e) {
     tbl <- if_else(e$which == "haystack", "table_a", "table_b")
 
@@ -210,7 +211,7 @@ abort_duplicates <- function(table_a, table_b, by) {
     tbl_char <- capture.output(as_tibble(tbl_row))[-1]
     info <- c(i = glue("The row shown below is duplicated."), tbl_char)
 
-    abort(message = top_msg, body = info, call = call2("compare"))
+    abort(message = top_msg, body = info, call = call)
   }
 }
 
