@@ -83,21 +83,16 @@
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"versus"</span><span class="op">)</span></span></code></pre></div>
-<div class="section level3">
-<h3 id="development-version">Development version<a class="anchor" aria-label="anchor" href="#development-version"></a>
-</h3>
-<p>To get a bug fix or to use a feature from the development version, you can install the development version of dplyr from GitHub.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># install.packages("pak")</span></span>
-<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"eutwt/versus"</span><span class="op">)</span></span></code></pre></div>
-</div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"versus"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Or install the development version from GitHub with</span></span>
+<span><span class="co"># pak::pak("eutwt/versus")</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
 <p>We will use the two data frames below as an example to demonstrate functionality</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://eutwt.github.io/versus/">versus</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">example_df_a</span></span>
@@ -132,7 +127,7 @@
 <li>Which rows are in only one table - <code>compare()$unmatched_rows</code>
 </li>
 </ul>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">comp</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/compare.html">compare</a></span><span class="op">(</span><span class="va">example_df_a</span>, <span class="va">example_df_b</span>, by <span class="op">=</span> <span class="va">car</span><span class="op">)</span></span>
 <span><span class="va">comp</span></span>
 <span><span class="co">#&gt; $tables</span></span>
@@ -175,7 +170,7 @@
 <span><span class="co">#&gt; 2 b     Merc 280C </span></span>
 <span><span class="co">#&gt; 3 b     Merc 450SE</span></span></code></pre></div>
 <p>Use <code><a href="reference/value-diffs.html">value_diffs()</a></code> to see the values that are different.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/value-diffs.html">value_diffs</a></span><span class="op">(</span><span class="va">comp</span>, <span class="va">disp</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 2 × 3</span></span>
 <span><span class="co">#&gt;   disp_a disp_b car           </span></span>
@@ -189,7 +184,7 @@
 <span><span class="co">#&gt; 1  14.3  16.3 Duster 360</span></span>
 <span><span class="co">#&gt; 2  24.4  26.4 Merc 240D</span></span></code></pre></div>
 <p>Use <code><a href="reference/value-diffs.html">value_diffs_all()</a></code> to combine all <code><a href="reference/value-diffs.html">value_diffs()</a></code> output into one table</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/value-diffs.html">value_diffs_all</a></span><span class="op">(</span><span class="va">comp</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 4 × 4</span></span>
 <span><span class="co">#&gt;   column val_a val_b car           </span></span>
