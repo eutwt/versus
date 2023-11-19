@@ -169,8 +169,18 @@
 <span><span class="co">#&gt; 1 a     Mazda RX4 </span></span>
 <span><span class="co">#&gt; 2 b     Merc 280C </span></span>
 <span><span class="co">#&gt; 3 b     Merc 450SE</span></span></code></pre></div>
-<p>Use <code><a href="reference/value-diffs.html">value_diffs()</a></code> to see the values that are different.</p>
+<p>Use <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> to see what kind of differences were found</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">comp</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 4 × 2</span></span>
+<span><span class="co">#&gt;   difference     found</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;          &lt;lgl&gt;</span></span>
+<span><span class="co">#&gt; 1 value_diffs    TRUE </span></span>
+<span><span class="co">#&gt; 2 unmatched_cols TRUE </span></span>
+<span><span class="co">#&gt; 3 unmatched_rows TRUE </span></span>
+<span><span class="co">#&gt; 4 class_diffs    FALSE</span></span></code></pre></div>
+<p>Use <code><a href="reference/value-diffs.html">value_diffs()</a></code> to see the values that are different.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/value-diffs.html">value_diffs</a></span><span class="op">(</span><span class="va">comp</span>, <span class="va">disp</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 2 × 3</span></span>
 <span><span class="co">#&gt;   disp_a disp_b car           </span></span>
@@ -184,7 +194,7 @@
 <span><span class="co">#&gt; 1  14.3  16.3 Duster 360</span></span>
 <span><span class="co">#&gt; 2  24.4  26.4 Merc 240D</span></span></code></pre></div>
 <p>Use <code><a href="reference/value-diffs.html">value_diffs_all()</a></code> to combine all <code><a href="reference/value-diffs.html">value_diffs()</a></code> output into one table</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/value-diffs.html">value_diffs_all</a></span><span class="op">(</span><span class="va">comp</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 4 × 4</span></span>
 <span><span class="co">#&gt;   column val_a val_b car           </span></span>
