@@ -120,9 +120,9 @@ print.vs_compare <- function(x, ...) {
 #' @export
 summary.vs_compare <- function(object, ...) {
   out_vec <- c(
-    unmatched_rows = nrow(object$unmatched_rows) > 0,
-    unmatched_cols = nrow(object$unmatched_cols) > 0,
     value_diffs = sum(object$intersection$n_diffs) > 0,
+    unmatched_cols = nrow(object$unmatched_cols) > 0,
+    unmatched_rows = nrow(object$unmatched_rows) > 0,
     class_diffs = any(object$class_a != object$class_b)
   )
   out <- tibble(

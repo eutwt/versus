@@ -108,6 +108,19 @@ comp
 #> 3 b     Merc 450SE
 ```
 
+Use `summary()` to see what kind of differences were found
+
+``` r
+summary(comp)
+#> # A tibble: 4 × 2
+#>   difference     found
+#>   <chr>          <lgl>
+#> 1 value_diffs    TRUE 
+#> 2 unmatched_cols TRUE 
+#> 3 unmatched_rows TRUE 
+#> 4 class_diffs    FALSE
+```
+
 Use `value_diffs()` to see the values that are different.
 
 ``` r

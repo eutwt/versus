@@ -54,6 +54,11 @@ comp <- compare(example_df_a, example_df_b, by = car)
 comp
 ```
 
+Use `summary()` to see what kind of differences were found
+```{r}
+summary(comp)
+```
+
 Use `value_diffs()` to see the values that are different.
 
 ```{r}
