@@ -69,7 +69,7 @@
       compare(a, b, by = x)
     Condition
       Error in `compare()`:
-      ! Issue with `table_b`
+      ! Problem with `table_b`:
       * Can't subset columns that don't exist.
       x Column `x` doesn't exist.
 
@@ -79,7 +79,8 @@
       compare(a, b, by = c(y = x))
     Condition
       Error in `compare()`:
-      ! Can't rename variables in this context.
+      ! Problem with `by`:
+      * Can't rename variables in this context.
 
 # Error when `by` uses `join_by`
 
