@@ -19,16 +19,9 @@ frames.
 
 ``` r
 install.packages("versus")
-```
 
-### Development version
-
-To get a bug fix or to use a feature from the development version, you
-can install the development version of dplyr from GitHub.
-
-``` r
-# install.packages("pak")
-pak::pak("eutwt/versus")
+# Or install the development version from GitHub with
+# pak::pak("eutwt/versus")
 ```
 
 ## Example

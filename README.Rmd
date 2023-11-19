@@ -28,16 +28,9 @@ A toolset for interactively exploring the differences between two data frames.
 
 ```{r, eval = FALSE}
 install.packages("versus")
-```
 
-### Development version
-
-To get a bug fix or to use a feature from the development version, you can install 
-the development version of dplyr from GitHub.
-
-```{r, eval = FALSE}
-# install.packages("pak")
-pak::pak("eutwt/versus")
+# Or install the development version from GitHub with
+# pak::pak("eutwt/versus")
 ```
 
 ## Example
