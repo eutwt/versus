@@ -108,6 +108,30 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE) {
   structure(out, class = "vs_compare")
 }
 
+# Methods -----------
+
+#' @export
+print.vs_compare <- function(x, ...) {
+  class(x) <- "list"
+  print(x)
+  class(x) <- "vs_compare"
+}
+
+#' @export
+summary.vs_compare <- function(object, ...) {
+  out_vec <- c(
+    unmatched_rows = nrow(object$unmatched_rows) > 0,
+    unmatched_cols = nrow(object$unmatched_cols) > 0,
+    value_diffs = sum(object$intersection$n_diffs) > 0,
+    class_diffs = any(object$class_a != object$class_b)
+  )
+  out <- tibble(
+    difference = names(out_vec),
+    found = unname(out_vec)
+  )
+  out
+}
+
 # Helpers ---------
 
 fsubset <- function(x, i, j) {
@@ -266,11 +290,4 @@ rethrow_with_arg_name <- function(arg_name, call) {
     message <- c(glue("Issue with `{arg_name}`"), cnd_msg)
     abort(message, call = call)
   }
-}
-
-#' @export
-print.vs_compare <- function(x, ...) {
-  class(x) <- "list"
-  print(x)
-  class(x) <- "vs_compare"
 }
