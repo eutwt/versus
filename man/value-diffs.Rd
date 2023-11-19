@@ -6,17 +6,19 @@
 \alias{value_diffs_all}
 \title{Show the differing values from a comparison}
 \usage{
-value_diffs(comparison, column)
+value_diffs(comparison, column, ...)
 
-value_diffs_stacked(comparison, column)
+value_diffs_stacked(comparison, column, ...)
 
-value_diffs_all(comparison)
+value_diffs_all(comparison, ...)
 }
 \arguments{
 \item{comparison}{The output of \code{compare()}}
 
 \item{column}{<\code{\link[=versus_tidy_select]{tidy-select}}>. The output will show the differing values
 for the provided columns.}
+
+\item{...}{These dots are for future extensions and must be empty.}
 }
 \value{
 \item{\code{value_diffs()}}{A data frame with one row for each element

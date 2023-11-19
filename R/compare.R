@@ -49,8 +49,8 @@
 compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE) {
   check_required(by)
   by <- enquo(by)
-  table_a_chr <- as_label(enexpr(table_a))
-  table_b_chr <- as_label(enexpr(table_b))
+  table_a_chr <- as_label(enquo(table_a))
+  table_b_chr <- as_label(enquo(table_b))
 
   ensure_data_frame(table_a)
   ensure_data_frame(table_b)
@@ -98,13 +98,14 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE) {
   cols$compare <- cols$compare %>%
     mutate(n_diffs = map_int(value_diffs, nrow), .after = column)
 
-  list(
+  out <- list(
     tables = table_summ,
     by = cols$by,
     intersection = cols$compare,
     unmatched_cols = cols$unmatched,
     unmatched_rows = unmatched_rows
   )
+  structure(out, class = "vs_compare")
 }
 
 # Helpers ---------
@@ -265,4 +266,11 @@ rethrow_with_arg_name <- function(arg_name, call) {
     message <- c(glue("Issue with `{arg_name}`"), cnd_msg)
     abort(message, call = call)
   }
+}
+
+#' @export
+print.vs_compare <- function(x, ...) {
+  class(x) <- "list"
+  print(x)
+  class(x) <- "vs_compare"
 }
