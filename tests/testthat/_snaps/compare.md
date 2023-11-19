@@ -74,7 +74,7 @@
       compare(test_df_a, test_df_b, by = car, coerce = FALSE)
     Condition
       Error in `compare()`:
-      ! coerce = FALSE but some columns classes do not match
+      ! coerce = FALSE but some column classes do not match
       i wt
 
 # example comparison

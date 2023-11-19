@@ -215,14 +215,16 @@ abort_duplicates <- function(table_a, table_b, by) {
 }
 
 abort_differing_class <- function(cols, coerce, call = caller_env()) {
-  if (!coerce) {
-    diff_class <- cols$compare %>%
-      filter(class_a != class_b)
-    if (nrow(diff_class) > 0) {
-      abort(c(
-        "coerce = FALSE but some columns classes do not match",
-        i = char_vec_display(diff_class$column, 50)
-      ), call = call)
-    }
+  if (coerce) {
+    return(invisible())
+  }
+  diff_class <- cols$compare %>%
+    filter(class_a != class_b)
+  if (nrow(diff_class) > 0) {
+    message <- c(
+      "coerce = FALSE but some column classes do not match",
+      i = char_vec_display(diff_class$column, 50)
+    )
+    abort(message, call = call)
   }
 }
