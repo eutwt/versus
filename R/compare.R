@@ -72,7 +72,7 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE) {
   matches <- tryCatch(
     locate_matches(table_a, table_b, by = by_vars),
     vctrs_error_matches_relationship_one_to_one =
-      abort_duplicates(by_vars, table_a, table_b)
+      abort_duplicates(table_a, table_b, by = by_vars)
   )
 
   unmatched_rows <- get_unmatched_rows(
@@ -195,7 +195,7 @@ not_equal <- function(col_a, col_b, allow_both_NA) {
   out
 }
 
-abort_duplicates <- function(by, table_a, table_b) {
+abort_duplicates <- function(table_a, table_b, by) {
   function(e) {
     tbl <- if_else(e$which == "haystack", "table_a", "table_b")
 
