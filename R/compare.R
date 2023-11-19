@@ -51,7 +51,11 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE) {
   by <- enquo(by)
   table_a_chr <- as_label(enexpr(table_a))
   table_b_chr <- as_label(enexpr(table_b))
+
+  ensure_data_frame(table_a)
+  ensure_data_frame(table_b)
   ensure_well_named(table_a, table_b)
+
   by_vars <- get_by_vars(by_quo = by, table_a = table_a, table_b = table_b)
 
   table_summ <- tibble(
@@ -240,6 +244,19 @@ ensure_well_named <- function(table_a, table_b, call = caller_env()) {
     vec_as_names(names(table_b), repair = "check_unique"),
     error = rethrow_with_arg_name("table_b", call)
   )
+}
+
+ensure_data_frame <- function(x, call = caller_env()) {
+  arg_name <- deparse(substitute(x))
+  if (is.data.frame(x)) {
+    return(TRUE)
+  }
+  class_display <- char_vec_display(glue('"{class(x)}"'), 40)
+  message <- c(
+    glue("`{arg_name}` must be a data frame"),
+    i = glue("class({arg_name}): {class_display}")
+  )
+  abort(message, call = call)
 }
 
 rethrow_with_arg_name <- function(arg_name, call) {

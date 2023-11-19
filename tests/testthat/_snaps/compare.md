@@ -22,6 +22,24 @@
         <int> <int>
       1    -2    -3
 
+# Error on non data frame input
+
+    Code
+      compare(example_df_a, non_df, by = car)
+    Condition
+      Error in `compare()`:
+      ! `table_b` must be a data frame
+      i class(table_b): "a", "b", "c", "d", "e", "f", "g", "h...
+
+---
+
+    Code
+      compare(non_df, example_df_b, by = car)
+    Condition
+      Error in `compare()`:
+      ! `table_a` must be a data frame
+      i class(table_a): "a", "b", "c", "d", "e", "f", "g", "h...
+
 # Error on input with duplicated names
 
     Code

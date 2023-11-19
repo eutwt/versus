@@ -13,6 +13,18 @@ test_that("Error on input with duplicates", {
   )
 })
 
+test_that("Error on non data frame input", {
+  non_df <- structure(list(), class = letters)
+  expect_snapshot(
+    compare(example_df_a, non_df, by = car),
+    error = TRUE
+  )
+  expect_snapshot(
+    compare(non_df, example_df_b, by = car),
+    error = TRUE
+  )
+})
+
 test_that("Error on input with duplicated names", {
   one <- data.frame(x = 1)
   two <- setNames(data.frame(x = 1, x = 1), c("x", "x"))
