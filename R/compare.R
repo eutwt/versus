@@ -114,7 +114,6 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE) {
 print.vs_compare <- function(x, ...) {
   class(x) <- "list"
   print(x)
-  class(x) <- "vs_compare"
 }
 
 #' @export
