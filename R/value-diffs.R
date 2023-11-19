@@ -63,6 +63,7 @@ value_diffs_stacked <- function(comparison, column) {
     }
   )
 }
+
 #' @rdname value-diffs
 #' @export
 value_diffs_all <- function(comparison) {
