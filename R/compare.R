@@ -20,7 +20,7 @@
 #'     A data frame with one row per \code{by} column showing the class
 #'     of the column in each of the input tables.
 #'  }
-#'  \item{summ}{
+#'  \item{intersection}{
 #'    A data frame with one row per column common to \code{table_a} and
 #'    \code{table_b} and columns "n_diffs" showing the number of values which
 #'    are different between the two tables, "class_a"/"class_b" the class of the
@@ -49,8 +49,8 @@
 compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE) {
   check_required(by)
   by <- enquo(by)
-  table_a_chr <- as_label(enexpr(table_a))
-  table_b_chr <- as_label(enexpr(table_b))
+  table_a_chr <- as_label(enquo(table_a))
+  table_b_chr <- as_label(enquo(table_b))
 
   ensure_data_frame(table_a)
   ensure_data_frame(table_b)
@@ -98,13 +98,38 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE) {
   cols$compare <- cols$compare %>%
     mutate(n_diffs = map_int(value_diffs, nrow), .after = column)
 
-  list(
+  out <- list(
     tables = table_summ,
     by = cols$by,
-    summ = cols$compare,
+    intersection = cols$compare,
     unmatched_cols = cols$unmatched,
     unmatched_rows = unmatched_rows
   )
+  structure(out, class = "vs_compare")
+}
+
+# Methods -----------
+
+#' @export
+print.vs_compare <- function(x, ...) {
+  class(x) <- "list"
+  print(x)
+  class(x) <- "vs_compare"
+}
+
+#' @export
+summary.vs_compare <- function(object, ...) {
+  out_vec <- c(
+    unmatched_rows = nrow(object$unmatched_rows) > 0,
+    unmatched_cols = nrow(object$unmatched_cols) > 0,
+    value_diffs = sum(object$intersection$n_diffs) > 0,
+    class_diffs = any(object$class_a != object$class_b)
+  )
+  out <- tibble(
+    difference = names(out_vec),
+    found = unname(out_vec)
+  )
+  out
 }
 
 # Helpers ---------

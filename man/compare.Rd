@@ -31,7 +31,7 @@ and columns in each.
 A data frame with one row per \code{by} column showing the class
 of the column in each of the input tables.
 }
-\item{summ}{
+\item{intersection}{
 A data frame with one row per column common to \code{table_a} and
 \code{table_b} and columns "n_diffs" showing the number of values which
 are different between the two tables, "class_a"/"class_b" the class of the
