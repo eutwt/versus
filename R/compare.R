@@ -210,7 +210,7 @@ abort_duplicates <- function(by, table_a, table_b) {
     tbl_char <- capture.output(as_tibble(tbl_row))[-1]
     info <- c(i = glue("The row shown below is duplicated."), tbl_char)
 
-    abort(message = top_msg, body = info, call = expr(compare()))
+    abort(message = top_msg, body = info, call = call2("compare"))
   }
 }
 
