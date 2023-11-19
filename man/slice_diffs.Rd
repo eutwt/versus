@@ -5,9 +5,9 @@
 \alias{slice_diffs_both}
 \title{Show rows which have differing values in a comparison}
 \usage{
-slice_diffs(table, comparison, column = everything(), ...)
+slice_diffs(table, comparison, column = everything())
 
-slice_diffs_both(table_a, table_b, comparison, column = everything(), ...)
+slice_diffs_both(table_a, table_b, comparison, column = everything())
 }
 \arguments{
 \item{table}{A data frame. One of \code{table_a} or \code{table_b} used to
@@ -17,8 +17,6 @@ create \code{comparison}}
 
 \item{column}{<\code{\link[=versus_tidy_select]{tidy-select}}>. A row will be in the output of slice functions if
 the comparison shows differing values for any columns matching this argument}
-
-\item{...}{These dots are for future extensions and must be empty.}
 
 \item{table_a}{The data frame\code{table_a} used to create \code{comparison}}
 

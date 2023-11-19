@@ -7,7 +7,6 @@
 #' @param column <[`tidy-select`][versus_tidy_select]>. A row will be in the output of slice functions if
 #' the comparison shows differing values for any columns matching this argument
 #' @param comparison The output of \code{compare()}
-#' @inheritParams rlang::args_dots_empty
 #'
 #' @return
 #' \item{\code{slice_diffs()}}{The input \code{table} is filtered to only the rows for which
@@ -25,13 +24,7 @@
 
 #' @rdname slice_diffs
 #' @export
-slice_diffs <- function(table, comparison, column = everything(), ...) {
-  UseMethod("slice_diffs")
-}
-
-#' @export
-slice_diffs.data.frame <- function(table, comparison, column = everything(), ...) {
-  check_dots_empty()
+slice_diffs <- function(table, comparison, column = everything()) {
   column <- enquo(column)
   select_by_vars <- function(value_diffs, col_name) {
     value_diffs %>%
@@ -54,18 +47,7 @@ slice_diffs.data.frame <- function(table, comparison, column = everything(), ...
 
 #' @rdname slice_diffs
 #' @export
-slice_diffs_both <- function(table_a, table_b, comparison, column = everything(), ...) {
-  UseMethod("slice_diffs_both")
-}
-
-#' @export
-slice_diffs_both.data.frame <- function(
-    table_a,
-    table_b,
-    comparison,
-    column = everything(),
-    ...) {
-  check_dots_empty()
+slice_diffs_both <- function(table_a, table_b, comparison, column = everything()) {
   output_cols <- c(comparison$by$column, comparison$intersection$column)
   slice_diffs_for_interleave <- function(df, name) {
     df %>%

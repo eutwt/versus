@@ -3,7 +3,6 @@
 #' @param comparison The output of \code{compare()}
 #' @param column <[`tidy-select`][versus_tidy_select]>. The output will show the differing values
 #' for the provided columns.
-#' @inheritParams rlang::args_dots_empty
 #'
 #' @return
 #' \item{\code{value_diffs()}}{A data frame with one row for each element
@@ -25,13 +24,7 @@
 
 #' @rdname value-diffs
 #' @export
-value_diffs <- function(comparison, column, ...) {
-  UseMethod("value_diffs")
-}
-
-#' @export
-value_diffs.vs_compare <- function(comparison, column, ...) {
-  check_dots_empty()
+value_diffs <- function(comparison, column) {
   column <- enquo(column)
   column_char <- get_cols_from_comparison(comparison, column)
   if (length(column_char) != 1) {
@@ -49,13 +42,7 @@ value_diffs.vs_compare <- function(comparison, column, ...) {
 
 #' @rdname value-diffs
 #' @export
-value_diffs_stacked <- function(comparison, column, ...) {
-  UseMethod("value_diffs_stacked")
-}
-
-#' @export
-value_diffs_stacked.vs_compare <- function(comparison, column, ...) {
-  check_dots_empty(...)
+value_diffs_stacked <- function(comparison, column) {
   column <- enquo(column)
 
   conform <- function(value_diffs, col_name) {
@@ -78,12 +65,6 @@ value_diffs_stacked.vs_compare <- function(comparison, column, ...) {
 }
 #' @rdname value-diffs
 #' @export
-value_diffs_all <- function(comparison, ...) {
-  UseMethod("value_diffs_all")
-}
-
-#' @export
-value_diffs_all <- function(comparison, ...) {
-  check_dots_empty()
+value_diffs_all <- function(comparison) {
   value_diffs_stacked(comparison, everything())
 }
