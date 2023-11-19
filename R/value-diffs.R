@@ -34,7 +34,7 @@ value_diffs <- function(comparison, column) {
       i = "For multiple columns, use `value_diffs_stacked()`"
     ))
   }
-  comparison$summ %>%
+  comparison$intersection %>%
     filter(column == column_char) %>%
     pull(value_diffs) %>%
     `[[`(1)

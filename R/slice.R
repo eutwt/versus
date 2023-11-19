@@ -48,7 +48,7 @@ slice_diffs <- function(table, comparison, column = everything()) {
 #' @rdname slice_diffs
 #' @export
 slice_diffs_both <- function(table_a, table_b, comparison, column = everything()) {
-  output_cols <- c(comparison$by$column, comparison$summ$column)
+  output_cols <- c(comparison$by$column, comparison$intersection$column)
   slice_diffs_for_interleave <- function(df, name) {
     df %>%
       select(all_of(output_cols)) %>%

@@ -136,7 +136,7 @@
         <chr>  <chr>     <chr>    
       1 car    character character
       
-      $summ
+      $intersection
       # A tibble: 11 x 5
          column n_diffs class_a class_b   value_diffs     
          <chr>    <int> <chr>   <chr>     <list>          
@@ -201,7 +201,7 @@
         <chr>  <chr>     <chr>    
       1 car    character character
       
-      $summ
+      $intersection
       # A tibble: 11 x 5
          column n_diffs class_a class_b   value_diffs     
          <chr>    <int> <chr>   <chr>     <list>          

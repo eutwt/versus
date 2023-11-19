@@ -59,7 +59,8 @@ example_df_b
 
 Use `compare()` to see
 
-- The number of differing values in each column - `compare()$summ`
+- The number of differing values in each column -
+  `compare()$intersection`
 - Which columns are in only one table - `compare()$unmatched_cols`
 - Which rows are in only one table - `compare()$unmatched_rows`
 
@@ -79,7 +80,7 @@ comp
 #>   <chr>  <chr>     <chr>    
 #> 1 car    character character
 #> 
-#> $summ
+#> $intersection
 #> # A tibble: 7 × 5
 #>   column n_diffs class_a class_b value_diffs     
 #>   <chr>    <int> <chr>   <chr>   <list>          
