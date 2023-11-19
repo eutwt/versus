@@ -91,7 +91,7 @@ and columns in each.</p></dd>
 <dd><p>A data frame with one row per <code>by</code> column showing the class
 of the column in each of the input tables.</p></dd>
 
-<dt>summ</dt>
+<dt>intersection</dt>
 <dd><p>A data frame with one row per column common to <code>table_a</code> and
 <code>table_b</code> and columns "n_diffs" showing the number of values which
 are different between the two tables, "class_a"/"class_b" the class of the
@@ -131,7 +131,7 @@ in and the <code>by</code> columns for that row.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> car    character character</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $summ</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $intersection</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 7 × 5</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   column n_diffs class_a class_b value_diffs     </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;list&gt;</span>          </span>
