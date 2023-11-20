@@ -115,15 +115,12 @@ print.vs_compare <- function(x, ...) {
 
 #' @export
 summary.vs_compare <- function(object, ...) {
-  same_class <- with(
-    attr(object, "classes"),
-    map2_lgl(a, b, identical)
-  )
   out_vec <- c(
     value_diffs = sum(object$intersection$n_diffs) > 0,
     unmatched_cols = nrow(object$unmatched_cols) > 0,
     unmatched_rows = nrow(object$unmatched_rows) > 0,
-    class_diffs = !all(same_class)
+    class_diffs =
+      !all(with(attr(object, "classes"), map2_lgl(a, b, identical)))
   )
   out <- tibble(
     difference = names(out_vec),
@@ -184,8 +181,8 @@ get_common_rows <- function(table_a, table_b, by, matches) {
 
 join_split <- function(table_a, table_b, by, matches) {
   matches <- locate_matches(table_a, table_b, by)
-  unmatched <- get_unmatched_rows(table_a, table_b, by, matches)
   common <- get_common_rows(table_a, table_b, by, matches)
+  unmatched <- get_unmatched_rows(table_a, table_b, by, matches)
   list(common = common, unmatched = unmatched)
 }
 
@@ -238,6 +235,8 @@ not_equal <- function(col_a, col_b, allow_both_NA) {
   }
   out
 }
+
+# Error handling -------------
 
 abort_duplicates <- function(table_a, table_b, by) {
   call <- caller_env()
