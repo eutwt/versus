@@ -100,7 +100,7 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE) {
     unmatched_cols = tbl_contents$unmatched_cols,
     unmatched_rows = unmatched_rows
   )
-  attr(out, "classes") <- tbl_contents$class
+  attr(out, "template") <- tbl_contents$template
   structure(out, class = "vs_compare")
 }
 
@@ -108,7 +108,7 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE) {
 
 #' @export
 print.vs_compare <- function(x, ...) {
-  attr(x, "classes") <- NULL
+  attr(x, "template") <- NULL
   class(x) <- "list"
   print(x)
 }
@@ -190,21 +190,21 @@ get_contents <- function(table_a, table_b, by) {
   tbl_contents <- join_split(contents(table_a), contents(table_b), by = "column")
 
   by <- tbl_contents$intersection %>%
-    filter(column %in% by) %>%
-    select(-starts_with("class_vec"))
+    select(-starts_with("template")) %>%
+    filter(column %in% by)
 
   compare <- tbl_contents$intersection %>%
-    filter(!column %in% by) %>%
-    select(-starts_with("class_vec"))
+    select(-starts_with("template")) %>%
+    filter(!column %in% by)
 
-  class <- tbl_contents$intersection %>%
+  template <- tbl_contents$intersection %>%
+    select(column, starts_with("template")) %>%
     filter(!column %in% by) %>%
-    select(starts_with("class_vec")) %>%
-    rename_with(\(x) sub("class_vec_", "", x))
+    rename_with(\(x) sub("template_", "", x))
 
   unmatched_cols <- tbl_contents$unmatched_rows
 
-  list(by = by, compare = compare, class = class, unmatched_cols = unmatched_cols)
+  list(by = by, compare = compare, template = template, unmatched_cols = unmatched_cols)
 }
 
 get_value_diffs <- function(col, table_a, table_b, by, matches, allow_both_NA) {
@@ -263,7 +263,7 @@ abort_differing_class <- function(contents, coerce, call = caller_env()) {
     return(invisible())
   }
 
-  same_class <- map2_lgl(contents$class$a, contents$class$b, identical)
+  same_class <- map2_lgl(contents$template$a, contents$template$b, identical)
   if (all(same_class)) {
     return(invisible())
   }
