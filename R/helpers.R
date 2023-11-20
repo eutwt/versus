@@ -7,8 +7,8 @@ fsubset <- function(x, i, j) {
 
 get_cols_from_comparison <- function(comparison, column) {
   # simulate a data frame with the same classes as table_a to eval_select from
-  init_table_a <- with(attr(comparison, "classes"), setNames(a, column))
-  names(eval_select(column, init_table_a))
+  template_a <- with(attr(comparison, "template"), setNames(a, column))
+  names(eval_select(column, template_a))
 }
 
 shorten <- function(x, max_char = 10) {
@@ -27,7 +27,7 @@ contents <- function(table) {
   tibble(
     column = names(table),
     class = map_chr(table, \(x) paste(class(x), collapse = ", ")),
-    class_vec = as.list(vec_init(table))
+    template = as.list(vec_init(table))
   )
 }
 
