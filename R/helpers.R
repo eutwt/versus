@@ -20,11 +20,10 @@ char_vec_display <- function(vec, max_char = 10) {
 }
 
 contents <- function(table) {
-  table %>%
-    lapply(\(x) glue_collapse(class(x), ", ")) %>%
-    bind_cols() %>%
-    unlist() %>%
-    tibble(column = names(.), class = .)
+  tibble(
+    column = names(table),
+    class = map_chr(table, \(x) paste(class(x), collapse = ", "))
+  )
 }
 
 stack_value_diffs <- function(comparison, column, pre_stack_fun) {
