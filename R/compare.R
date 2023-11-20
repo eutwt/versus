@@ -199,7 +199,7 @@ get_contents <- function(table_a, table_b, by) {
 
   class <- tbl_contents$intersection %>%
     filter(!column %in% by) %>%
-    select(starts_with("class_vec")) %>%
+    select(column, starts_with("class_vec")) %>%
     rename_with(\(x) sub("class_vec_", "", x))
 
   unmatched_cols <- tbl_contents$unmatched_rows

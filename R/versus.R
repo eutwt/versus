@@ -7,7 +7,7 @@
 #' @import tidyselect
 #' @import glue
 #' @importFrom utils capture.output
-#' @importFrom vctrs vec_locate_matches vec_as_names
+#' @importFrom vctrs vec_locate_matches vec_as_names vec_init
 #' @importFrom vctrs vec_interleave vec_ptype_common
 #' @importFrom purrr map_int map_lgl map2_lgl map_chr
 #' @importFrom tibble tibble rownames_to_column
