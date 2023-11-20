@@ -65,14 +65,9 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE) {
     nrow = c(nrow(table_a), nrow(table_b))
   )
 
-  cols <- join_split(contents(table_a), contents(table_b), by = "column") %>%
-    with(list(
-      by = common %>% filter(column %in% by_vars),
-      compare = common %>% filter(!column %in% by_vars),
-      unmatched = unmatched
-    ))
+  tbl_contents <- get_contents(table_a, table_b, by_vars)
 
-  abort_differing_class(cols, coerce)
+  abort_differing_class(tbl_contents, coerce)
 
   matches <- try_fetch(
     locate_matches(table_a, table_b, by = by_vars),
@@ -86,7 +81,7 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE) {
     by = by_vars,
     matches = matches
   )
-  cols$compare$value_diffs <- cols$compare$column %>%
+  tbl_contents$compare$value_diffs <- tbl_contents$compare$column %>%
     lapply(get_value_diffs,
       table_a = table_a,
       table_b = table_b,
@@ -95,16 +90,17 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE) {
       allow_both_NA = allow_both_NA
     )
 
-  cols$compare <- cols$compare %>%
+  tbl_contents$compare <- tbl_contents$compare %>%
     mutate(n_diffs = map_int(value_diffs, nrow), .after = column)
 
   out <- list(
     tables = table_summ,
-    by = cols$by,
-    intersection = cols$compare,
-    unmatched_cols = cols$unmatched,
+    by = tbl_contents$by,
+    intersection = tbl_contents$compare,
+    unmatched_cols = tbl_contents$unmatched_cols,
     unmatched_rows = unmatched_rows
   )
+  attr(out, "classes") <- tbl_contents$class
   structure(out, class = "vs_compare")
 }
 
@@ -112,6 +108,7 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE) {
 
 #' @export
 print.vs_compare <- function(x, ...) {
+  attr(x, "classes") <- NULL
   class(x) <- "list"
   print(x)
 }
@@ -122,7 +119,8 @@ summary.vs_compare <- function(object, ...) {
     value_diffs = sum(object$intersection$n_diffs) > 0,
     unmatched_cols = nrow(object$unmatched_cols) > 0,
     unmatched_rows = nrow(object$unmatched_rows) > 0,
-    class_diffs = any(object$class_a != object$class_b)
+    class_diffs =
+      !all(with(attr(object, "classes"), map2_lgl(a, b, identical)))
   )
   out <- tibble(
     difference = names(out_vec),
@@ -132,13 +130,6 @@ summary.vs_compare <- function(object, ...) {
 }
 
 # Helpers ---------
-
-fsubset <- function(x, i, j) {
-  check <- function(i) {
-    length(i) == 1 && i == 0
-  }
-  ss(x, i, j, check = check(i))
-}
 
 locate_matches <- function(table_a, table_b, by) {
   matches <- vec_locate_matches(
@@ -174,7 +165,7 @@ get_unmatched_rows <- function(table_a, table_b, by, matches) {
   as_tibble(rowbind(unmatched, idcol = "table", id.factor = FALSE))
 }
 
-get_common_rows <- function(table_a, table_b, by, matches) {
+converge <- function(table_a, table_b, by, matches) {
   common_cols <- setdiff(intersect(names(table_a), names(table_b)), by)
 
   by_a <- fsubset(table_a, matches$common$needles, by)
@@ -190,9 +181,30 @@ get_common_rows <- function(table_a, table_b, by, matches) {
 
 join_split <- function(table_a, table_b, by, matches) {
   matches <- locate_matches(table_a, table_b, by)
-  unmatched <- get_unmatched_rows(table_a, table_b, by, matches)
-  common <- get_common_rows(table_a, table_b, by, matches)
-  list(common = common, unmatched = unmatched)
+  intersection <- converge(table_a, table_b, by, matches)
+  unmatched_rows <- get_unmatched_rows(table_a, table_b, by, matches)
+  list(intersection = intersection, unmatched_rows = unmatched_rows)
+}
+
+get_contents <- function(table_a, table_b, by) {
+  tbl_contents <- join_split(contents(table_a), contents(table_b), by = "column")
+
+  by <- tbl_contents$intersection %>%
+    filter(column %in% by) %>%
+    select(-starts_with("class_vec"))
+
+  compare <- tbl_contents$intersection %>%
+    filter(!column %in% by) %>%
+    select(-starts_with("class_vec"))
+
+  class <- tbl_contents$intersection %>%
+    filter(!column %in% by) %>%
+    select(starts_with("class_vec")) %>%
+    rename_with(\(x) sub("class_vec_", "", x))
+
+  unmatched_cols <- tbl_contents$unmatched_rows
+
+  list(by = by, compare = compare, class = class, unmatched_cols = unmatched_cols)
 }
 
 get_value_diffs <- function(col, table_a, table_b, by, matches, allow_both_NA) {
@@ -224,6 +236,8 @@ not_equal <- function(col_a, col_b, allow_both_NA) {
   out
 }
 
+# Error handling -------------
+
 abort_duplicates <- function(table_a, table_b, by) {
   call <- caller_env()
   function(e) {
@@ -244,19 +258,22 @@ abort_duplicates <- function(table_a, table_b, by) {
   }
 }
 
-abort_differing_class <- function(cols, coerce, call = caller_env()) {
+abort_differing_class <- function(contents, coerce, call = caller_env()) {
   if (coerce) {
     return(invisible())
   }
-  diff_class <- cols$compare %>%
-    filter(class_a != class_b)
-  if (nrow(diff_class) > 0) {
-    message <- c(
-      "coerce = FALSE but some column classes do not match",
-      i = char_vec_display(diff_class$column, 50)
-    )
-    abort(message, call = call)
+
+  same_class <- map2_lgl(contents$class$a, contents$class$b, identical)
+  if (all(same_class)) {
+    return(invisible())
   }
+
+  columns <- contents$compare$column[!same_class]
+  message <- c(
+    "coerce = FALSE but some column classes do not match",
+    i = char_vec_display(columns, 50)
+  )
+  abort(message, call = call)
 }
 
 ensure_well_named <- function(table_a, table_b, call = caller_env()) {

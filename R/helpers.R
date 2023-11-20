@@ -1,7 +1,13 @@
+fsubset <- function(x, i, j) {
+  check <- function(i) {
+    length(i) == 1 && i == 0
+  }
+  ss(x, i, j, check = check(i))
+}
+
 get_cols_from_comparison <- function(comparison, column) {
   # simulate a data frame with the same classes as table_a to eval_select from
-  fake_table_a <- comparison$intersection$class_a %>%
-    strsplit(", ") %>%
+  fake_table_a <- attr(comparison, "classes")$a %>%
     lapply(\(x) `class<-`(list(), x)) %>%
     setNames(comparison$intersection$column)
   names(eval_select(column, fake_table_a))
@@ -22,7 +28,8 @@ char_vec_display <- function(vec, max_char = 10) {
 contents <- function(table) {
   tibble(
     column = names(table),
-    class = map_chr(table, \(x) paste(class(x), collapse = ", "))
+    class = map_chr(table, \(x) paste(class(x), collapse = ", ")),
+    class_vec = lapply(table, class)
   )
 }
 
