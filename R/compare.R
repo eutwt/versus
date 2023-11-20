@@ -97,7 +97,7 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE) {
     tables = table_summ,
     by = tbl_contents$by,
     intersection = tbl_contents$compare,
-    unmatched_cols = tbl_contents$unmatched,
+    unmatched_cols = tbl_contents$unmatched_cols,
     unmatched_rows = unmatched_rows
   )
   attr(out, "classes") <- tbl_contents$class
@@ -165,7 +165,7 @@ get_unmatched_rows <- function(table_a, table_b, by, matches) {
   as_tibble(rowbind(unmatched, idcol = "table", id.factor = FALSE))
 }
 
-get_common_rows <- function(table_a, table_b, by, matches) {
+converge <- function(table_a, table_b, by, matches) {
   common_cols <- setdiff(intersect(names(table_a), names(table_b)), by)
 
   by_a <- fsubset(table_a, matches$common$needles, by)
@@ -181,30 +181,30 @@ get_common_rows <- function(table_a, table_b, by, matches) {
 
 join_split <- function(table_a, table_b, by, matches) {
   matches <- locate_matches(table_a, table_b, by)
-  common <- get_common_rows(table_a, table_b, by, matches)
-  unmatched <- get_unmatched_rows(table_a, table_b, by, matches)
-  list(common = common, unmatched = unmatched)
+  intersection <- converge(table_a, table_b, by, matches)
+  unmatched_rows <- get_unmatched_rows(table_a, table_b, by, matches)
+  list(intersection = intersection, unmatched_rows = unmatched_rows)
 }
 
 get_contents <- function(table_a, table_b, by) {
   tbl_contents <- join_split(contents(table_a), contents(table_b), by = "column")
 
-  by <- tbl_contents$common %>%
+  by <- tbl_contents$intersection %>%
     filter(column %in% by) %>%
     select(-starts_with("class_vec"))
 
-  compare <- tbl_contents$common %>%
+  compare <- tbl_contents$intersection %>%
     filter(!column %in% by) %>%
     select(-starts_with("class_vec"))
 
-  class <- tbl_contents$common %>%
+  class <- tbl_contents$intersection %>%
     filter(!column %in% by) %>%
     select(starts_with("class_vec")) %>%
     rename_with(\(x) sub("class_vec_", "", x))
 
-  unmatched <- tbl_contents$unmatched
+  unmatched_cols <- tbl_contents$unmatched_rows
 
-  list(by = by, compare = compare, class = class, unmatched = unmatched)
+  list(by = by, compare = compare, class = class, unmatched_cols = unmatched_cols)
 }
 
 get_value_diffs <- function(col, table_a, table_b, by, matches, allow_both_NA) {
