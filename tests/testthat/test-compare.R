@@ -92,3 +92,14 @@ test_that("compare() works when the tables only have one column", {
   b <- tibble(car = 2:5)
   expect_snapshot(compare(a, b, by = car))
 })
+
+test_that("summary() works", {
+  comp <- compare(example_df_a, example_df_b, by = car)
+  expect_identical(
+    summary(comp),
+    tibble(
+      difference = c("value_diffs", "unmatched_cols", "unmatched_rows", "class_diffs"),
+      found = c(TRUE, TRUE, TRUE, FALSE)
+    )
+  )
+})

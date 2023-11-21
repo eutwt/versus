@@ -120,7 +120,7 @@ summary.vs_compare <- function(object, ...) {
     unmatched_cols = nrow(object$unmatched_cols) > 0,
     unmatched_rows = nrow(object$unmatched_rows) > 0,
     class_diffs =
-      !all(with(attr(object, "classes"), map2_lgl(a, b, identical)))
+      !all(with(attr(object, "template"), map2_lgl(a, b, identical)))
   )
   out <- tibble(
     difference = names(out_vec),
