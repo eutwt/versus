@@ -146,12 +146,8 @@ locate_matches <- function(table_a, table_b, by) {
   )
   i_split <- function(x, g) {
     out <- gsplit(x, g, use.g.names = TRUE)
-    if (!"a" %in% names(out)) {
-      out$a <- 0
-    }
-    if (!"b" %in% names(out)) {
-      out$b <- 0
-    }
+    out$a <- out$a %||% 0
+    out$b <- out$b %||% 0
     if (!"common" %in% names(out)) {
       abort("nothing in common")
     }
