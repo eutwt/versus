@@ -145,7 +145,7 @@ locate_matches <- function(table_a, table_b, by) {
     default = "common"
   )
   i_split <- function(x, g) {
-    out <- collapse::gsplit(x, g, use.g.names = TRUE)
+    out <- gsplit(x, g, use.g.names = TRUE)
     if (!"a" %in% names(out)) {
       out$a <- 0
     }
