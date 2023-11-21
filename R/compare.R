@@ -191,23 +191,24 @@ join_split <- function(table_a, table_b, by, matches) {
 
 get_contents <- function(table_a, table_b, by) {
   tbl_contents <- join_split(contents(table_a), contents(table_b), by = "column")
+  out <- list()
 
-  by <- tbl_contents$intersection %>%
+  out$by <- tbl_contents$intersection %>%
     select(-starts_with("template")) %>%
     filter(column %in% by)
 
-  compare <- tbl_contents$intersection %>%
+  out$compare <- tbl_contents$intersection %>%
     select(-starts_with("template")) %>%
     filter(!column %in% by)
 
-  template <- tbl_contents$intersection %>%
+  out$template <- tbl_contents$intersection %>%
     select(column, starts_with("template")) %>%
     filter(!column %in% by) %>%
     rename_with(\(x) sub("template_", "", x))
 
-  unmatched_cols <- tbl_contents$unmatched_rows
+  out$unmatched_cols <- tbl_contents$unmatched_rows
 
-  list(by = by, compare = compare, template = template, unmatched_cols = unmatched_cols)
+  out
 }
 
 get_value_diffs <- function(col, table_a, table_b, by, matches, allow_both_NA) {
