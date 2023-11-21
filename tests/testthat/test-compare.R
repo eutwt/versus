@@ -86,3 +86,9 @@ test_that("compare() works when table arguemnts aren't symbols", {
   comp <- compare(test_df_a %>% mutate(x = 1), test_df_b, by = car, allow_both_NA = FALSE)
   expect_equal(comp$tables$expr[1], "test_df_a %>% mutate(x = 1)")
 })
+
+test_that("compare() works when the tables only have one column", {
+  a <- tibble(car = 1:4)
+  b <- tibble(car = 2:5)
+  expect_snapshot(compare(a, b, by = car))
+})
