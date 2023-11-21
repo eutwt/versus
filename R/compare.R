@@ -153,7 +153,6 @@ locate_matches <- function(table_a, table_b, by) {
     }
     out
   }
-
   out <- lapply(matches, i_split, match_group)
   out$haystack$a <- NULL
   out$needles$b <- NULL
