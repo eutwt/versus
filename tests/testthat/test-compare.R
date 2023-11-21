@@ -93,6 +93,12 @@ test_that("compare() works when the tables only have one column", {
   expect_snapshot(compare(a, b, by = car))
 })
 
+test_that("compare() works when no rows are common", {
+  a <- tibble(car = 1:2)
+  b <- tibble(car = 5:6)
+  expect_snapshot(compare(a, b, by = car))
+})
+
 test_that("summary() works", {
   comp <- compare(example_df_a, example_df_b, by = car)
   expect_identical(

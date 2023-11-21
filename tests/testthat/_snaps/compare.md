@@ -283,3 +283,40 @@
       2 b         5
       
 
+# compare() works when no rows are common
+
+    Code
+      compare(a, b, by = car)
+    Output
+      $tables
+      # A tibble: 2 x 4
+        table   expr   ncol  nrow
+        <chr>   <chr> <int> <int>
+      1 table_a a         1     2
+      2 table_b b         1     2
+      
+      $by
+      # A tibble: 1 x 3
+        column class_a class_b
+        <chr>  <chr>   <chr>  
+      1 car    integer integer
+      
+      $intersection
+      # A tibble: 0 x 5
+      # i 5 variables: column <chr>, n_diffs <int>, class_a <chr>, class_b <chr>,
+      #   value_diffs <list>
+      
+      $unmatched_cols
+      # A tibble: 0 x 2
+      # i 2 variables: table <chr>, column <chr>
+      
+      $unmatched_rows
+      # A tibble: 4 x 2
+        table   car
+        <chr> <int>
+      1 a         1
+      2 a         2
+      3 b         5
+      4 b         6
+      
+

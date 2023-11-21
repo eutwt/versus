@@ -144,16 +144,14 @@ locate_matches <- function(table_a, table_b, by) {
     matches$needles == -2, "b",
     default = "common"
   )
-  i_split <- function(x, g) {
+  split_matches <- function(x, g) {
     out <- gsplit(x, g, use.g.names = TRUE)
     out$a <- out$a %||% 0
     out$b <- out$b %||% 0
-    if (!"common" %in% names(out)) {
-      abort("nothing in common")
-    }
+    out$common <- out$common %||% 0
     out
   }
-  out <- lapply(matches, i_split, match_group)
+  out <- lapply(matches, split_matches, match_group)
   out$haystack$a <- NULL
   out$needles$b <- NULL
   out
