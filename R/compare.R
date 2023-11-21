@@ -144,23 +144,25 @@ locate_matches <- function(table_a, table_b, by) {
     matches$needles == -2, "b",
     default = "common"
   )
-  out <- split(matches, qF(match_group))
-  if (!"a" %in% names(out)) {
-    out$a <- tibble(needles = 0, haystack = 0)
+  i_split <- function(x, g) {
+    out <- gsplit(x, g, use.g.names = TRUE)
+    out$a <- out$a %||% 0
+    out$b <- out$b %||% 0
+    if (!"common" %in% names(out)) {
+      abort("nothing in common")
+    }
+    out
   }
-  if (!"b" %in% names(out)) {
-    out$b <- tibble(needles = 0, haystack = 0)
-  }
-  if (!"common" %in% names(out)) {
-    abort("nothing in common")
-  }
+  out <- lapply(matches, i_split, match_group)
+  out$haystack$a <- NULL
+  out$needles$b <- NULL
   out
 }
 
 get_unmatched_rows <- function(table_a, table_b, by, matches) {
   unmatched <- list(
-    a = fsubset(table_a, matches$a$needles, by),
-    b = fsubset(table_b, matches$b$haystack, by)
+    a = fsubset(table_a, matches$needles$a, by),
+    b = fsubset(table_b, matches$haystack$b, by)
   )
   as_tibble(rowbind(unmatched, idcol = "table", id.factor = FALSE))
 }
@@ -168,9 +170,9 @@ get_unmatched_rows <- function(table_a, table_b, by, matches) {
 converge <- function(table_a, table_b, by, matches) {
   common_cols <- setdiff(intersect(names(table_a), names(table_b)), by)
 
-  by_a <- fsubset(table_a, matches$common$needles, by)
-  common_a <- fsubset(table_a, matches$common$needles, common_cols)
-  common_b <- fsubset(table_b, matches$common$haystack, common_cols)
+  by_a <- fsubset(table_a, matches$needles$common, by)
+  common_a <- fsubset(table_a, matches$needles$common, common_cols)
+  common_b <- fsubset(table_b, matches$haystack$common, common_cols)
 
   add_vars(
     by_a,
@@ -188,34 +190,35 @@ join_split <- function(table_a, table_b, by, matches) {
 
 get_contents <- function(table_a, table_b, by) {
   tbl_contents <- join_split(contents(table_a), contents(table_b), by = "column")
+  out <- list()
 
-  by <- tbl_contents$intersection %>%
+  out$by <- tbl_contents$intersection %>%
     select(-starts_with("template")) %>%
     filter(column %in% by)
 
-  compare <- tbl_contents$intersection %>%
+  out$compare <- tbl_contents$intersection %>%
     select(-starts_with("template")) %>%
     filter(!column %in% by)
 
-  template <- tbl_contents$intersection %>%
+  out$template <- tbl_contents$intersection %>%
     select(column, starts_with("template")) %>%
     filter(!column %in% by) %>%
     rename_with(\(x) sub("template_", "", x))
 
-  unmatched_cols <- tbl_contents$unmatched_rows
+  out$unmatched_cols <- tbl_contents$unmatched_rows
 
-  list(by = by, compare = compare, template = template, unmatched_cols = unmatched_cols)
+  out
 }
 
 get_value_diffs <- function(col, table_a, table_b, by, matches, allow_both_NA) {
-  col_a <- fsubset(table_a, matches$common$needles, col)[[1]]
-  col_b <- fsubset(table_b, matches$common$haystack, col)[[1]]
+  col_a <- fsubset(table_a, matches$needles$common, col)[[1]]
+  col_b <- fsubset(table_b, matches$haystack$common, col)[[1]]
   is_not_equal <- not_equal(col_a, col_b, allow_both_NA)
 
   if (any(is_not_equal)) {
     vals <- tibble(a = col_a[is_not_equal], b = col_b[is_not_equal]) %>%
       frename(paste0(col, c("_a", "_b")))
-    by_cols <- fsubset(table_a, matches$common$needles[is_not_equal], by)
+    by_cols <- fsubset(table_a, matches$needles$common[is_not_equal], by)
   } else {
     vals_a <- fsubset(table_a, 0, col)
     vals_b <- fsubset(table_b, 0, col)
