@@ -22,15 +22,15 @@ shorten <- function(x, max_char = 10) {
 
 dottize <- function(vec, max_size = 20) {
   shorten_vec <- function(vec, max_size) {
-    char_length <- cumsum(nchar(vec))
+    # get printed size when printed with ", " between each element and ...
+    print_size <- cumsum(nchar(vec)) + 2 * (seq_along(vec) - 1) + 4
     for (i in seq_along(vec)) {
-      # get printed size when printed with ", " between each element and ...
-      print_size <- char_length[i] + 2 * (i - 1) + 4
-      if (print_size > max_size) {
+      if (print_size[i] > max_size) {
         if (i == 1) {
-          return(shorten(vec, max_size))
+          out <- shorten(vec, max_size)
         }
-        return(c(head(vec, i - 1), "..."))
+        out <- c(head(vec, i - 1), "...")
+        return(out)
       }
     }
     return(vec)
