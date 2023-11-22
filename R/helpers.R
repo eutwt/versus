@@ -23,7 +23,7 @@ shorten <- function(x, max_char = 10) {
 dottize <- function(vec, max_size = 20) {
   vec <- as.character(vec)
   if (is_empty(vec)) {
-    return(character(0))
+    return(vec)
   }
   if (nchar(vec[1]) > max_size) {
     return(shorten(vec[1], max_size))
