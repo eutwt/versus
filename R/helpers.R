@@ -48,7 +48,7 @@ abort_glimpse <- function(df, max_lines = 3, width = 50) {
   # print the first line of a df in ~glimpse() form, boxed by [max_lines x width]
   tdf <- tibble(
     var = names(df),
-    val = shorten(map_chr(fsubset(df, 1), format_glimpse), width)
+    val = fsubset(df, 1) %>% map_chr(format_glimpse) %>% shorten(width)
   )
   if (nrow(tdf) < max_lines) {
     out <- with(tdf, glue("$ {var}: {val}"))
