@@ -41,10 +41,20 @@
       Error in `compare()`:
       ! `by` variables must uniquely identify rows
       i `table_a` has 2 rows with the same `by` values as row 1
-      $ a : 1
-      $ b : 2
-      $ c : 3
+      $ a: 1
+      $ b: 2
+      $ c: 3
       i 3 more: azbzczdzezfzgzhzizjzkzlzmznzozpzqzrzsztzuzvzwzx...
+
+---
+
+    Code
+      compare(with_dupe, without_dupe, by = a)
+    Condition
+      Error in `compare()`:
+      ! `by` variables must uniquely identify rows
+      i `table_a` has 2 rows with the same `by` values as row 1
+      $ a: "azbzczdzezfzgzhzizjzkzlzmznzozpzqzrzsztzuzvzwz...
 
 # Error on non data frame input
 

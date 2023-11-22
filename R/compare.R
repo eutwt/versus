@@ -254,24 +254,8 @@ abort_duplicates <- function(table_a, table_b, by) {
     }
     n_rows <- length(row_num)
     info <- c(i = "`{tbl}` has {n_rows} rows with the same `by` values as row {row_num[1]}")
-    field_display <- tail(capture.output(glimpse(tbl_row)), -2) %>%
-      style_no_color() %>%
-      sub(pattern = " <.*>", replacement = ":")
 
-    n_disp <- 3
-    if (length(field_display) > n_disp) {
-      first <- head(field_display, n_disp)
-      n_others <- length(field_display) - n_disp
-      others <- paste(
-        sep = " ",
-        "{symbol$info} {n_others} more:",
-        dottize(tail(by, n_others), 50)
-      ) %>%
-        pluralize()
-      field_display <- c(first, others)
-    }
-
-    cli_abort(c(top_msg, info, field_display), call = call)
+    cli_abort(c(top_msg, info, abort_glimpse(tbl_row)), call = call)
   }
 }
 

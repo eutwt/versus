@@ -6,6 +6,7 @@
 #' @import cli
 #' @import dplyr
 #' @import tidyselect
+#' @importFrom pillar format_glimpse
 #' @importFrom glue glue glue_collapse
 #' @importFrom utils capture.output head tail
 #' @importFrom cli cli_abort

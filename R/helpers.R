@@ -44,6 +44,25 @@ dottize <- function(vec, max_size = 20) {
     glue_collapse(", ")
 }
 
+abort_glimpse <- function(df, max_lines = 3, width = 50) {
+  # print the first line of a df in ~glimpse() form, boxed by [max_lines x width]
+  tdf <- tibble(
+    var = names(df),
+    val = shorten(map_chr(fsubset(df, 1), format_glimpse), width)
+  )
+  if (nrow(tdf) < max_lines) {
+    out <- with(tdf, glue("$ {var}: {val}"))
+    return(out)
+  }
+  first <- head(tdf, max_lines) %>%
+    with(glue("$ {var}: {val}"))
+  n_more <- nrow(tdf) - max_lines
+  more <- paste0(
+    glue("{symbol$info} {n_more} more: "),
+    dottize(tail(tdf$var, n_more), width)
+  )
+  c(first, more)
+}
 contents <- function(table) {
   tibble(
     column = names(table),

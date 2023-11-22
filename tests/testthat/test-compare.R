@@ -26,9 +26,15 @@ test_that("Error on input with duplicates", {
     as_tibble() %>%
     frename(\(x) replace(x, 4, glue_collapse(letters, "z")))
   with_dupe <- without_dupe[c(1, 1, 2), ]
-  # for table_a
   expect_snapshot(
     compare(with_dupe, without_dupe, by = 1:6),
+    error = TRUE
+  )
+  # when there is a by value with a large print width
+  without_dupe <- tibble(a = glue_collapse(letters, "z"))
+  with_dupe <- without_dupe[c(1, 1, 2), ]
+  expect_snapshot(
+    compare(with_dupe, without_dupe, by = a),
     error = TRUE
   )
 })
