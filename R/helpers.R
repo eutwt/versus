@@ -21,6 +21,7 @@ shorten <- function(x, max_char = 10) {
 }
 
 dottize <- function(vec, max_size = 20) {
+  vec <- as.character(vec)
   if (is_empty(vec)) {
     return(character(0))
   }
@@ -39,7 +40,6 @@ dottize <- function(vec, max_size = 20) {
   }
 
   vec %>%
-    as.character() %>%
     shorten_vec(max_size) %>%
     glue_collapse(", ")
 }
