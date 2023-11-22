@@ -12,6 +12,7 @@ get_cols_from_comparison <- function(comparison, column) {
 }
 
 shorten <- function(x, max_char = 10) {
+  x <- as.character(x)
   if_else(
     nchar(x) > max_char,
     paste0(substr(x, 1, max_char - 3), "..."),
@@ -19,8 +20,26 @@ shorten <- function(x, max_char = 10) {
   )
 }
 
-char_vec_display <- function(vec, max_char = 10) {
-  shorten(glue_collapse(vec, ", "), max_char)
+dottize <- function(vec, max_size = 20) {
+  shorten_vec <- function(vec, max_size) {
+    for (i in seq_along(vec)) {
+      out <- head(vec, i)
+      # get printed size when printed with ", " between each element and ...
+      print_size <- sum(nchar(out)) + 2 * (length(out) - 1) + 4
+      if (print_size > max_size) {
+        if (i == 1) {
+          return(shorten(out, max_size))
+        }
+        return(c(head(out, i - 1), "..."))
+      }
+    }
+    return(vec)
+  }
+
+  vec %>%
+    as.character() %>%
+    shorten_vec(max_size) %>%
+    glue_collapse(", ")
 }
 
 contents <- function(table) {

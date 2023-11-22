@@ -66,8 +66,8 @@ slice_diffs_both <- function(table_a, table_b, comparison, column = everything()
   })
   if (any(is_incompatible)) {
     incompatible_cols <- names(is_incompatible)[is_incompatible]
-    cols_char <- char_vec_display(incompatible_cols, 30)
-    inform(c(i = glue("Columns converted to character: {cols_char}")))
+    cols_char <- dottize(incompatible_cols, 30)
+    cli_alert_info("Columns converted to character: {cols_char}")
 
     diffs_a <- diffs_a %>%
       mutate(across(all_of(incompatible_cols), as.character))

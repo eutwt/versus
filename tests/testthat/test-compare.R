@@ -11,10 +11,19 @@ test_that("Error on input with duplicates", {
     compare(without_dupe, with_dupe, by = c(x, y)),
     error = TRUE
   )
+  # when there are lots of `by` columns
+  without_dupe <- setNames(seq_along(letters), letters) %>%
+    as.list() %>%
+    as_tibble()
+  with_dupe <- without_dupe[c(1, 1, 2), ]
+  expect_snapshot(
+    compare(without_dupe, with_dupe, by = all_of(letters)),
+    error = TRUE
+  )
 })
 
 test_that("Error on non data frame input", {
-  non_df <- structure(list(), class = letters)
+  non_df <- structure(list(), class = class(Sys.time()))
   expect_snapshot(
     compare(example_df_a, non_df, by = car),
     error = TRUE

@@ -243,19 +243,35 @@ abort_duplicates <- function(table_a, table_b, by) {
   call <- caller_env()
   function(e) {
     tbl <- if_else(e$which == "haystack", "table_a", "table_b")
-
-    cols_char <- char_vec_display(glue("`{by}`"), 20)
-    top_msg <- glue("`{tbl}` must be unique on `by` vars ({cols_char})")
+    top_msg <- "`by` variables must uniquely identify rows"
 
     if (tbl == "table_a") {
       tbl_row <- fsubset(table_b, e$i, by)
+      row_num <- vec_locate_matches(tbl_row, fsubset(table_a, j = by))$haystack
     } else {
       tbl_row <- fsubset(table_a, e$i, by)
+      row_num <- vec_locate_matches(tbl_row, fsubset(table_b, j = by))$haystack
     }
-    tbl_char <- capture.output(as_tibble(tbl_row))[-1]
-    info <- c(i = glue("The row shown below is duplicated."), tbl_char)
+    n_rows <- length(row_num)
+    info <- c(i = "`{tbl}` has {n_rows} rows with the same `by` values as row {row_num[1]}")
+    field_display <- tail(capture.output(glimpse(tbl_row)), -2) %>%
+      style_no_color() %>%
+      sub(pattern = " <.*>", replacement = ":")
 
-    abort(message = top_msg, body = info, call = call)
+    n_disp <- 3
+    if (length(field_display) > n_disp) {
+      first <- head(field_display, n_disp)
+      n_others <- length(field_display) - n_disp
+      others <- paste(
+        sep = " ",
+        "{symbol$info} {n_others} more:",
+        dottize(tail(by, n_others), 50)
+      ) %>%
+        pluralize()
+      field_display <- c(first, others)
+    }
+
+    cli_abort(c(top_msg, info, field_display), call = call)
   }
 }
 
@@ -272,9 +288,9 @@ abort_differing_class <- function(contents, coerce, call = caller_env()) {
   columns <- contents$compare$column[!same_class]
   message <- c(
     "coerce = FALSE but some column classes do not match",
-    i = char_vec_display(columns, 50)
+    i = dottize(columns, 50)
   )
-  abort(message, call = call)
+  cli_abort(message, call = call)
 }
 
 ensure_well_named <- function(table_a, table_b, call = caller_env()) {
@@ -293,12 +309,11 @@ ensure_data_frame <- function(x, call = caller_env()) {
   if (is.data.frame(x)) {
     return(TRUE)
   }
-  class_display <- char_vec_display(glue('"{class(x)}"'), 40)
   message <- c(
-    glue("`{arg_name}` must be a data frame"),
-    i = glue("class({arg_name}): {class_display}")
+    "`{arg_name}` must be a data frame",
+    i = "class({arg_name}): {.cls {class(x)}}"
   )
-  abort(message, call = call)
+  cli_abort(message, call = call)
 }
 
 rethrow_with_arg_name <- function(arg_name, call) {

@@ -4,11 +4,10 @@
       compare(with_dupe, without_dupe, by = c(x, y))
     Condition
       Error in `compare()`:
-      ! `table_a` must be unique on `by` vars (`x`, `y`)
-      i The row shown below is duplicated.
-            x     y
-        <int> <int>
-      1    -2    -3
+      ! `by` variables must uniquely identify rows
+      i `table_a` has 2 rows with the same `by` values as row 1
+      $ x: -2
+      $ y: -3
 
 ---
 
@@ -16,11 +15,23 @@
       compare(without_dupe, with_dupe, by = c(x, y))
     Condition
       Error in `compare()`:
-      ! `table_b` must be unique on `by` vars (`x`, `y`)
-      i The row shown below is duplicated.
-            x     y
-        <int> <int>
-      1    -2    -3
+      ! `by` variables must uniquely identify rows
+      i `table_b` has 2 rows with the same `by` values as row 1
+      $ x: -2
+      $ y: -3
+
+---
+
+    Code
+      compare(without_dupe, with_dupe, by = all_of(letters))
+    Condition
+      Error in `compare()`:
+      ! `by` variables must uniquely identify rows
+      i `table_b` has 2 rows with the same `by` values as row 1
+      $ a: 1
+      $ b: 2
+      $ c: 3
+      i 23 more: d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, ...
 
 # Error on non data frame input
 
@@ -29,7 +40,7 @@
     Condition
       Error in `compare()`:
       ! `table_b` must be a data frame
-      i class(table_b): "a", "b", "c", "d", "e", "f", "g", "h...
+      i class(table_b): <POSIXct/POSIXt>
 
 ---
 
@@ -38,7 +49,7 @@
     Condition
       Error in `compare()`:
       ! `table_a` must be a data frame
-      i class(table_a): "a", "b", "c", "d", "e", "f", "g", "h...
+      i class(table_a): <POSIXct/POSIXt>
 
 # Error on input with duplicated names
 

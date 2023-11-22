@@ -28,9 +28,9 @@ value_diffs <- function(comparison, column) {
   column <- enquo(column)
   column_char <- get_cols_from_comparison(comparison, column)
   if (length(column_char) != 1) {
-    cols_selected <- char_vec_display(column_char, 30)
-    abort(c("Must select only one column.",
-      i = glue("Columns selected: {cols_selected}"),
+    cols_selected <- dottize(column_char, 30)
+    cli_abort(c("Must select only one column.",
+      i = "Columns selected: {cols_selected}",
       i = "For multiple columns, use `value_diffs_stacked()`"
     ))
   }

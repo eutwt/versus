@@ -9,14 +9,14 @@ get_by_vars <- function(by_quo, table_a, table_b, call = caller_env()) {
   )
   if (!identical(names(cols_a), names(cols_b))) {
     msg <- "Column names of `by` variables must be the same in both data frames"
-    a_names <- char_vec_display(names(cols_a), 50)
-    b_names <- char_vec_display(names(cols_b), 50)
+    a_names <- dottize(names(cols_a), 50)
+    b_names <- dottize(names(cols_b), 50)
     msg <- c(
       msg,
-      i = glue("table_a names: {a_names}"),
-      i = glue("table_b names: {b_names}")
+      i = "table_a names: {a_names}",
+      i = "table_b names: {b_names}"
     )
-    abort(msg, call = call)
+    cli_abort(msg, call = call)
   }
   names(cols_a)
 }
@@ -37,7 +37,7 @@ rethrow_by_select_error <- function(arg_name, call) {
         i = glue("No matching columns found in `{arg_name}`")
       )
     } else {
-      cnd_msg <- c(glue("Problem with `by`:"), cnd_msg)
+      cnd_msg <- c("Problem with `by`:", cnd_msg)
     }
     abort(cnd_msg, call = call)
   }
