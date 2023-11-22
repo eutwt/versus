@@ -24,10 +24,10 @@ dottize <- function(vec, max_size = 20) {
   if (is_empty(vec)) {
     return(character(0))
   }
+  if (nchar(vec[1]) > max_size) {
+    return(shorten(vec[1], max_size))
+  }
   shorten_vec <- function(vec, max_size) {
-    if (nchar(vec[1]) > max_size) {
-      return(shorten(vec[1], max_size))
-    }
     # get printed size when printed with ", " between each element and ...
     print_size <- cumsum(nchar(vec)) + 2 * (seq_along(vec) - 1) + 4
     for (i in seq2(2, length(vec))) {
