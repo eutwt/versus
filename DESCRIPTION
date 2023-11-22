@@ -19,6 +19,7 @@ Imports:
     tidyselect (>= 1.2.0),
     vctrs (>= 0.6.4),
     tibble,
+    pillar,
     purrr,
     collapse,
     data.table
