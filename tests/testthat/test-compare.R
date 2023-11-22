@@ -20,6 +20,17 @@ test_that("Error on input with duplicates", {
     compare(without_dupe, with_dupe, by = all_of(letters)),
     error = TRUE
   )
+  # when there is a by column with a long name
+  without_dupe <- setNames(seq_along(letters), letters) %>%
+    as.list() %>%
+    as_tibble() %>%
+    frename(\(x) replace(x, 4, glue_collapse(letters, "z")))
+  with_dupe <- without_dupe[c(1, 1, 2), ]
+  # for table_a
+  expect_snapshot(
+    compare(with_dupe, without_dupe, by = 1:6),
+    error = TRUE
+  )
 })
 
 test_that("Error on non data frame input", {

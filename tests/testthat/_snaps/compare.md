@@ -33,6 +33,19 @@
       $ c: 3
       i 23 more: d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, ...
 
+---
+
+    Code
+      compare(with_dupe, without_dupe, by = 1:6)
+    Condition
+      Error in `compare()`:
+      ! `by` variables must uniquely identify rows
+      i `table_a` has 2 rows with the same `by` values as row 1
+      $ a : 1
+      $ b : 2
+      $ c : 3
+      i 3 more: azbzczdzezfzgzhzizjzkzlzmznzozpzqzrzsztzuzvzwzx...
+
 # Error on non data frame input
 
     Code
