@@ -63,6 +63,7 @@ abort_glimpse <- function(df, max_lines = 3, width = 50) {
   )
   c(first, more)
 }
+
 contents <- function(table) {
   tibble(
     column = names(table),
