@@ -17,7 +17,3 @@
 #' @importFrom collapse ss qF rowbind add_vars frename gsplit
 #' @importFrom data.table fcase fcoalesce
 "_PACKAGE"
-
-.onLoad <- function(libname, pkgname) {
-  options(duckdb.materialize_message = FALSE)
-}

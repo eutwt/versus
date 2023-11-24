@@ -104,8 +104,15 @@ test_that("Error when `by` uses `join_by`", {
 })
 
 test_that("Error on different classes with coerce = FALSE", {
-  expect_snapshot(compare(test_df_a, test_df_b, by = car, coerce = FALSE),
+  expect_snapshot(
+    compare(test_df_a, test_df_b, by = car, coerce = FALSE),
     error = TRUE
+  )
+  # but only if the classes are different
+  df <- rownames_to_column(mtcars, "car")
+  expect_identical(
+    compare(df, df, by = car, coerce = FALSE),
+    compare(df, df, by = car, coerce = TRUE)
   )
 })
 

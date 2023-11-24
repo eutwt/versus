@@ -37,7 +37,7 @@ slice_diffs <- function(table, comparison, column = everything()) {
   )
 
   if (nrow(indices_having_diffs) == 0) {
-    out <- table %>% slice(c())
+    out <- fsubset(table, 0)
   } else {
     out <- table %>%
       semi_join(indices_having_diffs, by = comparison$by$column)
