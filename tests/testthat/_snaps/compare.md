@@ -4,11 +4,10 @@
       compare(with_dupe, without_dupe, by = c(x, y))
     Condition
       Error in `compare()`:
-      ! `table_a` must be unique on `by` vars (`x`, `y`)
-      i The row shown below is duplicated.
-            x     y
-        <int> <int>
-      1    -2    -3
+      ! `by` variables must uniquely identify rows
+      i `table_a` has 2 rows with the same `by` values as row 1
+      $ x: -2
+      $ y: -3
 
 ---
 
@@ -16,11 +15,59 @@
       compare(without_dupe, with_dupe, by = c(x, y))
     Condition
       Error in `compare()`:
-      ! `table_b` must be unique on `by` vars (`x`, `y`)
-      i The row shown below is duplicated.
-            x     y
-        <int> <int>
-      1    -2    -3
+      ! `by` variables must uniquely identify rows
+      i `table_b` has 2 rows with the same `by` values as row 1
+      $ x: -2
+      $ y: -3
+
+---
+
+    Code
+      compare(a, b, by = all_of(names(mtcars)))
+    Condition
+      Error in `compare()`:
+      ! `by` variables must uniquely identify rows
+      i `table_b` has 2 rows with the same `by` values as row 2
+      $ mpg: 22.8
+      $ cyl: 4
+      $ disp: 108
+      i 8 more: hp, drat, wt, qsec, vs, am, gear, carb
+
+# Error on dupes when there are lots of `by` columns
+
+    Code
+      compare(without_dupe, with_dupe, by = all_of(letters))
+    Condition
+      Error in `compare()`:
+      ! `by` variables must uniquely identify rows
+      i `table_b` has 2 rows with the same `by` values as row 1
+      $ a: 1
+      $ b: 2
+      $ c: 3
+      i 23 more: d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, ...
+
+# Error on dupes when there is a `by` column with a long name
+
+    Code
+      compare(with_dupe, without_dupe, by = 1:6)
+    Condition
+      Error in `compare()`:
+      ! `by` variables must uniquely identify rows
+      i `table_a` has 2 rows with the same `by` values as row 1
+      $ a: 1
+      $ b: 2
+      $ c: 3
+      i 3 more: azbzczdzezfzgzhzizjzkzlzmznzozpzqzrzsztzuzvzwzx...
+
+# Error on dupes when there is a `by` value with a large print width
+
+    Code
+      compare(with_dupe, without_dupe, by = a)
+    Condition
+      Error in `compare()`:
+      ! `by` variables must uniquely identify rows
+      i `table_a` has 2 rows with the same `by` values as row 1
+      $ a: "azbzczdzezfzgzhzizjzkzlzmznzozpzqzrzsztzuzvzwz...
 
 # Error on non data frame input
 
@@ -29,7 +76,7 @@
     Condition
       Error in `compare()`:
       ! `table_b` must be a data frame
-      i class(table_b): "a", "b", "c", "d", "e", "f", "g", "h...
+      i class(table_b): <POSIXct/POSIXt>
 
 ---
 
@@ -38,7 +85,7 @@
     Condition
       Error in `compare()`:
       ! `table_a` must be a data frame
-      i class(table_a): "a", "b", "c", "d", "e", "f", "g", "h...
+      i class(table_a): <POSIXct/POSIXt>
 
 # Error on input with duplicated names
 

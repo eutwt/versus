@@ -12,6 +12,7 @@ get_cols_from_comparison <- function(comparison, column) {
 }
 
 shorten <- function(x, max_char = 10) {
+  x <- as.character(x)
   if_else(
     nchar(x) > max_char,
     paste0(substr(x, 1, max_char - 3), "..."),
@@ -19,10 +20,49 @@ shorten <- function(x, max_char = 10) {
   )
 }
 
-char_vec_display <- function(vec, max_char = 10) {
-  shorten(glue_collapse(vec, ", "), max_char)
+dottize <- function(vec, max_size = 20) {
+  vec <- as.character(vec)
+  if (is_empty(vec)) {
+    return(vec)
+  }
+  if (nchar(vec[1]) > max_size) {
+    return(shorten(vec[1], max_size))
+  }
+  shorten_vec <- function(vec, max_size) {
+    # get printed size when printed with ", " between each element and ...
+    print_size <- cumsum(nchar(vec)) + 2 * (seq_along(vec) - 1) + 4
+    for (i in seq2(2, length(vec))) {
+      if (print_size[i] > max_size) {
+        return(c(head(vec, i - 1), "..."))
+      }
+    }
+    return(vec)
+  }
+
+  vec %>%
+    shorten_vec(max_size) %>%
+    glue_collapse(", ")
 }
 
+abort_glimpse <- function(df, max_lines = 3, width = 50) {
+  # print the first line of a df in ~glimpse() form, boxed by [max_lines x width]
+  tdf <- tibble(
+    var = names(df),
+    val = fsubset(df, 1) %>% map_chr(format_glimpse) %>% shorten(width)
+  )
+  if (nrow(tdf) < max_lines) {
+    out <- with(tdf, glue("$ {var}: {val}"))
+    return(out)
+  }
+  first <- head(tdf, max_lines) %>%
+    with(glue("$ {var}: {val}"))
+  n_more <- nrow(tdf) - max_lines
+  more <- paste0(
+    glue("{symbol$info} {n_more} more: "),
+    dottize(tail(tdf$var, n_more), width)
+  )
+  c(first, more)
+}
 contents <- function(table) {
   tibble(
     column = names(table),
