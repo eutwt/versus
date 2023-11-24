@@ -23,6 +23,19 @@
 ---
 
     Code
+      compare(a, b, by = all_of(names(mtcars)))
+    Condition
+      Error in `compare()`:
+      ! `by` variables must uniquely identify rows
+      i `table_b` has 2 rows with the same `by` values as row 2
+      $ mpg: 22.8
+      $ cyl: 4
+      $ disp: 108
+      i 8 more: hp, drat, wt, qsec, vs, am, gear, carb
+
+# Error on dupes when there are lots of `by` columns
+
+    Code
       compare(without_dupe, with_dupe, by = all_of(letters))
     Condition
       Error in `compare()`:
@@ -33,7 +46,7 @@
       $ c: 3
       i 23 more: d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, ...
 
----
+# Error on dupes when there is a `by` column with a long name
 
     Code
       compare(with_dupe, without_dupe, by = 1:6)
@@ -46,7 +59,7 @@
       $ c: 3
       i 3 more: azbzczdzezfzgzhzizjzkzlzmznzozpzqzrzsztzuzvzwzx...
 
----
+# Error on dupes when there is a `by` value with a large print width
 
     Code
       compare(with_dupe, without_dupe, by = a)

@@ -11,7 +11,16 @@ test_that("Error on input with duplicates", {
     compare(without_dupe, with_dupe, by = c(x, y)),
     error = TRUE
   )
-  # when there are lots of `by` columns
+  # many-to-many
+  a <- mtcars[c(3, 3, 1), ]
+  b <- mtcars[c(1, 3, 3), ]
+  expect_snapshot(
+    compare(a, b, by = all_of(names(mtcars))),
+    error = TRUE
+  )
+})
+
+test_that("Error on dupes when there are lots of `by` columns", {
   without_dupe <- setNames(seq_along(letters), letters) %>%
     as.list() %>%
     as_tibble()
@@ -20,7 +29,9 @@ test_that("Error on input with duplicates", {
     compare(without_dupe, with_dupe, by = all_of(letters)),
     error = TRUE
   )
-  # when there is a by column with a long name
+})
+
+test_that("Error on dupes when there is a `by` column with a long name", {
   without_dupe <- setNames(seq_along(letters), letters) %>%
     as.list() %>%
     as_tibble() %>%
@@ -30,7 +41,9 @@ test_that("Error on input with duplicates", {
     compare(with_dupe, without_dupe, by = 1:6),
     error = TRUE
   )
-  # when there is a by value with a large print width
+})
+
+test_that("Error on dupes when there is a `by` value with a large print width", {
   without_dupe <- tibble(a = glue_collapse(letters, "z"))
   with_dupe <- without_dupe[c(1, 1, 2), ]
   expect_snapshot(
