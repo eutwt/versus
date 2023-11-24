@@ -8,6 +8,8 @@
 [![R-CMD-check](https://github.com/eutwt/versus/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/eutwt/versus/actions/workflows/R-CMD-check.yaml)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/versus)](https://CRAN.R-project.org/package=versus)
+[![Codecov test
+coverage](https://codecov.io/gh/eutwt/versus/branch/main/graph/badge.svg)](https://app.codecov.io/gh/eutwt/versus?branch=main)
 <!-- badges: end -->
 
 ## Overview
