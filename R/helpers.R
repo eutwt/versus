@@ -5,10 +5,21 @@ fsubset <- function(x, i, j) {
   ss(x, i, j, check = check(i))
 }
 
+table_init <- function(comparison, tbl) {
+  # simulate a data frame with the same classes as table_[tbl]
+  column <- switch(tbl,
+    a = 1,
+    b = 2
+  )
+  comparison$intersection$value_diffs %>%
+    lapply(\(x) x[[column]][0]) %>%
+    setNames(comparison$intersection$column)
+}
+
 get_cols_from_comparison <- function(comparison, column) {
-  # simulate a data frame with the same classes as table_a to eval_select from
-  template_a <- with(attr(comparison, "template"), setNames(a, column))
-  names(eval_select(column, template_a))
+  template_a <- table_init(comparison, tbl = "a")
+  selection <- eval_select(column, template_a)
+  names(selection)
 }
 
 shorten <- function(x, max_char = 10) {
@@ -67,8 +78,7 @@ abort_glimpse <- function(df, max_lines = 3, width = 50) {
 contents <- function(table) {
   tibble(
     column = names(table),
-    class = map_chr(table, \(x) paste(class(x), collapse = ", ")),
-    template = as.list(vec_init(table))
+    class = map_chr(table, \(x) paste(class(x), collapse = ", "))
   )
 }
 
