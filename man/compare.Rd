@@ -17,7 +17,8 @@ compare(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE)
 \item{allow_both_NA}{Logical. If \code{TRUE} a missing value in both data frames is
 considered as equal}
 
-\item{coerce}{Logical. If \code{FALSE} only columns with the same class are compared.}
+\item{coerce}{Logical. If \code{FALSE} and columns from the input tables have
+differing classes, the function throws an error.}
 }
 \value{
 \describe{
