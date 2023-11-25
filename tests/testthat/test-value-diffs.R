@@ -21,7 +21,7 @@ test_that("Error on value_diffs when column doesn't exist", {
   expect_snapshot(value_diffs_stacked(comp, c(bear, mpg)), error = TRUE)
 })
 
-test_that("value_diffs with multiple columns errors", {
+test_that("Error on value_diffs with multiple columns", {
   comp <- compare(test_df_a, test_df_b, by = car)
   expect_snapshot(value_diffs(comp, c(mpg, disp)), error = TRUE)
 })

@@ -63,7 +63,7 @@
       * Can't subset columns that don't exist.
       x Column `bear` doesn't exist.
 
-# value_diffs with multiple columns errors
+# Error on value_diffs with multiple columns
 
     Code
       value_diffs(comp, c(mpg, disp))
