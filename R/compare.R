@@ -84,6 +84,7 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE) {
     by = by_vars,
     matches = matches
   )
+
   tbl_contents$compare$value_diffs <- tbl_contents$compare$column %>%
     lapply(get_value_diffs,
       table_a = table_a,

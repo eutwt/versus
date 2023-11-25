@@ -27,3 +27,9 @@ test_that("value_diffs_all coerces to char on incompatible ptypes", {
   comp <- compare(test_df_a_char_mpg, test_df_b, by = car)
   expect_snapshot(as_tibble(value_diffs_all(comp)))
 })
+
+load_all()
+
+comp <- compare(test_df_a, test_df_b, by = car)
+comp
+value_diffs_stacked(comp, c(mpg, disp))

@@ -5,15 +5,14 @@ fsubset <- function(x, i, j) {
   ss(x, i, j, check = check(i))
 }
 
-table_init <- function(comparison, tbl) {
+table_init <- function(comparison, tbl = c("a", "b")) {
   # simulate a data frame with the same classes as table_[tbl]
-  column <- switch(tbl,
-    a = 1,
-    b = 2
-  )
-  comparison$intersection$value_diffs %>%
-    lapply(\(x) x[[column]][0]) %>%
-    setNames(comparison$intersection$column)
+  tbl <- arg_match(tbl)
+  col_index <- if_else(tbl == "a", 1, 2)
+
+  comparison$intersection %>%
+    with(setNames(value_diffs, column)) %>%
+    lapply(\(x) x[[col_index]][0])
 }
 
 get_cols_from_comparison <- function(comparison, column) {
