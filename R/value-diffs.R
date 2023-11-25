@@ -73,11 +73,7 @@ stack_value_diffs <- function(comparison, column, pre_stack_fun, call = caller_e
   column_locs <- get_cols_from_comparison(comparison, column, call = call)
   is_selected <- seq(nrow(comparison$intersection)) %in% column_locs
   has_value_diffs <- comparison$intersection$n_diffs > 0
-  to_stack <- which(is_selected & has_value_diffs)
-
-  if (is_empty(to_stack)) {
-    to_stack <- which.max(is_selected)
-  }
+  to_stack <- which(is_selected & has_value_diffs) %0% which.max(is_selected)
 
   Map(
     pre_stack_fun,
