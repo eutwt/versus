@@ -28,19 +28,19 @@
 # Error on value_diffs with empty selection
 
     Code
-      value_diffs(comp, where(is.Date))
+      value_diffs(comp, where(is.factor))
     Condition
       Error in `value_diffs()`:
-      ! Problem with supplied `column = where(is.Date)`:
+      ! Problem with supplied `column = where(is.factor)`:
       * Must select at least one item.
 
 ---
 
     Code
-      value_diffs_stacked(comp, where(is.Date))
+      value_diffs_stacked(comp, where(is.factor))
     Condition
       Error in `value_diffs_stacked()`:
-      ! Problem with supplied `column = where(is.Date)`:
+      ! Problem with supplied `column = where(is.factor)`:
       * Must select at least one item.
 
 # Error on value_diffs when column doesn't exist

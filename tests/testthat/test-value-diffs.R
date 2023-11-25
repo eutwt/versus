@@ -11,8 +11,8 @@ test_that("value_diffs works when the supplied columns have no diffs ", {
 
 test_that("Error on value_diffs with empty selection", {
   comp <- compare(test_df_a, test_df_b, by = car)
-  expect_snapshot(value_diffs(comp, where(is.Date)), error = TRUE)
-  expect_snapshot(value_diffs_stacked(comp, where(is.Date)), error = TRUE)
+  expect_snapshot(value_diffs(comp, where(is.factor)), error = TRUE)
+  expect_snapshot(value_diffs_stacked(comp, where(is.factor)), error = TRUE)
 })
 
 test_that("Error on value_diffs when column doesn't exist", {
