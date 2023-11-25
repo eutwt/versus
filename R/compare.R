@@ -6,7 +6,8 @@
 #' \code{.data_a} and \code{.data_b}. Both data frames must be unique on \code{by}.
 #' @param allow_both_NA Logical. If \code{TRUE} a missing value in both data frames is
 #' considered as equal
-#' @param coerce Logical. If \code{FALSE} only columns with the same class are compared.
+#' @param coerce Logical. If \code{FALSE} and columns from the input tables have
+#' differing classes, the function throws an error.
 #'
 #' @return
 #' \describe{
@@ -55,6 +56,9 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE) {
   ensure_data_frame(table_a)
   ensure_data_frame(table_b)
   ensure_well_named(table_a, table_b)
+  if (!coerce) {
+    ensure_same_class(table_a, table_b)
+  }
 
   by_vars <- get_by_vars(by_quo = by, table_a = table_a, table_b = table_b)
 
@@ -67,7 +71,6 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE) {
 
   tbl_contents <- get_contents(table_a, table_b, by_vars)
 
-  abort_differing_class(tbl_contents, coerce)
 
   matches <- try_fetch(
     locate_matches(table_a, table_b, by = by_vars),
@@ -81,6 +84,7 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE) {
     by = by_vars,
     matches = matches
   )
+
   tbl_contents$compare$value_diffs <- tbl_contents$compare$column %>%
     lapply(get_value_diffs,
       table_a = table_a,
@@ -100,7 +104,6 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE) {
     unmatched_cols = tbl_contents$unmatched_cols,
     unmatched_rows = unmatched_rows
   )
-  attr(out, "template") <- tbl_contents$template
   structure(out, class = "vs_compare")
 }
 
@@ -108,7 +111,6 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE) {
 
 #' @export
 print.vs_compare <- function(x, ...) {
-  attr(x, "template") <- NULL
   class(x) <- "list"
   print(x)
 }
@@ -119,8 +121,9 @@ summary.vs_compare <- function(object, ...) {
     value_diffs = sum(object$intersection$n_diffs) > 0,
     unmatched_cols = nrow(object$unmatched_cols) > 0,
     unmatched_rows = nrow(object$unmatched_rows) > 0,
-    class_diffs =
-      !all(with(attr(object, "template"), map2_lgl(a, b, identical)))
+    class_diffs = object$intersection$value_diffs %>%
+      map_lgl(\(x) !identical(x[[1]][0], x[[2]][0])) %>%
+      any()
   )
   out <- tibble(
     difference = names(out_vec),
@@ -191,17 +194,10 @@ get_contents <- function(table_a, table_b, by) {
   out <- list()
 
   out$by <- tbl_contents$intersection %>%
-    select(-starts_with("template")) %>%
     filter(column %in% by)
 
   out$compare <- tbl_contents$intersection %>%
-    select(-starts_with("template")) %>%
     filter(!column %in% by)
-
-  out$template <- tbl_contents$intersection %>%
-    select(column, starts_with("template")) %>%
-    filter(!column %in% by) %>%
-    rename_with(\(x) sub("template_", "", x))
 
   out$unmatched_cols <- tbl_contents$unmatched_rows
 
@@ -259,22 +255,21 @@ abort_duplicates <- function(table_a, table_b, by) {
   }
 }
 
-abort_differing_class <- function(contents, coerce, call = caller_env()) {
-  if (coerce) {
-    return(invisible())
+ensure_same_class <- function(table_a, table_b, call = caller_env()) {
+  common_cols <- intersect(names(table_a), names(table_b))
+  for (col in common_cols) {
+    a <- table_a[[col]][0]
+    b <- table_b[[col]][0]
+    if (identical(a, b)) {
+      next
+    }
+    message <- c(
+      "`coerce = FALSE` but some column classes do not match",
+      i = "table_a: {col} {.cls {class(a)}}",
+      i = "table_b: {col} {.cls {class(b)}}"
+    )
+    cli_abort(message, call = call)
   }
-
-  same_class <- map2_lgl(contents$template$a, contents$template$b, identical)
-  if (all(same_class)) {
-    return(invisible())
-  }
-
-  columns <- contents$compare$column[!same_class]
-  message <- c(
-    "coerce = FALSE but some column classes do not match",
-    i = dottize(columns, 50)
-  )
-  cli_abort(message, call = call)
 }
 
 ensure_well_named <- function(table_a, table_b, call = caller_env()) {
