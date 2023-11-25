@@ -15,10 +15,20 @@ table_init <- function(comparison, tbl = c("a", "b")) {
     lapply(\(x) x[[col_index]][0])
 }
 
-get_cols_from_comparison <- function(comparison, column) {
+get_cols_from_comparison <- function(
+    comparison,
+    column,
+    allow_empty = FALSE,
+    call = caller_env()) {
   template_a <- table_init(comparison, tbl = "a")
-  selection <- eval_select(column, template_a)
-  names(selection)
+  try_fetch(
+    eval_select(column, template_a, allow_empty = allow_empty, error_call = call),
+    error = function(e) {
+      column_arg <- shorten(glue("column = {as_label(column)}"), 50)
+      top_message <- glue("Problem with supplied `{column_arg}`:")
+      abort(message = c(top_message, cnd_message(e)), call = call)
+    }
+  )
 }
 
 shorten <- function(x, max_char = 10) {
@@ -79,19 +89,6 @@ contents <- function(table) {
     column = names(table),
     class = map_chr(table, \(x) paste(class(x), collapse = ", "))
   )
-}
-
-stack_value_diffs <- function(comparison, column, pre_stack_fun) {
-  column_char <- get_cols_from_comparison(comparison, column)
-  has_value_diffs <- comparison$intersection$n_diffs > 0
-  to_stack <- has_value_diffs & comparison$intersection$column %in% column_char
-
-  Map(
-    pre_stack_fun,
-    comparison$intersection$value_diffs[to_stack],
-    comparison$intersection$column[to_stack]
-  ) %>%
-    bind_rows()
 }
 
 test_df_a <- mtcars %>%

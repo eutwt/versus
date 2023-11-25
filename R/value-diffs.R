@@ -26,18 +26,15 @@
 #' @export
 value_diffs <- function(comparison, column) {
   column <- enquo(column)
-  column_char <- get_cols_from_comparison(comparison, column)
-  if (length(column_char) != 1) {
-    cols_selected <- dottize(column_char, 30)
+  column_loc <- get_cols_from_comparison(comparison, column)
+  if (length(column_loc) != 1) {
+    cols_selected <- dottize(names(column_loc), 30)
     cli_abort(c("Must select only one column.",
       i = "Columns selected: {cols_selected}",
       i = "For multiple columns, use `value_diffs_stacked()`"
     ))
   }
-  comparison$intersection %>%
-    filter(column == column_char) %>%
-    pull(value_diffs) %>%
-    `[[`(1)
+  fsubset(comparison$intersection, column_loc, "value_diffs")[[1]][[1]]
 }
 
 #' @rdname value-diffs
@@ -68,4 +65,24 @@ value_diffs_stacked <- function(comparison, column) {
 #' @export
 value_diffs_all <- function(comparison) {
   value_diffs_stacked(comparison, everything())
+}
+
+# Helpers -------------------
+
+stack_value_diffs <- function(comparison, column, pre_stack_fun, call = caller_env()) {
+  column_locs <- get_cols_from_comparison(comparison, column, call = call)
+  is_selected <- seq(nrow(comparison$intersection)) %in% column_locs
+  has_value_diffs <- comparison$intersection$n_diffs > 0
+  to_stack <- which(is_selected & has_value_diffs)
+
+  if (is_empty(to_stack)) {
+    to_stack <- which.max(is_selected)
+  }
+
+  Map(
+    pre_stack_fun,
+    comparison$intersection$value_diffs[to_stack],
+    comparison$intersection$column[to_stack]
+  ) %>%
+    bind_rows()
 }

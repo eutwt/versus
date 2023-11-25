@@ -71,7 +71,6 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE) {
 
   tbl_contents <- get_contents(table_a, table_b, by_vars)
 
-
   matches <- try_fetch(
     locate_matches(table_a, table_b, by = by_vars),
     vctrs_error_matches_relationship_one_to_one =
