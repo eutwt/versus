@@ -9,6 +9,52 @@
       1  14.3  16.3 Duster 360
       2  24.4  26.4 Merc 240D 
 
+---
+
+    Code
+      value_diffs(comp, drat)
+    Output
+      # A tibble: 0 x 3
+      # i 3 variables: drat_a <dbl>, drat_b <dbl>, car <chr>
+
+# Error on value_diffs with empty selection
+
+    Code
+      value_diffs(comp, where(is.POSIXct))
+    Condition
+      Error in `value_diffs()`:
+      ! Problem with supplied `column = where(is.POSIXct)`:
+      * Must select at least one item.
+
+---
+
+    Code
+      value_diffs_stacked(comp, where(is.POSIXct))
+    Condition
+      Error in `value_diffs_stacked()`:
+      ! Problem with supplied `column = where(is.POSIXct)`:
+      * Must select at least one item.
+
+# Error on value_diffs when column doesn't exist
+
+    Code
+      value_diffs(comp, bear)
+    Condition
+      Error in `value_diffs()`:
+      ! Problem with supplied `column = bear`:
+      * Can't subset columns that don't exist.
+      x Column `bear` doesn't exist.
+
+---
+
+    Code
+      value_diffs_stacked(comp, c(bear, mpg))
+    Condition
+      Error in `value_diffs_stacked()`:
+      ! Problem with supplied `column = c(bear, mpg)`:
+      * Can't subset columns that don't exist.
+      x Column `bear` doesn't exist.
+
 # value_diffs with multiple columns errors
 
     Code

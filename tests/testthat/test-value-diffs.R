@@ -1,6 +1,21 @@
 test_that("value_diffs with a single column works", {
   comp <- compare(test_df_a, test_df_b, by = car)
+  # when value_diffs has > 0 rows
   expect_snapshot(value_diffs(comp, mpg))
+  # when value_diffs has 0 rows
+  expect_snapshot(value_diffs(comp, drat))
+})
+
+test_that("Error on value_diffs with empty selection", {
+  comp <- compare(test_df_a, test_df_b, by = car)
+  expect_snapshot(value_diffs(comp, where(is.POSIXct)), error = TRUE)
+  expect_snapshot(value_diffs_stacked(comp, where(is.POSIXct)), error = TRUE)
+})
+
+test_that("Error on value_diffs when column doesn't exist", {
+  comp <- compare(test_df_a, test_df_b, by = car)
+  expect_snapshot(value_diffs(comp, bear), error = TRUE)
+  expect_snapshot(value_diffs_stacked(comp, c(bear, mpg)), error = TRUE)
 })
 
 test_that("value_diffs with multiple columns errors", {
