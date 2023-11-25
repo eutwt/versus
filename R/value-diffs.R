@@ -48,7 +48,7 @@ value_diffs_stacked <- function(comparison, column) {
   conform <- function(value_diffs, col_name) {
     out <- value_diffs %>%
       rename_with(\(x) replace(x, seq(2), paste0("val_", c("a", "b")))) %>%
-      mutate(column = col_name, .before = 1)
+      mutate(column = .env$col_name, .before = 1)
   }
   conform_with_coerce <- function(...) {
     conform(...) %>% mutate(across(c(val_a, val_b), as.character))
