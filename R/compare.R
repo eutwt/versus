@@ -117,15 +117,14 @@ print.vs_compare <- function(x, ...) {
 
 #' @export
 summary.vs_compare <- function(object, ...) {
-  same_class <-
-    out_vec <- c(
-      value_diffs = sum(object$intersection$n_diffs) > 0,
-      unmatched_cols = nrow(object$unmatched_cols) > 0,
-      unmatched_rows = nrow(object$unmatched_rows) > 0,
-      class_diffs = object$intersection$value_diffs %>%
-        map_lgl(\(x) !identical(x[[1]][0], x[[2]][0])) %>%
-        any()
-    )
+  out_vec <- c(
+    value_diffs = sum(object$intersection$n_diffs) > 0,
+    unmatched_cols = nrow(object$unmatched_cols) > 0,
+    unmatched_rows = nrow(object$unmatched_rows) > 0,
+    class_diffs = object$intersection$value_diffs %>%
+      map_lgl(\(x) !identical(x[[1]][0], x[[2]][0])) %>%
+      any()
+  )
   out <- tibble(
     difference = names(out_vec),
     found = unname(out_vec)
