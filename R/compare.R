@@ -264,14 +264,12 @@ ensure_same_class <- function(table_a, table_b, call = caller_env()) {
     if (identical(a, b)) {
       next
     }
-    cli_abort(
-      c(
-        "`coerce = FALSE` but some column classes do not match",
-        i = "table_a: {col} {.cls {class(a)}}",
-        i = "table_b: {col} {.cls {class(b)}}"
-      ),
-      call = call
+    message <- c(
+      "`coerce = FALSE` but some column classes do not match",
+      i = "table_a: {col} {.cls {class(a)}}",
+      i = "table_b: {col} {.cls {class(b)}}"
     )
+    cli_abort(message, call = call)
   }
 }
 
