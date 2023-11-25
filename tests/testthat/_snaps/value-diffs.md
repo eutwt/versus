@@ -9,30 +9,38 @@
       1  14.3  16.3 Duster 360
       2  24.4  26.4 Merc 240D 
 
+# value_diffs works when the supplied columns have no diffs 
+
+    Code
+      value_diffs(comp, hp)
+    Output
+      # A tibble: 0 x 3
+      # i 3 variables: hp_a <dbl>, hp_b <dbl>, car <chr>
+
 ---
 
     Code
-      value_diffs(comp, drat)
+      value_diffs_stacked(comp, c(hp, drat))
     Output
-      # A tibble: 0 x 3
-      # i 3 variables: drat_a <dbl>, drat_b <dbl>, car <chr>
+      # A tibble: 0 x 4
+      # i 4 variables: column <chr>, val_a <dbl>, val_b <dbl>, car <chr>
 
 # Error on value_diffs with empty selection
 
     Code
-      value_diffs(comp, where(is.POSIXct))
+      value_diffs(comp, where(is.Date))
     Condition
       Error in `value_diffs()`:
-      ! Problem with supplied `column = where(is.POSIXct)`:
+      ! Problem with supplied `column = where(is.Date)`:
       * Must select at least one item.
 
 ---
 
     Code
-      value_diffs_stacked(comp, where(is.POSIXct))
+      value_diffs_stacked(comp, where(is.Date))
     Condition
       Error in `value_diffs_stacked()`:
-      ! Problem with supplied `column = where(is.POSIXct)`:
+      ! Problem with supplied `column = where(is.Date)`:
       * Must select at least one item.
 
 # Error on value_diffs when column doesn't exist

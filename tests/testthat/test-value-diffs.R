@@ -1,9 +1,12 @@
 test_that("value_diffs with a single column works", {
   comp <- compare(test_df_a, test_df_b, by = car)
-  # when value_diffs has > 0 rows
   expect_snapshot(value_diffs(comp, mpg))
-  # when value_diffs has 0 rows
-  expect_snapshot(value_diffs(comp, drat))
+})
+
+test_that("value_diffs works when the supplied columns have no diffs ", {
+  comp <- compare(test_df_a, test_df_b, by = car)
+  expect_snapshot(value_diffs(comp, hp))
+  expect_snapshot(value_diffs_stacked(comp, c(hp, drat)))
 })
 
 test_that("Error on value_diffs with empty selection", {
