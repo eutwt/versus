@@ -24,3 +24,31 @@
       3 a     Merc ~     1     4  24.4     4  147.    62  3.69 3.19   20       0     2
       4 b     Merc ~     1     4  26.4     4  147.    62  3.69 3.19   20       0     2
 
+# Error when supplied table doesn't contain cols in `comparison`
+
+    Code
+      slice_diffs(tibble(x = 1), comp, column = drat)
+    Condition
+      Error in `slice_diffs()`:
+      ! `table` is missing some columns from `comparison`
+      column `car` is not present in `table`
+
+---
+
+    Code
+      slice_diffs_both(test_df_a, tibble(car = 1), comp, column = drat)
+    Condition
+      Error in `slice_diffs_both()`:
+      ! `table_b` is missing some columns from `comparison`
+      column `mpg` is not present in `table_b`
+
+# Error when `by` columns in `table` aren't compatible with `comparison`
+
+    Code
+      slice_diffs(bad_table, comp, column = mpg)
+    Condition
+      Error in `slice_diffs()`:
+      ! `by` columns in `table` must be compatible with those in `comparison`
+      `vs` class in `table`: <character>
+      `vs` class in `comparison`: <numeric>
+
