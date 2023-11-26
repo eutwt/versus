@@ -74,7 +74,7 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE) {
   matches <- try_fetch(
     locate_matches(table_a, table_b, by = by_vars),
     vctrs_error_matches_relationship_one_to_one =
-      abort_duplicates(table_a, table_b, by = by_vars)
+      rethrow_match_relationship(table_a, table_b, by = by_vars)
   )
 
   unmatched_rows <- get_unmatched_rows(
@@ -234,7 +234,7 @@ not_equal <- function(col_a, col_b, allow_both_NA) {
 
 # Error handling -------------
 
-abort_duplicates <- function(table_a, table_b, by) {
+rethrow_match_relationship <- function(table_a, table_b, by) {
   call <- caller_env()
   function(e) {
     tbl <- if_else(e$which == "haystack", "table_a", "table_b")
@@ -250,7 +250,7 @@ abort_duplicates <- function(table_a, table_b, by) {
     n_rows <- length(row_num)
     info <- c(i = "`{tbl}` has {n_rows} rows with the same `by` values as row {row_num[1]}")
 
-    cli_abort(c(top_msg, info, abort_glimpse(tbl_row)), call = call)
+    cli_abort(c(top_msg, info, itemize_row(tbl_row)), call = call)
   }
 }
 
@@ -297,7 +297,7 @@ ensure_data_frame <- function(x, call = caller_env()) {
 rethrow_with_arg_name <- function(arg_name, call) {
   function(cnd) {
     cnd_msg <- cnd_message(cnd)
-    message <- c(glue("Issue with `{arg_name}`"), cnd_msg)
+    message <- c(glue("Problem with `{arg_name}`"), cnd_msg)
     abort(message, call = call)
   }
 }

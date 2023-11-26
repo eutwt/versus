@@ -93,7 +93,7 @@
       compare(one, two, by = mpg)
     Condition
       Error in `compare()`:
-      ! Issue with `table_b`
+      ! Problem with `table_b`
       * Names must be unique.
       x These names are duplicated:
         * "x" at locations 1 and 2.
@@ -104,7 +104,7 @@
       compare(one, two, by = "mpg")
     Condition
       Error in `compare()`:
-      ! Issue with `table_b`
+      ! Problem with `table_b`
       * Names must be unique.
       x These names are duplicated:
         * "x" at locations 1 and 2.

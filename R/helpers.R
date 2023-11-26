@@ -64,8 +64,8 @@ dottize <- function(vec, max_size = 20) {
     glue_collapse(", ")
 }
 
-abort_glimpse <- function(df, max_lines = 3, width = 50) {
-  # print the first line of a df in ~glimpse() form, boxed by [max_lines x width]
+itemize_row <- function(df, max_lines = 3, width = 50) {
+  # similar to capture.output(glimpse(df[1,])), boxed by max_lines x width
   tdf <- tibble(
     var = names(df),
     val = fsubset(df, 1) %>% map_chr(format_glimpse) %>% shorten(width)
