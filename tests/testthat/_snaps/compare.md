@@ -33,6 +33,16 @@
       $ disp: 108
       i 8 more: hp, drat, wt, qsec, vs, am, gear, carb
 
+# Error when `by` columns are incompatible
+
+    Code
+      compare(test_df_a, test_df_b, by = c(car, wt, mpg))
+    Condition
+      Error in `compare()`:
+      ! `by` columns must be compatible
+      `table_a$wt` <numeric>
+      `table_b$wt` <character>
+
 # Error on dupes when there are lots of `by` columns
 
     Code

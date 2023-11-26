@@ -59,11 +59,8 @@ slice_diffs_both <- function(table_a, table_b, comparison, column = everything()
   diffs_a <- slice_diffs_for_interleave(table_a, "a")
   diffs_b <- slice_diffs_for_interleave(table_b, "b")
 
-  # if the column-types are incompatible, convert them to character first
-  is_incompatible <- map2_lgl(diffs_a, diffs_b, \(col_a, col_b) {
-    cnd <- catch_cnd(vec_ptype_common(col_a, col_b))
-    inherits(cnd, "vctrs_error_ptype2")
-  })
+  # if the column types are incompatible, convert them to character first
+  is_incompatible <- !is_ptype_compatible(diffs_a, diffs_b)
   if (any(is_incompatible)) {
     incompatible_cols <- names(is_incompatible)[is_incompatible]
     cols_char <- dottize(incompatible_cols, 30)

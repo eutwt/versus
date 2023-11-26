@@ -5,6 +5,14 @@ fsubset <- function(x, i, j) {
   ss(x, i, j, check = check(i))
 }
 
+is_ptype_compatible <- function(tbl_a, tbl_b) {
+  incompatible <- map2_lgl(tbl_a, tbl_b, \(col_a, col_b) {
+    cnd <- catch_cnd(vec_ptype_common(col_a, col_b))
+    inherits(cnd, "vctrs_error_ptype2")
+  })
+  !incompatible
+}
+
 table_init <- function(comparison, tbl = c("a", "b")) {
   # simulate a data frame with the same classes as table_[tbl]
   tbl <- arg_match(tbl)

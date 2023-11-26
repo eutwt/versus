@@ -67,7 +67,9 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE) {
   matches <- try_fetch(
     locate_matches(table_a, table_b, by = by_vars),
     vctrs_error_matches_relationship_one_to_one =
-      rethrow_match_relationship(table_a, table_b, by = by_vars)
+      rethrow_match_relationship(table_a, table_b, by = by_vars),
+    vctrs_error_ptype2 =
+      rethrow_incompatible_by_vars(table_a, table_b, by = by_vars)
   )
 
   unmatched_rows <- get_unmatched_rows(
@@ -293,5 +295,30 @@ ensure_same_class <- function(table_a, table_b, call = caller_env()) {
       i = "table_b: {col} {.cls {class(b)}}"
     )
     cli_abort(message, call = call)
+  }
+}
+
+rethrow_incompatible_by_vars <- function(table_a, table_b, by) {
+  call <- caller_env()
+  function(e) {
+    incompatible <- !is_ptype_compatible(
+      fsubset(table_a, j = by),
+      fsubset(table_b, j = by)
+    )
+    throw_error <- function(column) {
+      class_a <- class(table_a[[column]])
+      class_b <- class(table_b[[column]])
+      message <- c(
+        "`by` columns must be compatible",
+        "`table_a${column}` {.cls {class_a}}",
+        "`table_b${column}` {.cls {class_b}}"
+      )
+      cli_abort(message, call = call)
+    }
+    for (column in by) {
+      if (incompatible[column]) {
+        throw_error(column)
+      }
+    }
   }
 }

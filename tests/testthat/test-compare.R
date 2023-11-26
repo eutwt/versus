@@ -20,6 +20,13 @@ test_that("Error on input with duplicates", {
   )
 })
 
+test_that("Error when `by` columns are incompatible", {
+  expect_snapshot(
+    compare(test_df_a, test_df_b, by = c(car, wt, mpg)),
+    error = TRUE
+  )
+})
+
 test_that("Error on dupes when there are lots of `by` columns", {
   without_dupe <- setNames(seq_along(letters), letters) %>%
     as.list() %>%
