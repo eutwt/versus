@@ -40,7 +40,7 @@ get_cols_from_comparison <- function(
   }
   rethrow_default <- function(e) {
     column_arg <- shorten(glue("column = {as_label(column)}"), 50)
-    top_message <- glue("Problem with supplied `{column_arg}`:")
+    top_message <- glue("Problem with argument `{column_arg}`:")
     abort(message = c(top_message, cnd_message(e)), call = call)
   }
   try_fetch(
