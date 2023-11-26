@@ -27,8 +27,7 @@
 slice_diffs <- function(table, comparison, column = everything()) {
   column <- enquo(column)
   select_by_vars <- function(value_diffs, col_name) {
-    value_diffs %>%
-      select(all_of(comparison$by$column))
+    fsubset(value_diffs, j = comparison$by$column)
   }
   indices_having_diffs <- stack_value_diffs(
     comparison,
@@ -36,13 +35,13 @@ slice_diffs <- function(table, comparison, column = everything()) {
     pre_stack_fun = select_by_vars
   )
 
-  if (nrow(indices_having_diffs) == 0) {
-    out <- fsubset(table, 0)
-  } else {
-    out <- table %>%
-      semi_join(indices_having_diffs, by = comparison$by$column)
-  }
-  out
+  join(
+    table,
+    indices_having_diffs,
+    on = comparison$by$column,
+    how = "semi",
+    verbose = FALSE
+  )
 }
 
 #' @rdname slice_diffs
