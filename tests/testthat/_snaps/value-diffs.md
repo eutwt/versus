@@ -31,7 +31,7 @@
       value_diffs(comp, where(is.factor))
     Condition
       Error in `value_diffs()`:
-      ! Problem with supplied `column = where(is.factor)`:
+      ! Problem with argument `column = where(is.factor)`:
       * Must select at least one item.
 
 ---
@@ -40,7 +40,7 @@
       value_diffs_stacked(comp, where(is.factor))
     Condition
       Error in `value_diffs_stacked()`:
-      ! Problem with supplied `column = where(is.factor)`:
+      ! Problem with argument `column = where(is.factor)`:
       * Must select at least one item.
 
 # Error on value_diffs when column doesn't exist
@@ -49,9 +49,9 @@
       value_diffs(comp, bear)
     Condition
       Error in `value_diffs()`:
-      ! Problem with supplied `column = bear`:
-      * Can't subset columns that don't exist.
-      x Column `bear` doesn't exist.
+      ! Problem with argument `column = bear`:
+      * Must select columns from `comparison$intersection`
+      i column `bear` is not part of the supplied comparison
 
 ---
 
@@ -59,9 +59,9 @@
       value_diffs_stacked(comp, c(bear, mpg))
     Condition
       Error in `value_diffs_stacked()`:
-      ! Problem with supplied `column = c(bear, mpg)`:
-      * Can't subset columns that don't exist.
-      x Column `bear` doesn't exist.
+      ! Problem with argument `column = c(bear, mpg)`:
+      * Must select columns from `comparison$intersection`
+      i column `bear` is not part of the supplied comparison
 
 # Error on value_diffs with multiple columns
 

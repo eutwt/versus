@@ -29,13 +29,24 @@ get_cols_from_comparison <- function(
     allow_empty = FALSE,
     call = caller_env()) {
   template_a <- table_init(comparison, tbl = "a")
+
+  rethrow_oob <- function(e) {
+    column_arg <- shorten(glue("column = {as_label(column)}"), 50)
+    message <- c(
+      "Must select columns from `comparison$intersection`",
+      i = "column `{e$i}` is not part of the supplied comparison"
+    )
+    cli_abort(message, call = call)
+  }
+  rethrow_default <- function(e) {
+    column_arg <- shorten(glue("column = {as_label(column)}"), 50)
+    top_message <- glue("Problem with argument `{column_arg}`:")
+    abort(message = c(top_message, cnd_message(e)), call = call)
+  }
   try_fetch(
-    eval_select(column, template_a, allow_empty = allow_empty, error_call = call),
-    error = function(e) {
-      column_arg <- shorten(glue("column = {as_label(column)}"), 50)
-      top_message <- glue("Problem with supplied `{column_arg}`:")
-      abort(message = c(top_message, cnd_message(e)), call = call)
-    }
+    eval_select(column, template_a, allow_empty = allow_empty),
+    vctrs_error_subscript_oob = rethrow_oob,
+    error = rethrow_default
   )
 }
 

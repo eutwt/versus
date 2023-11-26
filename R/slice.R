@@ -26,34 +26,41 @@
 #' @export
 slice_diffs <- function(table, comparison, column = everything()) {
   column <- enquo(column)
+  validate_slice_diff_columns(table, comparison, type = "single")
+
   select_by_vars <- function(value_diffs, col_name) {
-    value_diffs %>%
-      select(all_of(comparison$by$column))
+    fsubset(value_diffs, j = comparison$by$column)
   }
-  indices_having_diffs <- stack_value_diffs(
+  by_vals_with_diffs <- stack_value_diffs(
     comparison,
     column,
     pre_stack_fun = select_by_vars
   )
+  validate_slice_diff_types(table, by_vals_with_diffs)
 
-  if (nrow(indices_having_diffs) == 0) {
-    out <- fsubset(table, 0)
-  } else {
-    out <- table %>%
-      semi_join(indices_having_diffs, by = comparison$by$column)
-  }
-  out
+  join(
+    table,
+    by_vals_with_diffs,
+    on = comparison$by$column,
+    how = "semi",
+    verbose = FALSE,
+    overid = 2
+  ) %>%
+    as_tibble()
 }
 
 #' @rdname slice_diffs
 #' @export
 slice_diffs_both <- function(table_a, table_b, comparison, column = everything()) {
+  validate_slice_diff_columns(table_a, comparison, type = "both")
+  validate_slice_diff_columns(table_b, comparison, type = "both")
+
   output_cols <- c(comparison$by$column, comparison$intersection$column)
   slice_diffs_for_interleave <- function(df, name) {
     df %>%
-      select(all_of(output_cols)) %>%
+      fsubset(j = output_cols) %>%
       slice_diffs(comparison, {{ column }}) %>%
-      arrange(comparison$by$column) %>%
+      roworderv(comparison$by$column) %>%
       mutate(table = name, .before = 1)
   }
   diffs_a <- slice_diffs_for_interleave(table_a, "a")
@@ -73,4 +80,45 @@ slice_diffs_both <- function(table_a, table_b, comparison, column = everything()
   }
 
   vec_interleave(diffs_a, diffs_b)
+}
+
+
+# Helpers ------------
+
+validate_slice_diff_columns <- function(table, comparison, type, call = caller_env()) {
+  arg_name <- deparse(substitute(table))
+  required_cols <- switch(type,
+    single = comparison$by$column,
+    both = c(comparison$by$column, comparison$intersection$column),
+    cli_abort("Internal error")
+  )
+  not_present <- !(required_cols %in% names(table))
+  if (any(not_present)) {
+    missing_col <- required_cols[which.max(not_present)]
+    message <- c(
+      "`{arg_name}` is missing some columns from `comparison`",
+      "column `{missing_col}` is not present in `{arg_name}`"
+    )
+    cli_abort(message, call = call)
+  }
+}
+
+validate_slice_diff_types <- function(table, by_vals_with_diffs, call = caller_env()) {
+  # collapse::join silently coerces join-key variables
+  # don't want that, so check compatibility before join
+  incompatible <- !is_ptype_compatible(
+    fsubset(table, j = names(by_vals_with_diffs)),
+    by_vals_with_diffs
+  )
+  if (any(incompatible)) {
+    col <- names(by_vals_with_diffs)[which.max(incompatible)]
+    class_table <- class(table[[col]])
+    class_comparison <- class(by_vals_with_diffs[[col]])
+    message <- c(
+      "`by` columns in `table` must be compatible with those in `comparison`",
+      "`{col}` class in `table`: {.cls {class_table}}",
+      "`{col}` class in `comparison`: {.cls {class_comparison}}"
+    )
+    cli_abort(message, call = call)
+  }
 }
