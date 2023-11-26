@@ -51,13 +51,7 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE) {
   check_required(by)
   by <- enquo(by)
   table_chr <- names(enquos(table_a, table_b, .named = TRUE))
-
-  ensure_data_frame(table_a)
-  ensure_data_frame(table_b)
-  ensure_well_named(table_a, table_b)
-  if (!coerce) {
-    ensure_same_class(table_a, table_b)
-  }
+  validate_tables(table_a, table_b, coerce = coerce)
 
   by_vars <- get_by_vars(by_quo = by, table_a = table_a, table_b = table_b)
 
@@ -253,6 +247,38 @@ rethrow_match_relationship <- function(table_a, table_b, by) {
   }
 }
 
+validate_tables <- function(table_a, table_b, coerce, call = caller_env()) {
+  ensure_data_frame(table_a, call = call)
+  ensure_data_frame(table_b, call = call)
+  ensure_well_named(table_a, call = call)
+  ensure_well_named(table_b, call = call)
+  if (!coerce) {
+    ensure_same_class(table_a, table_b, call = call)
+  }
+}
+
+ensure_well_named <- function(table, call = caller_env()) {
+  arg_name <- deparse(substitute(table))
+  try_fetch(
+    vec_as_names(names(table), repair = "check_unique"),
+    error = function(e) {
+      abort(c(glue("Problem with `{arg_name}`"), cnd_message(e)), call = call)
+    }
+  )
+}
+
+ensure_data_frame <- function(table, call = caller_env()) {
+  arg_name <- deparse(substitute(table))
+  if (is.data.frame(table)) {
+    return(invisible())
+  }
+  message <- c(
+    "`{arg_name}` must be a data frame",
+    i = "class({arg_name}): {.cls {class(table)}}"
+  )
+  cli_abort(message, call = call)
+}
+
 ensure_same_class <- function(table_a, table_b, call = caller_env()) {
   common_cols <- intersect(names(table_a), names(table_b))
   for (col in common_cols) {
@@ -267,36 +293,5 @@ ensure_same_class <- function(table_a, table_b, call = caller_env()) {
       i = "table_b: {col} {.cls {class(b)}}"
     )
     cli_abort(message, call = call)
-  }
-}
-
-ensure_well_named <- function(table_a, table_b, call = caller_env()) {
-  try_fetch(
-    vec_as_names(names(table_a), repair = "check_unique"),
-    error = rethrow_with_arg_name("table_a", call)
-  )
-  try_fetch(
-    vec_as_names(names(table_b), repair = "check_unique"),
-    error = rethrow_with_arg_name("table_b", call)
-  )
-}
-
-ensure_data_frame <- function(x, call = caller_env()) {
-  arg_name <- deparse(substitute(x))
-  if (is.data.frame(x)) {
-    return(TRUE)
-  }
-  message <- c(
-    "`{arg_name}` must be a data frame",
-    i = "class({arg_name}): {.cls {class(x)}}"
-  )
-  cli_abort(message, call = call)
-}
-
-rethrow_with_arg_name <- function(arg_name, call) {
-  function(cnd) {
-    cnd_msg <- cnd_message(cnd)
-    message <- c(glue("Problem with `{arg_name}`"), cnd_msg)
-    abort(message, call = call)
   }
 }
