@@ -71,10 +71,10 @@ comp <- compare(example_df_a, example_df_b, by = car)
 comp
 #> $tables
 #> # A tibble: 2 × 4
-#>   table   expr          ncol  nrow
+#>   table   expr          nrow  ncol
 #>   <chr>   <chr>        <int> <int>
 #> 1 table_a example_df_a     9     9
-#> 2 table_b example_df_b     9    10
+#> 2 table_b example_df_b    10     9
 #> 
 #> $by
 #> # A tibble: 1 × 3

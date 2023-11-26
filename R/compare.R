@@ -65,8 +65,8 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE) {
   table_summ <- tibble(
     table = c("table_a", "table_b"),
     expr = c(table_a_chr, table_b_chr),
-    ncol = c(ncol(table_a), ncol(table_b)),
-    nrow = c(nrow(table_a), nrow(table_b))
+    nrow = c(nrow(table_a), nrow(table_b)),
+    ncol = c(ncol(table_a), ncol(table_b))
   )
 
   tbl_contents <- get_contents(table_a, table_b, by_vars)
