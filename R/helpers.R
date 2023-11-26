@@ -31,6 +31,14 @@ get_cols_from_comparison <- function(
   template_a <- table_init(comparison, tbl = "a")
   try_fetch(
     eval_select(column, template_a, allow_empty = allow_empty, error_call = call),
+    vctrs_error_subscript_oob = function(e) {
+      column_arg <- shorten(glue("column = {as_label(column)}"), 50)
+      message <- c(
+        "Must select columns from `comparison$intersection`",
+        i = "column `{e$i}` is not part of the supplied comparison"
+      )
+      cli_abort(message, call = call)
+    },
     error = function(e) {
       column_arg <- shorten(glue("column = {as_label(column)}"), 50)
       top_message <- glue("Problem with supplied `{column_arg}`:")
@@ -38,6 +46,8 @@ get_cols_from_comparison <- function(
     }
   )
 }
+
+
 
 shorten <- function(x, max_char = 10) {
   x <- as.character(x)

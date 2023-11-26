@@ -50,8 +50,8 @@
     Condition
       Error in `value_diffs()`:
       ! Problem with supplied `column = bear`:
-      * Can't subset columns that don't exist.
-      x Column `bear` doesn't exist.
+      * Must select columns from `comparison$intersection`
+      i column `bear` is not part of the supplied comparison
 
 ---
 
@@ -60,8 +60,8 @@
     Condition
       Error in `value_diffs_stacked()`:
       ! Problem with supplied `column = c(bear, mpg)`:
-      * Can't subset columns that don't exist.
-      x Column `bear` doesn't exist.
+      * Must select columns from `comparison$intersection`
+      i column `bear` is not part of the supplied comparison
 
 # Error on value_diffs with multiple columns
 
