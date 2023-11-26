@@ -50,23 +50,16 @@
 compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE) {
   check_required(by)
   by <- enquo(by)
-  table_a_chr <- as_label(enquo(table_a))
-  table_b_chr <- as_label(enquo(table_b))
-
-  ensure_data_frame(table_a)
-  ensure_data_frame(table_b)
-  ensure_well_named(table_a, table_b)
-  if (!coerce) {
-    ensure_same_class(table_a, table_b)
-  }
+  table_chr <- map_chr(enquos(table_a, table_b), as_label)
+  validate_tables(table_a, table_b, coerce)
 
   by_vars <- get_by_vars(by_quo = by, table_a = table_a, table_b = table_b)
 
   table_summ <- tibble(
     table = c("table_a", "table_b"),
-    expr = c(table_a_chr, table_b_chr),
+    expr = table_chr,
     ncol = c(ncol(table_a), ncol(table_b)),
-    nrow = c(nrow(table_a), nrow(table_b))
+    nrow = c(nrow(table_a), ncol(table_b))
   )
 
   tbl_contents <- get_contents(table_a, table_b, by_vars)
@@ -74,7 +67,7 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE) {
   matches <- try_fetch(
     locate_matches(table_a, table_b, by = by_vars),
     vctrs_error_matches_relationship_one_to_one =
-      abort_duplicates(table_a, table_b, by = by_vars)
+      rethrow_match_relationship(table_a, table_b, by = by_vars)
   )
 
   unmatched_rows <- get_unmatched_rows(
@@ -234,7 +227,7 @@ not_equal <- function(col_a, col_b, allow_both_NA) {
 
 # Error handling -------------
 
-abort_duplicates <- function(table_a, table_b, by) {
+rethrow_match_relationship <- function(table_a, table_b, by) {
   call <- caller_env()
   function(e) {
     tbl <- if_else(e$which == "haystack", "table_a", "table_b")
@@ -250,15 +243,46 @@ abort_duplicates <- function(table_a, table_b, by) {
     n_rows <- length(row_num)
     info <- c(i = "`{tbl}` has {n_rows} rows with the same `by` values as row {row_num[1]}")
 
-    cli_abort(c(top_msg, info, abort_glimpse(tbl_row)), call = call)
+    cli_abort(c(top_msg, info, itemize_row(tbl_row)), call = call)
   }
 }
 
-ensure_same_class <- function(table_a, table_b, call = caller_env()) {
-  common_cols <- intersect(names(table_a), names(table_b))
+# Validation --------------
+
+validate_tables <- function(table_a, table_b, coerce, call = caller_env()) {
+  tables <- list(table_a = table_a, table_b = table_b)
+  iwalk(tables, ensure_data_frame, call = call)
+  iwalk(tables, ensure_well_named, call = call)
+  if (!coerce) {
+    ensure_same_class(tables, call = call)
+  }
+}
+
+ensure_well_named <- function(table, arg_name, call = caller_env()) {
+  try_fetch(
+    vec_as_names(names(table), repair = "check_unique"),
+    error = function(e) {
+      cli_abort(c("Problem with {arg_name}", cnd_message(e)), call = call)
+    }
+  )
+}
+
+ensure_data_frame <- function(table, arg_name, call = caller_env()) {
+  if (is.data.frame(table)) {
+    return(invisible())
+  }
+  message <- c(
+    "`{arg_name}` must be a data frame",
+    i = "class({arg_name}): {.cls {class(table)}}"
+  )
+  cli_abort(message, call = call)
+}
+
+ensure_same_class <- function(table, call = caller_env()) {
+  common_cols <- intersect(names(table$a), names(table$b))
   for (col in common_cols) {
-    a <- table_a[[col]][0]
-    b <- table_b[[col]][0]
+    a <- fsubset(table$a, 0, col)[[1]]
+    b <- fsubset(table$b, 0, col)[[1]]
     if (identical(a, b)) {
       next
     }
@@ -268,36 +292,5 @@ ensure_same_class <- function(table_a, table_b, call = caller_env()) {
       i = "table_b: {col} {.cls {class(b)}}"
     )
     cli_abort(message, call = call)
-  }
-}
-
-ensure_well_named <- function(table_a, table_b, call = caller_env()) {
-  try_fetch(
-    vec_as_names(names(table_a), repair = "check_unique"),
-    error = rethrow_with_arg_name("table_a", call)
-  )
-  try_fetch(
-    vec_as_names(names(table_b), repair = "check_unique"),
-    error = rethrow_with_arg_name("table_b", call)
-  )
-}
-
-ensure_data_frame <- function(x, call = caller_env()) {
-  arg_name <- deparse(substitute(x))
-  if (is.data.frame(x)) {
-    return(TRUE)
-  }
-  message <- c(
-    "`{arg_name}` must be a data frame",
-    i = "class({arg_name}): {.cls {class(x)}}"
-  )
-  cli_abort(message, call = call)
-}
-
-rethrow_with_arg_name <- function(arg_name, call) {
-  function(cnd) {
-    cnd_msg <- cnd_message(cnd)
-    message <- c(glue("Issue with `{arg_name}`"), cnd_msg)
-    abort(message, call = call)
   }
 }

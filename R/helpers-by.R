@@ -25,20 +25,20 @@ rethrow_by_select_error <- function(arg_name, call) {
   function(cnd) {
     cnd_msg <- cnd_message(cnd)
     if (inherits(cnd, "vctrs_error_subscript_oob")) {
-      cnd_msg <- c(glue("Problem with `{arg_name}`:"), cnd_msg)
-    } else if (inherits(cnd, "vctrs_error_subscript_type") && grepl("join_by", cnd_msg)) {
-      cnd_msg <- c(
+      abort(c(glue("Problem with `{arg_name}`:"), cnd_msg), call = call)
+    }
+    if (inherits(cnd, "vctrs_error_subscript_type") && grepl("join_by", cnd_msg)) {
+      abort(c(
         "`join_by()` is not supported",
         i = "provide `by` columns with tidy-select, as in `dplyr::across()`"
-      )
-    } else if (grepl("Must select at least one item", cnd_msg)) {
-      cnd_msg <- c(
+      ), call = call)
+    }
+    if (grepl("Must select at least one item", cnd_msg)) {
+      abort(c(
         "Must select at least one column with `by`",
         i = glue("No matching columns found in `{arg_name}`")
-      )
-    } else {
-      cnd_msg <- c("Problem with `by`:", cnd_msg)
+      ), call = call)
     }
-    abort(cnd_msg, call = call)
+    abort(c("Problem with `by`:", cnd_msg), call = call)
   }
 }

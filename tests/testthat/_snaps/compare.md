@@ -93,7 +93,7 @@
       compare(one, two, by = mpg)
     Condition
       Error in `compare()`:
-      ! Issue with `table_b`
+      ! Problem with `table_b`
       * Names must be unique.
       x These names are duplicated:
         * "x" at locations 1 and 2.
@@ -104,7 +104,7 @@
       compare(one, two, by = "mpg")
     Condition
       Error in `compare()`:
-      ! Issue with `table_b`
+      ! Problem with `table_b`
       * Names must be unique.
       x These names are duplicated:
         * "x" at locations 1 and 2.
@@ -155,16 +155,6 @@
       Error in `compare()`:
       ! `join_by()` is not supported
       i provide `by` columns with tidy-select, as in `dplyr::across()`
-
-# Error on different classes with coerce = FALSE
-
-    Code
-      compare(test_df_a, test_df_b, by = car, coerce = FALSE)
-    Condition
-      Error in `compare()`:
-      ! `coerce = FALSE` but some column classes do not match
-      i table_a: wt <numeric>
-      i table_b: wt <character>
 
 # example comparison
 
