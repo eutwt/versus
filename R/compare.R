@@ -50,8 +50,7 @@
 compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE) {
   check_required(by)
   by <- enquo(by)
-  table_a_chr <- as_label(enquo(table_a))
-  table_b_chr <- as_label(enquo(table_b))
+  table_chr <- names(enquos(table_a, table_b, .named = TRUE))
 
   ensure_data_frame(table_a)
   ensure_data_frame(table_b)
@@ -64,7 +63,7 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE) {
 
   table_summ <- tibble(
     table = c("table_a", "table_b"),
-    expr = c(table_a_chr, table_b_chr),
+    expr = table_chr,
     nrow = c(nrow(table_a), nrow(table_b)),
     ncol = c(ncol(table_a), ncol(table_b))
   )
