@@ -40,7 +40,8 @@ slice_diffs <- function(table, comparison, column = everything()) {
     indices_having_diffs,
     on = comparison$by$column,
     how = "semi",
-    verbose = FALSE
+    verbose = FALSE,
+    overid = 2
   )
 }
 
