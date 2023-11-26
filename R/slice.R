@@ -50,9 +50,9 @@ slice_diffs_both <- function(table_a, table_b, comparison, column = everything()
   output_cols <- c(comparison$by$column, comparison$intersection$column)
   slice_diffs_for_interleave <- function(df, name) {
     df %>%
-      select(all_of(output_cols)) %>%
+      fsubset(j = output_cols) %>%
       slice_diffs(comparison, {{ column }}) %>%
-      arrange(comparison$by$column) %>%
+      roworderv(comparison$by$column) %>%
       mutate(table = name, .before = 1)
   }
   diffs_a <- slice_diffs_for_interleave(table_a, "a")
