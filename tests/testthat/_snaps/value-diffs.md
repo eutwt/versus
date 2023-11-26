@@ -25,6 +25,24 @@
       # A tibble: 0 x 4
       # i 4 variables: column <chr>, val_a <dbl>, val_b <dbl>, car <chr>
 
+# Error when `comparison` isn't a comparison
+
+    Code
+      value_diffs(mtcars, mpg)
+    Condition
+      Error in `value_diffs()`:
+      ! Problem with argument `comparison = mtcars`
+      i `comparison` must be the output of `versus::compare()`
+
+---
+
+    Code
+      value_diffs_stacked(mtcars, c(mpg, disp))
+    Condition
+      Error in `value_diffs_stacked()`:
+      ! Problem with argument `comparison = mtcars`
+      i `comparison` must be the output of `versus::compare()`
+
 # Error on value_diffs with empty selection
 
     Code

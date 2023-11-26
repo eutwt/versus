@@ -5,6 +5,24 @@ fsubset <- function(x, i, j) {
   ss(x, i, j, check = check(i))
 }
 
+validate_comparison <- function(comparison_quo, call = caller_env()) {
+  comparison_label <- shorten(as_label(comparison_quo), 40)
+  message <- c(
+    "Problem with argument `comparison = {comparison_label}`",
+    i = "`comparison` must be the output of `versus::compare()`"
+  )
+
+  comparison_class <- try_fetch(
+    class(eval_tidy(comparison_quo)),
+    error = \(e) cli_abort(message, call = call)
+  )
+
+  if (identical(comparison_class, "vs_compare")) {
+    return(invisible())
+  }
+  cli_abort(message, call = call)
+}
+
 is_ptype_compatible <- function(tbl_a, tbl_b) {
   incompatible <- map2_lgl(tbl_a, tbl_b, \(col_a, col_b) {
     cnd <- catch_cnd(vec_ptype_common(col_a, col_b))

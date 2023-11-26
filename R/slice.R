@@ -26,6 +26,7 @@
 #' @export
 slice_diffs <- function(table, comparison, column = everything()) {
   column <- enquo(column)
+  validate_comparison(enquo(comparison))
   validate_slice_diff_columns(table, comparison, type = "single")
 
   select_by_vars <- function(value_diffs, col_name) {
@@ -52,6 +53,7 @@ slice_diffs <- function(table, comparison, column = everything()) {
 #' @rdname slice_diffs
 #' @export
 slice_diffs_both <- function(table_a, table_b, comparison, column = everything()) {
+  validate_comparison(enquo(comparison))
   validate_slice_diff_columns(table_a, comparison, type = "both")
   validate_slice_diff_columns(table_b, comparison, type = "both")
 

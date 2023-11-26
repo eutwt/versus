@@ -10,6 +10,26 @@ test_that("slice_diffs_both works with multi-variable `by`", {
   expect_snapshot(as_tibble(out))
 })
 
+test_that("Error when `comparison` isn't a comparison", {
+  comp <- compare(example_df_a, example_df_b, by = c(car, drat))
+  expect_snapshot(
+    example_df_a |> slice_diffs(disp),
+    error = TRUE
+  )
+  expect_snapshot(
+    example_df_a |> slice_diffs(example_df_b, disp),
+    error = TRUE
+  )
+  expect_snapshot(
+    example_df_a |> slice_diffs_both(example_df_b, disp),
+    error = TRUE
+  )
+  expect_snapshot(
+    example_df_a |> slice_diffs_both(example_df_b, 1, disp),
+    error = TRUE
+  )
+})
+
 test_that("Error when supplied table doesn't contain cols in `comparison`", {
   comp <- compare(test_df_a, test_df_b, by = car)
   expect_snapshot(slice_diffs(tibble(x = 1), comp, column = drat), error = TRUE)

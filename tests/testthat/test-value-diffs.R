@@ -9,6 +9,18 @@ test_that("value_diffs works when the supplied columns have no diffs ", {
   expect_snapshot(value_diffs_stacked(comp, c(hp, drat)))
 })
 
+test_that("Error when `comparison` isn't a comparison", {
+  comp <- compare(example_df_a, example_df_b, by = c(car, drat))
+  expect_snapshot(
+    value_diffs(mtcars, mpg),
+    error = TRUE
+  )
+  expect_snapshot(
+    value_diffs_stacked(mtcars, c(mpg, disp)),
+    error = TRUE
+  )
+})
+
 test_that("Error on value_diffs with empty selection", {
   comp <- compare(test_df_a, test_df_b, by = car)
   expect_snapshot(value_diffs(comp, where(is.factor)), error = TRUE)

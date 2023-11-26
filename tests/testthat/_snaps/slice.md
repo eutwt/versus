@@ -24,6 +24,42 @@
       3 a     Merc ~     1     4  24.4     4  147.    62  3.69 3.19   20       0     2
       4 b     Merc ~     1     4  26.4     4  147.    62  3.69 3.19   20       0     2
 
+# Error when `comparison` isn't a comparison
+
+    Code
+      slice_diffs(example_df_a, disp)
+    Condition
+      Error in `slice_diffs()`:
+      ! Problem with argument `comparison = disp`
+      i `comparison` must be the output of `versus::compare()`
+
+---
+
+    Code
+      slice_diffs(example_df_a, example_df_b, disp)
+    Condition
+      Error in `slice_diffs()`:
+      ! Problem with argument `comparison = example_df_b`
+      i `comparison` must be the output of `versus::compare()`
+
+---
+
+    Code
+      slice_diffs_both(example_df_a, example_df_b, disp)
+    Condition
+      Error in `slice_diffs_both()`:
+      ! Problem with argument `comparison = disp`
+      i `comparison` must be the output of `versus::compare()`
+
+---
+
+    Code
+      slice_diffs_both(example_df_a, example_df_b, 1, disp)
+    Condition
+      Error in `slice_diffs_both()`:
+      ! Problem with argument `comparison = 1`
+      i `comparison` must be the output of `versus::compare()`
+
 # Error when supplied table doesn't contain cols in `comparison`
 
     Code
