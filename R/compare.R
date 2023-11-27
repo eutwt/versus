@@ -293,24 +293,19 @@ ensure_same_class <- function(table_a, table_b, call = caller_env()) {
 rethrow_incompatible_by_vars <- function(table_a, table_b, by) {
   call <- caller_env()
   function(e) {
-    incompatible <- !is_ptype_compatible(
+    compatible <- is_ptype_compatible(
       fsubset(table_a, j = by),
       fsubset(table_b, j = by)
     )
-    throw_error <- function(column) {
-      class_a <- class(table_a[[column]])
-      class_b <- class(table_b[[column]])
-      message <- c(
-        "`by` columns must be compatible",
-        "`table_a${column}` {.cls {class_a}}",
-        "`table_b${column}` {.cls {class_b}}"
-      )
-      cli_abort(message, call = call)
-    }
-    for (column in by) {
-      if (incompatible[column]) {
-        throw_error(column)
-      }
-    }
+    bad_column <- by[which.max(!compatible)]
+
+    class_a <- class(table_a[[bad_column]])
+    class_b <- class(table_b[[bad_column]])
+    message <- c(
+      "`by` columns must be compatible",
+      "`table_a${bad_column}` {.cls {class_a}}",
+      "`table_b${bad_column}` {.cls {class_b}}"
+    )
+    cli_abort(message, call = call)
   }
 }
