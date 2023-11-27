@@ -176,7 +176,7 @@ converge <- function(table_a, table_b, by, matches) {
   )
 }
 
-join_split <- function(table_a, table_b, by, matches) {
+join_split <- function(table_a, table_b, by) {
   matches <- locate_matches(table_a, table_b, by)
   intersection <- converge(table_a, table_b, by, matches)
   unmatched_rows <- get_unmatched_rows(table_a, table_b, by, matches)
