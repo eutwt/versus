@@ -203,17 +203,9 @@ get_value_diffs <- function(col, table_a, table_b, by, matches, allow_both_NA) {
   col_b <- fsubset(table_b, matches$haystack$common, col)[[1]]
   not_equal <- which(not_equal(col_a, col_b, allow_both_NA))
 
-  if (!is_empty(not_equal)) {
-    vals <- tibble(a = col_a[not_equal], b = col_b[not_equal]) %>%
-      frename(paste0(col, c("_a", "_b")))
-    by_cols <- fsubset(table_a, matches$needles$common[not_equal], by)
-  } else {
-    vals_a <- fsubset(table_a, 0, col)
-    vals_b <- fsubset(table_b, 0, col)
-    vals <- add_vars(vals_a, vals_b) %>%
-      frename(paste0(col, c("_a", "_b")))
-    by_cols <- fsubset(table_a, 0, by)
-  }
+  vals <- tibble(a = col_a[not_equal], b = col_b[not_equal]) %>%
+    frename(paste0(col, c("_a", "_b")))
+  by_cols <- fsubset(table_a, matches$needles$common[not_equal], by)
   as_tibble(add_vars(vals, by_cols))
 }
 
