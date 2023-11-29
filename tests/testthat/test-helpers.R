@@ -1,3 +1,28 @@
+test_that("shorten_works", {
+  # length 1 input that is not too long
+  expect_identical(
+    shorten(c(a = "12345"), 5),
+    c(a = "12345")
+  )
+  # length 1 input that is too long
+  expect_identical(
+    shorten(c(a = "123456"), 5),
+    c(a = "12...")
+  )
+  # length > 1 input with some too-long elements
+  expect_identical(
+    shorten(c(a = "a", b = glue_collapse(1:10, ""), c = "c")),
+    c(a = "a", b = "1234567...", c = "c")
+  )
+  # length > 1 input with no too-long elements
+  expect_identical(
+    shorten(setNames(letters, letters)),
+    setNames(letters, letters)
+  )
+  # errors when not character
+  expect_error(shorten(1, 10), regexp = "is.character\\(x\\) is not TRUE")
+})
+
 test_that("dottize works", {
   expect_identical(
     dottize(character(0), 8),

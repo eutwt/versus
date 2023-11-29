@@ -119,11 +119,7 @@ summary.vs_compare <- function(object, ...) {
       map_lgl(\(x) !identical(x[[1]][0], x[[2]][0])) %>%
       any()
   )
-  out <- tibble(
-    difference = names(out_vec),
-    found = unname(out_vec)
-  )
-  out
+  enframe(out_vec, name = "difference", value = "found")
 }
 
 # Helpers ---------

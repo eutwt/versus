@@ -69,12 +69,13 @@ get_cols_from_comparison <- function(
 }
 
 shorten <- function(x, max_char = 10) {
-  x <- as.character(x)
-  if_else(
-    nchar(x) > max_char,
-    paste0(substr(x, 1, max_char - 3), "..."),
-    x
-  )
+  stopifnot(is.character(x))
+  is_long <- nchar(x) > max_char
+  if (!any(is_long)) {
+    return(x)
+  }
+  x[is_long] <- paste0(substr(x[is_long], 1, max_char - 3), "...")
+  x
 }
 
 dottize <- function(vec, max_size = 20) {
@@ -102,30 +103,28 @@ dottize <- function(vec, max_size = 20) {
 }
 
 itemize_row <- function(df, max_lines = 3, width = 50) {
-  # similar to capture.output(glimpse(df[1,])), boxed by max_lines x width
-  tdf <- tibble(
-    var = names(df),
-    val = fsubset(df, 1) %>% map_chr(format_glimpse) %>% shorten(width)
-  )
+  # similar to `capture.output(glimpse(df[1,]))`, boxed by max_lines x width
+  tdf <- fsubset(df, 1) %>%
+    map_chr(format_glimpse) %>%
+    shorten(width) %>%
+    enframe()
   if (nrow(tdf) < max_lines) {
-    out <- with(tdf, glue("$ {var}: {val}"))
+    out <- with(tdf, glue("$ {name}: {value}"))
     return(out)
   }
   first <- head(tdf, max_lines) %>%
-    with(glue("$ {var}: {val}"))
+    with(glue("$ {name}: {value}"))
   n_more <- nrow(tdf) - max_lines
   more <- paste0(
     glue("{symbol$info} {n_more} more: "),
-    dottize(tail(tdf$var, n_more), width)
+    dottize(tail(tdf$name, n_more), width)
   )
   c(first, more)
 }
 
 contents <- function(table) {
-  tibble(
-    column = names(table),
-    class = map_chr(table, \(x) paste(class(x), collapse = ", "))
-  )
+  out_vec <- map_chr(table, \(x) paste(class(x), collapse = ", "))
+  enframe(out_vec, name = "column", value = "class")
 }
 
 test_df_a <- mtcars %>%
