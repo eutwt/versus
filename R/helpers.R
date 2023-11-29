@@ -69,6 +69,7 @@ get_cols_from_comparison <- function(
 }
 
 shorten <- function(x, max_char = 10) {
+  stopifnot(is.character(x))
   is_long <- nchar(x) > max_char
   if (!any(is_long)) {
     return(x)

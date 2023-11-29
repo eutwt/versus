@@ -19,16 +19,8 @@ test_that("shorten_works", {
     shorten(setNames(letters, letters)),
     setNames(letters, letters)
   )
-  # numerics that aren't too long stay numeric (not needed but have test as FYI)
-  expect_identical(
-    shorten(c(1, 2, 3), 10),
-    c(1, 2, 3)
-  )
-  # numerics that are too long are converted to character and shortened
-  expect_identical(
-    shorten(c(1, 123456789101112, 3), 10),
-    c("1", "1234567...", "3")
-  )
+  # errors when not character
+  expect_error(shorten(1, 10), regexp = "is.character\\(x\\) is not TRUE")
 })
 
 test_that("dottize works", {
