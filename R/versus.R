@@ -13,7 +13,7 @@
 #' @importFrom vctrs vec_locate_matches vec_as_names vec_init
 #' @importFrom vctrs vec_interleave vec_ptype_common %0%
 #' @importFrom purrr map_int map_lgl map2_lgl map_chr
-#' @importFrom tibble tibble rownames_to_column
+#' @importFrom tibble tibble rownames_to_column enframe
 #' @importFrom collapse ss qF rowbind add_vars frename gsplit join roworderv
 #' @importFrom data.table fcase fcoalesce
 "_PACKAGE"
