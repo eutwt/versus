@@ -69,15 +69,11 @@ get_cols_from_comparison <- function(
 }
 
 shorten <- function(x, max_char = 10) {
-  if (!is.character(x)) {
-    x <- setNames(as.character(x), names(x))
-  }
   is_long <- nchar(x) > max_char
   if (!any(is_long)) {
     return(x)
   }
-  i_long <- which(is_long)
-  x[i_long] <- paste0(substr(x[i_long], 1, max_char - 3), "...")
+  x[is_long] <- paste0(substr(x[is_long], 1, max_char - 3), "...")
   x
 }
 
