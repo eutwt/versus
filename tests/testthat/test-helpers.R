@@ -1,5 +1,5 @@
 test_that("shorten_works", {
-  # return input unchanged
+  # length 1 input that is not too long
   expect_identical(
     shorten(c(a = "12345"), 5),
     c(a = "12345")
@@ -14,7 +14,7 @@ test_that("shorten_works", {
     shorten(c(a = "a", b = glue_collapse(1:10, ""), c = "c")),
     c(a = "a", b = "1234567...", c = "c")
   )
-  # length > 1 input no too-long elements
+  # length > 1 input with no too-long elements
   expect_identical(
     shorten(setNames(letters, letters)),
     setNames(letters, letters)
