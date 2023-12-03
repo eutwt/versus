@@ -109,11 +109,11 @@ itemize_row <- function(df, max_lines = 3, width = 50) {
     shorten(width) %>%
     enframe()
   if (nrow(tdf) < max_lines) {
-    out <- with(tdf, glue("$ {name}: {value}"))
+    out <- glue_data(tdf, "$ {name}: {value}")
     return(out)
   }
   first <- head(tdf, max_lines) %>%
-    with(glue("$ {name}: {value}"))
+    glue_data("$ {name}: {value}")
   n_more <- nrow(tdf) - max_lines
   more <- paste0(
     glue("{symbol$info} {n_more} more: "),
