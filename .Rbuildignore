@@ -11,3 +11,4 @@
 ^CRAN-SUBMISSION$
 todo.txt
 ^codecov\.yml$
+^revdep$
