@@ -1,3 +1,5 @@
+# versus (development version)
+
 # versus 0.2.0
 
 * A new function `slice_diffs_both()` is added, used to get the differences from
