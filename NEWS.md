@@ -1,4 +1,6 @@
-# versus (development version)
+# versus 0.2.1
+
+* Patch to avoid error when input is data.table
 
 # versus 0.2.0
 
