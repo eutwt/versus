@@ -126,8 +126,8 @@ summary.vs_compare <- function(object, ...) {
 
 locate_matches <- function(table_a, table_b, by) {
   matches <- vec_locate_matches(
-    table_a[by],
-    table_b[by],
+    fsubset(table_a, j = by),
+    fsubset(table_b, j = by),
     relationship = "one-to-one",
     no_match = -1L,
     remaining = -2L

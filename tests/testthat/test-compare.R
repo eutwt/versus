@@ -152,6 +152,19 @@ test_that("compare() works when no rows are common", {
   expect_snapshot(compare(a, b, by = car))
 })
 
+test_that("compare() works when inputs are data tables", {
+  dt_comp <- local({
+    example_df_a <- data.table::as.data.table(example_df_a)
+    example_df_b <- data.table::as.data.table(example_df_b)
+    comp <- compare(example_df_a, example_df_b, by = car)
+    attr(comp$unmatched_rows, ".internal.selfref") <- NULL
+    comp
+  })
+  df_comp <- compare(example_df_a, example_df_b, by = car)
+
+  expect_identical(dt_comp, df_comp)
+})
+
 test_that("summary() works", {
   comp <- compare(example_df_a, example_df_b, by = car)
   expect_identical(
