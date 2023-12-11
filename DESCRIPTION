@@ -1,6 +1,6 @@
 Package: versus
 Title: Compare Data Frames
-Version: 0.2.1
+Version: 0.2.1.9000
 Authors@R: 
     person("Ryan", "Dickerson", , "fresh.tent5866@fastmail.com", role = c("aut", "cre", "cph"))
 Description: A toolset for interactively exploring the differences between two data frames.
