@@ -74,11 +74,8 @@
 </div>
 <!-- badges: start -->
 
-<div class="section level2">
-<h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
-</h2>
-<p>A toolset for interactively exploring the differences between two data frames.</p>
-</div>
+<!-- badges: end -->
+<p>The difference between two data frames as a list of data frames.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -91,7 +88,7 @@
 <div class="section level2">
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
-<p>We will use the two data frames below as an example to demonstrate functionality</p>
+<p>The two data frames below are used as an example to demonstrate functionality</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://eutwt.github.io/versus/">versus</a></span><span class="op">)</span></span>
 <span></span>
@@ -118,13 +115,13 @@
 <span><span class="co">#&gt; 8      Merc 450SE 4.070 16.4 180   8 275.8    3 3.07  0</span></span>
 <span><span class="co">#&gt; 9        Merc 230 3.150 22.8  95   4 140.8    2 3.92  1</span></span>
 <span><span class="co">#&gt; 10  Mazda RX4 Wag 2.875 21.0 110   6 160.0    4 3.90  0</span></span></code></pre></div>
-<p>Use <code><a href="reference/compare.html">compare()</a></code> to see</p>
+<p><code><a href="reference/compare.html">compare()</a></code> gives</p>
 <ul>
-<li>The number of differing values in each column - <code>compare()$intersection</code>
+<li>count of differing values in each column - <code>compare()$intersection</code>
 </li>
-<li>Which columns are in only one table - <code>compare()$unmatched_cols</code>
+<li>columns in only one table - <code>compare()$unmatched_cols</code>
 </li>
-<li>Which rows are in only one table - <code>compare()$unmatched_rows</code>
+<li>rows in only one table - <code>compare()$unmatched_rows</code>
 </li>
 </ul>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
@@ -132,10 +129,10 @@
 <span><span class="va">comp</span></span>
 <span><span class="co">#&gt; $tables</span></span>
 <span><span class="co">#&gt; # A tibble: 2 × 4</span></span>
-<span><span class="co">#&gt;   table   expr          nrow  ncol</span></span>
+<span><span class="co">#&gt;   table   expr          ncol  nrow</span></span>
 <span><span class="co">#&gt;   &lt;chr&gt;   &lt;chr&gt;        &lt;int&gt; &lt;int&gt;</span></span>
 <span><span class="co">#&gt; 1 table_a example_df_a     9     9</span></span>
-<span><span class="co">#&gt; 2 table_b example_df_b    10     9</span></span>
+<span><span class="co">#&gt; 2 table_b example_df_b     9    10</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; $by</span></span>
 <span><span class="co">#&gt; # A tibble: 1 × 3</span></span>
@@ -143,7 +140,7 @@
 <span><span class="co">#&gt;   &lt;chr&gt;  &lt;chr&gt;     &lt;chr&gt;    </span></span>
 <span><span class="co">#&gt; 1 car    character character</span></span>
 <span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt; $intersection</span></span>
+<span><span class="co">#&gt; $summ</span></span>
 <span><span class="co">#&gt; # A tibble: 7 × 5</span></span>
 <span><span class="co">#&gt;   column n_diffs class_a class_b value_diffs     </span></span>
 <span><span class="co">#&gt;   &lt;chr&gt;    &lt;int&gt; &lt;chr&gt;   &lt;chr&gt;   &lt;list&gt;          </span></span>
@@ -169,33 +166,15 @@
 <span><span class="co">#&gt; 1 a     Mazda RX4 </span></span>
 <span><span class="co">#&gt; 2 b     Merc 280C </span></span>
 <span><span class="co">#&gt; 3 b     Merc 450SE</span></span></code></pre></div>
-<p>Use <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> to see what kind of differences were found</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">comp</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 4 × 2</span></span>
-<span><span class="co">#&gt;   difference     found</span></span>
-<span><span class="co">#&gt;   &lt;chr&gt;          &lt;lgl&gt;</span></span>
-<span><span class="co">#&gt; 1 value_diffs    TRUE </span></span>
-<span><span class="co">#&gt; 2 unmatched_cols TRUE </span></span>
-<span><span class="co">#&gt; 3 unmatched_rows TRUE </span></span>
-<span><span class="co">#&gt; 4 class_diffs    FALSE</span></span></code></pre></div>
 <p>Use <code><a href="reference/value-diffs.html">value_diffs()</a></code> to see the values that are different.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/value-diffs.html">value_diffs</a></span><span class="op">(</span><span class="va">comp</span>, <span class="va">disp</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 2 × 3</span></span>
 <span><span class="co">#&gt;   disp_a disp_b car           </span></span>
 <span><span class="co">#&gt;    &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;         </span></span>
 <span><span class="co">#&gt; 1    109    108 Datsun 710    </span></span>
 <span><span class="co">#&gt; 2    259    258 Hornet 4 Drive</span></span>
-<span><span class="fu"><a href="reference/value-diffs.html">value_diffs</a></span><span class="op">(</span><span class="va">comp</span>, <span class="va">mpg</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 2 × 3</span></span>
-<span><span class="co">#&gt;   mpg_a mpg_b car       </span></span>
-<span><span class="co">#&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;     </span></span>
-<span><span class="co">#&gt; 1  14.3  16.3 Duster 360</span></span>
-<span><span class="co">#&gt; 2  24.4  26.4 Merc 240D</span></span></code></pre></div>
-<p>Use <code><a href="reference/value-diffs.html">value_diffs_all()</a></code> to combine all <code><a href="reference/value-diffs.html">value_diffs()</a></code> output into one table</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/value-diffs.html">value_diffs_all</a></span><span class="op">(</span><span class="va">comp</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/value-diffs.html">value_diffs_stacked</a></span><span class="op">(</span><span class="va">comp</span>, column <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">disp</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 4 × 4</span></span>
 <span><span class="co">#&gt;   column val_a val_b car           </span></span>
 <span><span class="co">#&gt;   &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;         </span></span>
@@ -203,6 +182,39 @@
 <span><span class="co">#&gt; 2 mpg     24.4  26.4 Merc 240D     </span></span>
 <span><span class="co">#&gt; 3 disp   109   108   Datsun 710    </span></span>
 <span><span class="co">#&gt; 4 disp   259   258   Hornet 4 Drive</span></span></code></pre></div>
+<p>Use <code><a href="reference/slice_diffs.html">slice_diffs()</a></code> to get the rows with differing values from one or both tables.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="reference/slice_diffs.html">slice_diffs</a></span><span class="op">(</span><span class="va">example_df_a</span>, <span class="va">comp</span><span class="op">)</span></span>
+<span><span class="co">#&gt;              car  mpg cyl  disp  hp drat    wt vs am</span></span>
+<span><span class="co">#&gt; 1     Duster 360 14.3   8 360.0 245 3.21 3.570  0  0</span></span>
+<span><span class="co">#&gt; 2     Datsun 710 22.8  NA 109.0  93 3.85 2.320  1  1</span></span>
+<span><span class="co">#&gt; 3      Merc 240D 24.4   4 146.7  62 3.69 3.190  1  0</span></span>
+<span><span class="co">#&gt; 4 Hornet 4 Drive 21.4   6 259.0 110 3.08 3.215  1  0</span></span>
+<span><span class="fu"><a href="reference/slice_diffs.html">slice_diffs</a></span><span class="op">(</span><span class="va">example_df_b</span>, <span class="va">comp</span><span class="op">)</span></span>
+<span><span class="co">#&gt;              car    wt  mpg  hp cyl  disp carb drat vs</span></span>
+<span><span class="co">#&gt; 1      Merc 240D 3.190 26.4  62   4 146.7    2 3.69  1</span></span>
+<span><span class="co">#&gt; 2     Duster 360 3.570 16.3 245   8 360.0    4 3.21  0</span></span>
+<span><span class="co">#&gt; 3     Datsun 710 2.320 22.8  93  NA 108.0    1 3.85  1</span></span>
+<span><span class="co">#&gt; 4 Hornet 4 Drive 3.215 21.4 110   6 258.0    1 3.08  1</span></span>
+<span><span class="fu"><a href="reference/slice_diffs.html">slice_diffs_both</a></span><span class="op">(</span><span class="va">example_df_a</span>, <span class="va">example_df_b</span>, <span class="va">comp</span><span class="op">)</span></span>
+<span><span class="co">#&gt;   table            car  mpg cyl  disp  hp drat    wt vs</span></span>
+<span><span class="co">#&gt; 1     a     Duster 360 14.3   8 360.0 245 3.21 3.570  0</span></span>
+<span><span class="co">#&gt; 2     b      Merc 240D 26.4   4 146.7  62 3.69 3.190  1</span></span>
+<span><span class="co">#&gt; 3     a     Datsun 710 22.8  NA 109.0  93 3.85 2.320  1</span></span>
+<span><span class="co">#&gt; 4     b     Duster 360 16.3   8 360.0 245 3.21 3.570  0</span></span>
+<span><span class="co">#&gt; 5     a      Merc 240D 24.4   4 146.7  62 3.69 3.190  1</span></span>
+<span><span class="co">#&gt; 6     b     Datsun 710 22.8  NA 108.0  93 3.85 2.320  1</span></span>
+<span><span class="co">#&gt; 7     a Hornet 4 Drive 21.4   6 259.0 110 3.08 3.215  1</span></span>
+<span><span class="co">#&gt; 8     b Hornet 4 Drive 21.4   6 258.0 110 3.08 3.215  1</span></span></code></pre></div>
+<p>Use <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> to see what kind of differences were found</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">comp</span><span class="op">)</span></span>
+<span><span class="co">#&gt;                Length Class  Mode</span></span>
+<span><span class="co">#&gt; tables         4      tbl_df list</span></span>
+<span><span class="co">#&gt; by             3      tbl_df list</span></span>
+<span><span class="co">#&gt; summ           5      tbl_df list</span></span>
+<span><span class="co">#&gt; unmatched_cols 2      tbl_df list</span></span>
+<span><span class="co">#&gt; unmatched_rows 2      tbl_df list</span></span></code></pre></div>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
