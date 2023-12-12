@@ -125,8 +125,8 @@
 </li>
 </ul>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">comp</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/compare.html">compare</a></span><span class="op">(</span><span class="va">example_df_a</span>, <span class="va">example_df_b</span>, by <span class="op">=</span> <span class="va">car</span><span class="op">)</span></span>
-<span><span class="va">comp</span></span>
+<code class="sourceCode R"><span><span class="va">comparison</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/compare.html">compare</a></span><span class="op">(</span><span class="va">example_df_a</span>, <span class="va">example_df_b</span>, by <span class="op">=</span> <span class="va">car</span><span class="op">)</span></span>
+<span><span class="va">comparison</span></span>
 <span><span class="co">#&gt; $tables</span></span>
 <span><span class="co">#&gt; # A tibble: 2 × 4</span></span>
 <span><span class="co">#&gt;   table   expr          nrow  ncol</span></span>
@@ -168,13 +168,13 @@
 <span><span class="co">#&gt; 3 b     Merc 450SE</span></span></code></pre></div>
 <p>Use <code><a href="reference/value-diffs.html">value_diffs()</a></code> to see the values that are different.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/value-diffs.html">value_diffs</a></span><span class="op">(</span><span class="va">comp</span>, <span class="va">disp</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/value-diffs.html">value_diffs</a></span><span class="op">(</span><span class="va">comparison</span>, <span class="va">disp</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 2 × 3</span></span>
 <span><span class="co">#&gt;   disp_a disp_b car           </span></span>
 <span><span class="co">#&gt;    &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;         </span></span>
 <span><span class="co">#&gt; 1    109    108 Datsun 710    </span></span>
 <span><span class="co">#&gt; 2    259    258 Hornet 4 Drive</span></span>
-<span><span class="fu"><a href="reference/value-diffs.html">value_diffs_stacked</a></span><span class="op">(</span><span class="va">comp</span>, column <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">disp</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/value-diffs.html">value_diffs_stacked</a></span><span class="op">(</span><span class="va">comparison</span>, column <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">mpg</span>, <span class="va">disp</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 4 × 4</span></span>
 <span><span class="co">#&gt;   column val_a val_b car           </span></span>
 <span><span class="co">#&gt;   &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;         </span></span>
@@ -184,7 +184,7 @@
 <span><span class="co">#&gt; 4 disp   259   258   Hornet 4 Drive</span></span></code></pre></div>
 <p>Use <code><a href="reference/slice_diffs.html">slice_diffs()</a></code> to get the rows with differing values from one or both tables.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/slice_diffs.html">slice_diffs</a></span><span class="op">(</span><span class="va">example_df_a</span>, <span class="va">comp</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/slice_diffs.html">slice_diffs</a></span><span class="op">(</span><span class="va">example_df_a</span>, <span class="va">comparison</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 4 × 9</span></span>
 <span><span class="co">#&gt;   car              mpg   cyl  disp    hp  drat    wt    vs    am</span></span>
 <span><span class="co">#&gt;   &lt;chr&gt;          &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt;</span></span>
@@ -192,7 +192,7 @@
 <span><span class="co">#&gt; 2 Datsun 710      22.8    NA  109     93  3.85  2.32     1     1</span></span>
 <span><span class="co">#&gt; 3 Merc 240D       24.4     4  147.    62  3.69  3.19     1     0</span></span>
 <span><span class="co">#&gt; 4 Hornet 4 Drive  21.4     6  259    110  3.08  3.22     1     0</span></span>
-<span><span class="fu"><a href="reference/slice_diffs.html">slice_diffs</a></span><span class="op">(</span><span class="va">example_df_b</span>, <span class="va">comp</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/slice_diffs.html">slice_diffs</a></span><span class="op">(</span><span class="va">example_df_b</span>, <span class="va">comparison</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 4 × 9</span></span>
 <span><span class="co">#&gt;   car               wt   mpg    hp   cyl  disp  carb  drat    vs</span></span>
 <span><span class="co">#&gt;   &lt;chr&gt;          &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;int&gt;</span></span>
@@ -200,7 +200,7 @@
 <span><span class="co">#&gt; 2 Duster 360      3.57  16.3   245     8  360      4  3.21     0</span></span>
 <span><span class="co">#&gt; 3 Datsun 710      2.32  22.8    93    NA  108      1  3.85     1</span></span>
 <span><span class="co">#&gt; 4 Hornet 4 Drive  3.22  21.4   110     6  258      1  3.08     1</span></span>
-<span><span class="fu"><a href="reference/slice_diffs.html">slice_diffs_both</a></span><span class="op">(</span><span class="va">example_df_a</span>, <span class="va">example_df_b</span>, <span class="va">comp</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/slice_diffs.html">slice_diffs_both</a></span><span class="op">(</span><span class="va">example_df_a</span>, <span class="va">example_df_b</span>, <span class="va">comparison</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 8 × 9</span></span>
 <span><span class="co">#&gt;   table car              mpg   cyl  disp    hp  drat    wt    vs</span></span>
 <span><span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;          &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt;</span></span>
@@ -214,7 +214,7 @@
 <span><span class="co">#&gt; 8 b     Merc 240D       26.4     4  147.    62  3.69  3.19     1</span></span></code></pre></div>
 <p>Use <code><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary()</a></code> to see what kind of differences were found</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">comp</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">comparison</span><span class="op">)</span></span>
 <span><span class="co">#&gt; # A tibble: 4 × 2</span></span>
 <span><span class="co">#&gt;   difference     found</span></span>
 <span><span class="co">#&gt;   &lt;chr&gt;          &lt;lgl&gt;</span></span>
