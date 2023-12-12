@@ -105,9 +105,12 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE) {
 
 #' @export
 print.vs_compare <- function(x, ...) {
-  class(x) <- "list"
-  print(x)
+  local({ # need local() for Rmd
+    class(x) <- "list"
+    print(x)
+  })
 }
+
 
 #' @export
 summary.vs_compare <- function(object, ...) {

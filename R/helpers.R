@@ -108,7 +108,7 @@ itemize_row <- function(df, max_lines = 3, width = 50) {
     map_chr(format_glimpse) %>%
     shorten(width) %>%
     enframe()
-  if (nrow(tdf) < max_lines) {
+  if (nrow(tdf) <= max_lines) {
     out <- glue_data(tdf, "$ {name}: {value}")
     return(out)
   }

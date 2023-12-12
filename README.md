@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# versus <img id="logo" src="man/figures/logo.png" align="right" width="17%" height="17%" />
+# versus <img src="man/figures/logo.png" id="logo" align="right" width="17%" height="17%"/>
 
 <!-- badges: start -->
 
@@ -10,12 +10,10 @@
 status](https://www.r-pkg.org/badges/version/versus)](https://CRAN.R-project.org/package=versus)
 [![Codecov test
 coverage](https://codecov.io/gh/eutwt/versus/branch/main/graph/badge.svg)](https://app.codecov.io/gh/eutwt/versus?branch=main)
+
 <!-- badges: end -->
 
-## Overview
-
-A toolset for interactively exploring the differences between two data
-frames.
+The difference between two data frames as a list of data frames.
 
 ## Installation
 
@@ -28,7 +26,7 @@ install.packages("versus")
 
 ## Example
 
-We will use the two data frames below as an example to demonstrate
+The two data frames below are used as an example to demonstrate
 functionality
 
 ``` r
@@ -61,14 +59,13 @@ example_df_b
 
 Use `compare()` to see
 
-- The number of differing values in each column -
-  `compare()$intersection`
-- Which columns are in only one table - `compare()$unmatched_cols`
-- Which rows are in only one table - `compare()$unmatched_rows`
+- counts of differing values in each column - `compare()$intersection`
+- columns in only one table - `compare()$unmatched_cols`
+- rows in only one table - `compare()$unmatched_rows`
 
 ``` r
-comp <- compare(example_df_a, example_df_b, by = car)
-comp
+comparison <- compare(example_df_a, example_df_b, by = car)
+comparison
 #> $tables
 #> # A tibble: 2 × 4
 #>   table   expr          nrow  ncol
@@ -110,41 +107,16 @@ comp
 #> 3 b     Merc 450SE
 ```
 
-Use `summary()` to see what kind of differences were found
-
-``` r
-summary(comp)
-#> # A tibble: 4 × 2
-#>   difference     found
-#>   <chr>          <lgl>
-#> 1 value_diffs    TRUE 
-#> 2 unmatched_cols TRUE 
-#> 3 unmatched_rows TRUE 
-#> 4 class_diffs    FALSE
-```
-
 Use `value_diffs()` to see the values that are different.
 
 ``` r
-value_diffs(comp, disp)
+value_diffs(comparison, disp)
 #> # A tibble: 2 × 3
 #>   disp_a disp_b car           
 #>    <dbl>  <dbl> <chr>         
 #> 1    109    108 Datsun 710    
 #> 2    259    258 Hornet 4 Drive
-value_diffs(comp, mpg)
-#> # A tibble: 2 × 3
-#>   mpg_a mpg_b car       
-#>   <dbl> <dbl> <chr>     
-#> 1  14.3  16.3 Duster 360
-#> 2  24.4  26.4 Merc 240D
-```
-
-Use `value_diffs_all()` to combine all `value_diffs()` output into one
-table
-
-``` r
-value_diffs_all(comp)
+value_diffs_stacked(comparison, column = c(mpg, disp))
 #> # A tibble: 4 × 4
 #>   column val_a val_b car           
 #>   <chr>  <dbl> <dbl> <chr>         
@@ -152,4 +124,51 @@ value_diffs_all(comp)
 #> 2 mpg     24.4  26.4 Merc 240D     
 #> 3 disp   109   108   Datsun 710    
 #> 4 disp   259   258   Hornet 4 Drive
+```
+
+Use `slice_diffs()` to get the rows with differing values from one or
+both tables.
+
+``` r
+slice_diffs(example_df_a, comparison)
+#> # A tibble: 4 × 9
+#>   car              mpg   cyl  disp    hp  drat    wt    vs    am
+#>   <chr>          <dbl> <int> <dbl> <int> <dbl> <dbl> <int> <int>
+#> 1 Duster 360      14.3     8  360    245  3.21  3.57     0     0
+#> 2 Datsun 710      22.8    NA  109     93  3.85  2.32     1     1
+#> 3 Merc 240D       24.4     4  147.    62  3.69  3.19     1     0
+#> 4 Hornet 4 Drive  21.4     6  259    110  3.08  3.22     1     0
+slice_diffs(example_df_b, comparison)
+#> # A tibble: 4 × 9
+#>   car               wt   mpg    hp   cyl  disp  carb  drat    vs
+#>   <chr>          <dbl> <dbl> <int> <int> <dbl> <int> <dbl> <int>
+#> 1 Merc 240D       3.19  26.4    62     4  147.     2  3.69     1
+#> 2 Duster 360      3.57  16.3   245     8  360      4  3.21     0
+#> 3 Datsun 710      2.32  22.8    93    NA  108      1  3.85     1
+#> 4 Hornet 4 Drive  3.22  21.4   110     6  258      1  3.08     1
+slice_diffs_both(example_df_a, example_df_b, comparison)
+#> # A tibble: 8 × 9
+#>   table car              mpg   cyl  disp    hp  drat    wt    vs
+#>   <chr> <chr>          <dbl> <int> <dbl> <int> <dbl> <dbl> <int>
+#> 1 a     Datsun 710      22.8    NA  109     93  3.85  2.32     1
+#> 2 b     Datsun 710      22.8    NA  108     93  3.85  2.32     1
+#> 3 a     Duster 360      14.3     8  360    245  3.21  3.57     0
+#> 4 b     Duster 360      16.3     8  360    245  3.21  3.57     0
+#> 5 a     Hornet 4 Drive  21.4     6  259    110  3.08  3.22     1
+#> 6 b     Hornet 4 Drive  21.4     6  258    110  3.08  3.22     1
+#> 7 a     Merc 240D       24.4     4  147.    62  3.69  3.19     1
+#> 8 b     Merc 240D       26.4     4  147.    62  3.69  3.19     1
+```
+
+Use `summary()` to see what kind of differences were found
+
+``` r
+summary(comparison)
+#> # A tibble: 4 × 2
+#>   difference     found
+#>   <chr>          <lgl>
+#> 1 value_diffs    TRUE 
+#> 2 unmatched_cols TRUE 
+#> 3 unmatched_rows TRUE 
+#> 4 class_diffs    FALSE
 ```

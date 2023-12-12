@@ -13,17 +13,15 @@ knitr::opts_chunk$set(
 )
 ```
 
-# versus <img id="logo" src="man/figures/logo.png" align="right" width="17%" height="17%" />
+# versus <img src="man/figures/logo.png" id="logo" align="right" width="17%" height="17%"/>
 
 <!-- badges: start -->
-[![R-CMD-check](https://github.com/eutwt/versus/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/eutwt/versus/actions/workflows/R-CMD-check.yaml)
-[![CRAN status](https://www.r-pkg.org/badges/version/versus)](https://CRAN.R-project.org/package=versus)
-[![Codecov test coverage](https://codecov.io/gh/eutwt/versus/branch/main/graph/badge.svg)](https://app.codecov.io/gh/eutwt/versus?branch=main)
+
+[![R-CMD-check](https://github.com/eutwt/versus/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/eutwt/versus/actions/workflows/R-CMD-check.yaml) [![CRAN status](https://www.r-pkg.org/badges/version/versus)](https://CRAN.R-project.org/package=versus) [![Codecov test coverage](https://codecov.io/gh/eutwt/versus/branch/main/graph/badge.svg)](https://app.codecov.io/gh/eutwt/versus?branch=main)
+
 <!-- badges: end -->
 
-## Overview
-
-A toolset for interactively exploring the differences between two data frames.
+The difference between two data frames as a list of data frames.
 
 ## Installation
 
@@ -36,7 +34,7 @@ install.packages("versus")
 
 ## Example
 
-We will use the two data frames below as an example to demonstrate functionality
+The two data frames below are used as an example to demonstrate functionality
 
 ```{r}
 library(versus)
@@ -45,30 +43,34 @@ example_df_a
 example_df_b
 ```
 
-Use `compare()` to see 
+Use `compare()` to see
 
-* The number of differing values in each column - `compare()$intersection`
-* Which columns are in only one table - `compare()$unmatched_cols`
-* Which rows are in only one table - `compare()$unmatched_rows`
-```{r}
-comp <- compare(example_df_a, example_df_b, by = car)
-comp
-```
+-   counts of differing values in each column - `compare()$intersection`
+-   columns in only one table - `compare()$unmatched_cols`
+-   rows in only one table - `compare()$unmatched_rows`
 
-Use `summary()` to see what kind of differences were found
 ```{r}
-summary(comp)
+comparison <- compare(example_df_a, example_df_b, by = car)
+comparison
 ```
 
 Use `value_diffs()` to see the values that are different.
 
 ```{r}
-value_diffs(comp, disp)
-value_diffs(comp, mpg)
+value_diffs(comparison, disp)
+value_diffs_stacked(comparison, column = c(mpg, disp))
 ```
 
-Use `value_diffs_all()` to combine all `value_diffs()` output into one table 
+Use `slice_diffs()` to get the rows with differing values from one or both tables.
 
 ```{r}
-value_diffs_all(comp)
+slice_diffs(example_df_a, comparison)
+slice_diffs(example_df_b, comparison)
+slice_diffs_both(example_df_a, example_df_b, comparison)
+```
+
+Use `summary()` to see what kind of differences were found
+
+```{r}
+summary(comparison)
 ```
