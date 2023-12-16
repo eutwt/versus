@@ -158,7 +158,7 @@ get_unmatched_rows <- function(table_a, table_b, by, matches) {
     a = fsubset(table_a, matches$needles$a, by),
     b = fsubset(table_b, matches$haystack$b, by)
   )
-  as_tibble(rowbind(unmatched, idcol = "table", id.factor = FALSE))
+  as_tibble(bind_rows(unmatched, .id = "table"))
 }
 
 converge <- function(table_a, table_b, by, matches) {

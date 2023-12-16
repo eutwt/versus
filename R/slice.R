@@ -14,7 +14,13 @@
 #' \code{column} argument}
 #' \item{\code{slice_diffs_both()}}{The output of \code{slice_diffs()} for both input
 #' tables with the rows interleaved and a column `table` indicating which table the row
-#' is from. The output contains only those columns present in both tables.}
+#' is from. The output contains only columns present in both tables.}
+#' \item{\code{slice_unmatched()}}{The input \code{table} is filtered to only the rows
+#' \code{comparison} shows as only appearing in \code{table}}
+#' \item{\code{slice_unmatched_both()}}{The output of \code{slice_unmatched()} for both input
+#' tables row-stacked and a column `table` indicating which table the row
+#' is from. The output contains only columns present in both tables.}
+#
 #'
 #' @examples
 #' comp <- compare(example_df_a, example_df_b, by = car)
@@ -27,7 +33,8 @@
 slice_diffs <- function(table, comparison, column = everything()) {
   column <- enquo(column)
   validate_comparison(enquo(comparison))
-  validate_slice_diff_columns(table, comparison, type = "single")
+  assert_has_columns(table, comparison$by$column)
+  assert_same_types(table, table_init(comparison, cols = "by"))
 
   select_by_vars <- function(value_diffs, col_name) {
     fsubset(value_diffs, j = comparison$by$column)
@@ -37,7 +44,7 @@ slice_diffs <- function(table, comparison, column = everything()) {
     column,
     pre_stack_fun = select_by_vars
   )
-  validate_slice_diff_types(table, by_vals_with_diffs)
+  assert_same_types(table, by_vals_with_diffs)
 
   join(
     table,
@@ -54,49 +61,84 @@ slice_diffs <- function(table, comparison, column = everything()) {
 #' @export
 slice_diffs_both <- function(table_a, table_b, comparison, column = everything()) {
   validate_comparison(enquo(comparison))
-  validate_slice_diff_columns(table_a, comparison, type = "both")
-  validate_slice_diff_columns(table_b, comparison, type = "both")
+  required_columns <- with(comparison, c(by$column, intersection$column))
+  assert_has_columns(table_a, required_columns)
+  assert_has_columns(table_b, required_columns)
 
-  output_cols <- c(comparison$by$column, comparison$intersection$column)
   slice_diffs_for_interleave <- function(df, name) {
     df %>%
-      fsubset(j = output_cols) %>%
+      fsubset(j = required_columns) %>%
       slice_diffs(comparison, {{ column }}) %>%
       roworderv(comparison$by$column) %>%
       mutate(table = name, .before = 1)
   }
-  diffs_a <- slice_diffs_for_interleave(table_a, "a")
-  diffs_b <- slice_diffs_for_interleave(table_b, "b")
+
+  diffs <- list("a" = table_a, "b" = table_b) %>%
+    imap(\(x, nm) slice_diffs_for_interleave(x, nm))
 
   # if the column types are incompatible, convert them to character first
-  is_incompatible <- !is_ptype_compatible(diffs_a, diffs_b)
+  is_incompatible <- !is_ptype_compatible(diffs$a, diffs$b)
   if (any(is_incompatible)) {
     incompatible_cols <- names(is_incompatible)[is_incompatible]
     cols_char <- dottize(incompatible_cols, 30)
     cli_alert_info("Columns converted to character: {cols_char}")
 
-    diffs_a <- diffs_a %>%
-      mutate(across(all_of(incompatible_cols), as.character))
-    diffs_b <- diffs_b %>%
-      mutate(across(all_of(incompatible_cols), as.character))
+    diffs <- diffs %>%
+      map(\(x) mutate(x, across(all_of(incompatible_cols), as.character)))
   }
 
-  vec_interleave(diffs_a, diffs_b)
+  vec_interleave(!!!diffs)
 }
 
+#' @rdname slice_diffs
+#' @export
+slice_unmatched <- function(table, comparison) {
+  validate_comparison(enquo(comparison))
+  assert_has_columns(table, comparison$by$column)
+  assert_same_types(table, table_init(comparison, cols = "by"))
 
-# Helpers ------------
+  join(
+    table,
+    comparison$unmatched_rows,
+    on = comparison$by$column,
+    how = "semi",
+    verbose = FALSE,
+    overid = 2
+  ) %>%
+    as_tibble()
+}
 
-validate_slice_diff_columns <- function(table, comparison, type, call = caller_env()) {
+slice_unmatched_both <- function(table_a, table_b, comparison) {
+  validate_comparison(enquo(comparison))
+  required_columns <- with(comparison, c(by$column, intersection$column))
+  assert_has_columns(table_a, required_columns)
+  assert_has_columns(table_b, required_columns)
+
+  unmatched <- list("a" = table_a, "b" = table_b) %>%
+    map(slice_unmatched, comparison) %>%
+    map(fsubset, j = required_columns)
+
+  # if the column types are incompatible, convert them to character first
+  is_incompatible <- !is_ptype_compatible(unmatched$a, unmatched$b)
+  if (any(is_incompatible)) {
+    incompatible_cols <- names(is_incompatible)[is_incompatible]
+    cols_char <- dottize(incompatible_cols, 30)
+    cli_alert_info("Columns converted to character: {cols_char}")
+
+    unmatched <- unmatched %>%
+      map(\(x) mutate(x, across(all_of(incompatible_cols), as.character)))
+  }
+
+  bind_rows(unmatched, .id = "table")
+}
+
+# helpers ---------
+
+assert_has_columns <- function(table, col_names, type, call = caller_env()) {
   arg_name <- deparse(substitute(table))
-  required_cols <- switch(type,
-    single = comparison$by$column,
-    both = c(comparison$by$column, comparison$intersection$column),
-    cli_abort("Internal error")
-  )
-  not_present <- !(required_cols %in% names(table))
+  not_present <- !(col_names %in% names(table))
   if (any(not_present)) {
-    missing_col <- required_cols[which.max(not_present)]
+    missing_col <- col_names[which.max(not_present)]
     message <- c(
       "`{arg_name}` is missing some columns from `comparison`",
       "column `{missing_col}` is not present in `{arg_name}`"
@@ -105,17 +147,17 @@ validate_slice_diff_columns <- function(table, comparison, type, call = caller_e
   }
 }
 
-validate_slice_diff_types <- function(table, by_vals_with_diffs, call = caller_env()) {
+assert_same_types <- function(table, slicer, call = caller_env()) {
   # collapse::join silently coerces join-key variables
   # don't want that, so check compatibility before join
   incompatible <- !is_ptype_compatible(
-    fsubset(table, j = names(by_vals_with_diffs)),
-    by_vals_with_diffs
+    fsubset(table, j = names(slicer)),
+    slicer
   )
   if (any(incompatible)) {
-    col <- names(by_vals_with_diffs)[which.max(incompatible)]
+    col <- names(slicer)[which.max(incompatible)]
     class_table <- class(table[[col]])
-    class_comparison <- class(by_vals_with_diffs[[col]])
+    class_comparison <- class(slicer[[col]])
     message <- c(
       "`by` columns in `table` must be compatible with those in `comparison`",
       "`{col}` class in `table`: {.cls {class_table}}",

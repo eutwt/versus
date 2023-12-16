@@ -3,11 +3,14 @@
 \name{slice_diffs}
 \alias{slice_diffs}
 \alias{slice_diffs_both}
+\alias{slice_unmatched}
 \title{Show rows which have differing values in a comparison}
 \usage{
 slice_diffs(table, comparison, column = everything())
 
 slice_diffs_both(table_a, table_b, comparison, column = everything())
+
+slice_unmatched(table, comparison)
 }
 \arguments{
 \item{table}{A data frame. One of \code{table_a} or \code{table_b} used to
@@ -28,7 +31,12 @@ the comparison shows differing values for any columns matching this argument}
 \code{column} argument}
 \item{\code{slice_diffs_both()}}{The output of \code{slice_diffs()} for both input
 tables with the rows interleaved and a column \code{table} indicating which table the row
-is from. The output contains only those columns present in both tables.}
+is from. The output contains only columns present in both tables.}
+\item{\code{slice_unmatched()}}{The input \code{table} is filtered to only the rows
+\code{comparison} shows as only appearing in \code{table}}
+\item{\code{slice_unmatched_both()}}{The output of \code{slice_unmatched()} for both input
+tables row-stacked and a column \code{table} indicating which table the row
+is from. The output contains only columns present in both tables.}
 }
 \description{
 Show rows which have differing values in a comparison

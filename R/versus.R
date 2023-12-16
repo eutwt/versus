@@ -11,8 +11,8 @@
 #' @importFrom utils capture.output head tail
 #' @importFrom vctrs vec_locate_matches vec_as_names
 #' @importFrom vctrs vec_interleave vec_ptype_common %0%
-#' @importFrom purrr map_int map_lgl map2_lgl map_chr
+#' @importFrom purrr map imap map_int map_lgl map2_lgl map_chr
 #' @importFrom tibble tibble rownames_to_column enframe
-#' @importFrom collapse ss rowbind add_vars frename gsplit join roworderv
+#' @importFrom collapse ss rowbind add_vars frename gsplit join roworderv fselect
 #' @importFrom data.table fcase fcoalesce
 "_PACKAGE"

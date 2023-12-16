@@ -31,14 +31,19 @@ is_ptype_compatible <- function(tbl_a, tbl_b) {
   !incompatible
 }
 
-table_init <- function(comparison, tbl = c("a", "b")) {
+table_init <- function(comparison, tbl = c("a", "b"), cols = c("intersection", "by")) {
   # simulate a data frame with the same classes as table_[tbl]
   tbl <- arg_match(tbl)
-  col_index <- if_else(tbl == "a", 1, 2)
+  cols <- arg_match(cols)
 
-  comparison$intersection %>%
-    with(setNames(value_diffs, column)) %>%
-    lapply(\(x) x[[col_index]][0])
+  if (cols == "intersection") {
+    value_diff_column <- if_else(tbl == "a", 1, 2)
+    comparison$intersection %>%
+      with(setNames(value_diffs, column)) %>%
+      lapply(\(x) x[[value_diff_column]][0])
+  } else if (cols == "by") {
+    fselect(comparison$unmatched_rows, -1)
+  }
 }
 
 get_cols_from_comparison <- function(
@@ -46,7 +51,7 @@ get_cols_from_comparison <- function(
     column,
     allow_empty = FALSE,
     call = caller_env()) {
-  template_a <- table_init(comparison, tbl = "a")
+  template_a <- table_init(comparison, tbl = "a", cols = "intersection")
 
   rethrow_oob <- function(e) {
     column_arg <- shorten(glue("column = {as_label(column)}"), 50)
