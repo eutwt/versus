@@ -46,7 +46,8 @@ Show rows which have differing values in a comparison
 }
 \examples{
 comp <- compare(example_df_a, example_df_b, by = car)
-example_df_a |> slice_diffs(comp, disp)
 example_df_a |> slice_diffs(comp, c(disp, mpg))
 slice_diffs_both(example_df_a, example_df_b, comp, column = disp)
+example_df_a |> slice_unmatched(comp)
+slice_unmatched_both(example_df_a, example_df_b, comp)
 }
