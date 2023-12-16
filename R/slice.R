@@ -134,7 +134,7 @@ slice_unmatched_both <- function(table_a, table_b, comparison) {
   bind_rows(unmatched, .id = "table")
 }
 
-# helpers ---------
+# Helpers ------------
 
 assert_has_columns <- function(table, col_names, type, call = caller_env()) {
   arg_name <- deparse(substitute(table))
