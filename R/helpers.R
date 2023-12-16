@@ -42,7 +42,7 @@ table_init <- function(comparison, tbl = c("a", "b"), cols = c("intersection", "
       with(setNames(value_diffs, column)) %>%
       lapply(\(x) x[[value_diff_column]][0])
   } else if (cols == "by") {
-    fselect(comparison$unmatched_rows, -1)
+    fsubset(comparison$unmatched_rows, 0, comparison$by$column)
   }
 }
 
