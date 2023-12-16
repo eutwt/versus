@@ -4,6 +4,7 @@
 \alias{slice_diffs}
 \alias{slice_diffs_both}
 \alias{slice_unmatched}
+\alias{slice_unmatched_both}
 \title{Show rows which have differing values in a comparison}
 \usage{
 slice_diffs(table, comparison, column = everything())
@@ -11,6 +12,8 @@ slice_diffs(table, comparison, column = everything())
 slice_diffs_both(table_a, table_b, comparison, column = everything())
 
 slice_unmatched(table, comparison)
+
+slice_unmatched_both(table_a, table_b, comparison)
 }
 \arguments{
 \item{table}{A data frame. One of \code{table_a} or \code{table_b} used to

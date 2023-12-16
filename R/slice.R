@@ -108,6 +108,8 @@ slice_unmatched <- function(table, comparison) {
     as_tibble()
 }
 
+#' @rdname slice_diffs
+#' @export
 slice_unmatched_both <- function(table_a, table_b, comparison) {
   validate_comparison(enquo(comparison))
   required_columns <- with(comparison, c(by$column, intersection$column))
