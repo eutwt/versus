@@ -15,19 +15,11 @@
 #' \item{\code{slice_diffs_both()}}{The output of \code{slice_diffs()} for both input
 #' tables with the rows interleaved and a column `table` indicating which table the row
 #' is from. The output contains only columns present in both tables.}
-#' \item{\code{slice_unmatched()}}{The input \code{table} is filtered to only the rows
-#' \code{comparison} shows as only appearing in \code{table}}
-#' \item{\code{slice_unmatched_both()}}{The output of \code{slice_unmatched()} for both input
-#' tables row-stacked and a column `table` indicating which table the row
-#' is from. The output contains only columns present in both tables.}
-#
 #'
 #' @examples
 #' comp <- compare(example_df_a, example_df_b, by = car)
 #' example_df_a |> slice_diffs(comp, c(disp, mpg))
 #' slice_diffs_both(example_df_a, example_df_b, comp, column = disp)
-#' example_df_a |> slice_unmatched(comp)
-#' slice_unmatched_both(example_df_a, example_df_b, comp)
 
 #' @rdname slice_diffs
 #' @export
@@ -89,83 +81,4 @@ slice_diffs_both <- function(table_a, table_b, comparison, column = everything()
   }
 
   vec_interleave(!!!diffs)
-}
-
-#' @rdname slice_diffs
-#' @export
-slice_unmatched <- function(table, comparison) {
-  validate_comparison(enquo(comparison))
-  assert_has_columns(table, comparison$by$column)
-  assert_same_types(table, table_init(comparison, cols = "by"))
-
-  join(
-    table,
-    comparison$unmatched_rows,
-    on = comparison$by$column,
-    how = "semi",
-    verbose = FALSE,
-    overid = 2
-  ) %>%
-    as_tibble()
-}
-
-#' @rdname slice_diffs
-#' @export
-slice_unmatched_both <- function(table_a, table_b, comparison) {
-  validate_comparison(enquo(comparison))
-  required_columns <- with(comparison, c(by$column, intersection$column))
-  assert_has_columns(table_a, required_columns)
-  assert_has_columns(table_b, required_columns)
-
-  unmatched <- list("a" = table_a, "b" = table_b) %>%
-    map(slice_unmatched, comparison) %>%
-    map(fsubset, j = required_columns)
-
-  # if the column types are incompatible, convert them to character first
-  is_incompatible <- !is_ptype_compatible(unmatched$a, unmatched$b)
-  if (any(is_incompatible)) {
-    incompatible_cols <- names(is_incompatible)[is_incompatible]
-    cols_char <- dottize(incompatible_cols, 30)
-    cli_alert_info("Columns converted to character: {cols_char}")
-
-    unmatched <- unmatched %>%
-      map(\(x) mutate(x, across(all_of(incompatible_cols), as.character)))
-  }
-
-  bind_rows(unmatched, .id = "table")
-}
-
-# Helpers ------------
-
-assert_has_columns <- function(table, col_names, type, call = caller_env()) {
-  arg_name <- deparse(substitute(table))
-  not_present <- !(col_names %in% names(table))
-  if (any(not_present)) {
-    missing_col <- col_names[which.max(not_present)]
-    message <- c(
-      "`{arg_name}` is missing some columns from `comparison`",
-      "column `{missing_col}` is not present in `{arg_name}`"
-    )
-    cli_abort(message, call = call)
-  }
-}
-
-assert_same_types <- function(table, slicer, call = caller_env()) {
-  # collapse::join silently coerces join-key variables
-  # don't want that, so check compatibility before join
-  incompatible <- !is_ptype_compatible(
-    fsubset(table, j = names(slicer)),
-    slicer
-  )
-  if (any(incompatible)) {
-    col <- names(slicer)[which.max(incompatible)]
-    class_table <- class(table[[col]])
-    class_comparison <- class(slicer[[col]])
-    message <- c(
-      "`by` columns in `table` must be compatible with those in `comparison`",
-      "`{col}` class in `table`: {.cls {class_table}}",
-      "`{col}` class in `comparison`: {.cls {class_comparison}}"
-    )
-    cli_abort(message, call = call)
-  }
 }

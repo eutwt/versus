@@ -132,6 +132,43 @@ contents <- function(table) {
   enframe(out_vec, name = "column", value = "class")
 }
 
+# slice_() helpers ------------
+
+assert_has_columns <- function(table, col_names, type, call = caller_env()) {
+  arg_name <- deparse(substitute(table))
+  not_present <- !(col_names %in% names(table))
+  if (any(not_present)) {
+    missing_col <- col_names[which.max(not_present)]
+    message <- c(
+      "`{arg_name}` is missing some columns from `comparison`",
+      "column `{missing_col}` is not present in `{arg_name}`"
+    )
+    cli_abort(message, call = call)
+  }
+}
+
+assert_same_types <- function(table, slicer, call = caller_env()) {
+  # collapse::join silently coerces join-key variables
+  # don't want that, so check compatibility before join
+  incompatible <- !is_ptype_compatible(
+    fsubset(table, j = names(slicer)),
+    slicer
+  )
+  if (any(incompatible)) {
+    col <- names(slicer)[which.max(incompatible)]
+    class_table <- class(table[[col]])
+    class_comparison <- class(slicer[[col]])
+    message <- c(
+      "`by` columns in `table` must be compatible with those in `comparison`",
+      "`{col}` class in `table`: {.cls {class_table}}",
+      "`{col}` class in `comparison`: {.cls {class_comparison}}"
+    )
+    cli_abort(message, call = call)
+  }
+}
+
+# test objects ------------
+
 test_df_a <- mtcars %>%
   rownames_to_column("car") %>%
   mutate(

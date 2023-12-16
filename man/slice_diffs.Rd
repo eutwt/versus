@@ -3,17 +3,11 @@
 \name{slice_diffs}
 \alias{slice_diffs}
 \alias{slice_diffs_both}
-\alias{slice_unmatched}
-\alias{slice_unmatched_both}
 \title{Show rows which have differing values in a comparison}
 \usage{
 slice_diffs(table, comparison, column = everything())
 
 slice_diffs_both(table_a, table_b, comparison, column = everything())
-
-slice_unmatched(table, comparison)
-
-slice_unmatched_both(table_a, table_b, comparison)
 }
 \arguments{
 \item{table}{A data frame. One of \code{table_a} or \code{table_b} used to
@@ -35,11 +29,6 @@ the comparison shows differing values for any columns matching this argument}
 \item{\code{slice_diffs_both()}}{The output of \code{slice_diffs()} for both input
 tables with the rows interleaved and a column \code{table} indicating which table the row
 is from. The output contains only columns present in both tables.}
-\item{\code{slice_unmatched()}}{The input \code{table} is filtered to only the rows
-\code{comparison} shows as only appearing in \code{table}}
-\item{\code{slice_unmatched_both()}}{The output of \code{slice_unmatched()} for both input
-tables row-stacked and a column \code{table} indicating which table the row
-is from. The output contains only columns present in both tables.}
 }
 \description{
 Show rows which have differing values in a comparison
@@ -48,6 +37,4 @@ Show rows which have differing values in a comparison
 comp <- compare(example_df_a, example_df_b, by = car)
 example_df_a |> slice_diffs(comp, c(disp, mpg))
 slice_diffs_both(example_df_a, example_df_b, comp, column = disp)
-example_df_a |> slice_unmatched(comp)
-slice_unmatched_both(example_df_a, example_df_b, comp)
 }
