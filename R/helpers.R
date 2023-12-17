@@ -147,9 +147,7 @@ assert_has_columns <- function(table, col_names, type, call = caller_env()) {
   }
 }
 
-assert_same_types <- function(table, slicer, call = caller_env()) {
-  # collapse::join silently coerces join-key variables
-  # don't want that, so check compatibility before join
+assert_ptype_compatible <- function(table, slicer, call = caller_env()) {
   incompatible <- !is_ptype_compatible(
     fsubset(table, j = names(slicer)),
     slicer

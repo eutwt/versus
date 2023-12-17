@@ -21,7 +21,7 @@
 slice_unmatched <- function(table, comparison) {
   validate_comparison(enquo(comparison))
   assert_has_columns(table, comparison$by$column)
-  assert_same_types(table, table_init(comparison, cols = "by"))
+  assert_ptype_compatible(table, table_init(comparison, cols = "by"))
 
   join(
     table,

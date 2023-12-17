@@ -27,7 +27,7 @@ slice_diffs <- function(table, comparison, column = everything()) {
   column <- enquo(column)
   validate_comparison(enquo(comparison))
   assert_has_columns(table, comparison$by$column)
-  assert_same_types(table, table_init(comparison, cols = "by"))
+  assert_ptype_compatible(table, table_init(comparison, cols = "by"))
 
   select_by_vars <- function(value_diffs, col_name) {
     fsubset(value_diffs, j = comparison$by$column)
@@ -37,7 +37,6 @@ slice_diffs <- function(table, comparison, column = everything()) {
     column,
     pre_stack_fun = select_by_vars
   )
-  assert_same_types(table, by_vals_with_diffs)
 
   join(
     table,
