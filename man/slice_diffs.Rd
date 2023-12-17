@@ -15,7 +15,7 @@ create \code{comparison}}
 
 \item{comparison}{The output of \code{compare()}}
 
-\item{column}{<\code{\link[=versus_tidy_select]{tidy-select}}>. A row will be in the output of slice functions if
+\item{column}{<\code{\link[=versus_tidy_select]{tidy-select}}>. A row will be in the output if
 the comparison shows differing values for any columns matching this argument}
 
 \item{table_a}{The data frame\code{table_a} used to create \code{comparison}}
@@ -23,7 +23,7 @@ the comparison shows differing values for any columns matching this argument}
 \item{table_b}{The data frame\code{table_b} used to create \code{comparison}}
 }
 \value{
-\item{\code{slice_diffs()}}{The input \code{table} is filtered to only the rows for which
+\item{\code{slice_diffs()}}{The input \code{table} is filtered to the rows for which
 \code{comparison} shows differing values for one of the columns in the supplied
 \code{column} argument}
 \item{\code{slice_diffs_both()}}{The output of \code{slice_diffs()} for both input

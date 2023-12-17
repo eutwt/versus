@@ -3,7 +3,7 @@
 #' @inheritParams slice_diffs
 #'
 #' @return
-#' \item{\code{slice_unmatched()}}{The input \code{table} is filtered to only the rows
+#' \item{\code{slice_unmatched()}}{The input \code{table} is filtered to the rows
 #' \code{comparison} shows as only appearing in \code{table}}
 #' \item{\code{slice_unmatched_both()}}{The output of \code{slice_unmatched()} for both input
 #' tables row-stacked with a column `table` indicating which table the row
