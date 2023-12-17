@@ -43,8 +43,8 @@ slice_unmatched_both <- function(table_a, table_b, comparison) {
   assert_has_columns(table_b, required_columns)
 
   unmatched <- list("a" = table_a, "b" = table_b) %>%
-    map(slice_unmatched, comparison) %>%
     map(fsubset, j = required_columns) %>%
+    map(slice_unmatched, comparison) %>%
     ensure_ptype_compatible()
 
   bind_rows(unmatched, .id = "table")
