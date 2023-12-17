@@ -12,3 +12,4 @@
 todo.txt
 ^codecov\.yml$
 ^revdep$
+^vignettes/articles$

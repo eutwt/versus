@@ -28,3 +28,4 @@ BugReports: https://github.com/eutwt/versus/issues
 Depends: 
     R (>= 4.1.0)
 LazyData: true
+Config/Needs/website: rmarkdown

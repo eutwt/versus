@@ -1,0 +1,81 @@
+---
+title: "Benchmark"
+output:
+  html_document:
+    code_folding: hide
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+The output of `versus::compare()` is designed to contain only the minimal amount of information needed to represent the difference between two data frames: value differences, unmatched columns, and unmatched rows. While other packages offer much more functionality, the minimal approach makes versus much faster.
+
+Below is an example benchmark using data from the `nycflights13` package over-sampled to various sizes. In the example data, 5% of rows from each data frame are missing in the other, and in 4 out of the 15 columns, 5% of values are different.
+
+At 1 million rows, versus takes 0.6 seconds and less than 1GB of memory while others take over 10 seconds and multiple GB of memory.
+
+### Benchmark code:
+
+```{r, warning=FALSE, message=FALSE, eval=FALSE}
+suppressPackageStartupMessages(library(dplyr))
+
+generate_example_data <- function(n_rows) {
+  tbl <- nycflights13::weather |>
+    slice_sample(n = n_rows, replace = TRUE) |>
+    # simulate unique key
+    mutate(time_hour = Sys.time() + row_number())
+
+  tbl_a <- tbl |>
+    slice_sample(n = n_rows * 0.95)
+  tbl_b <- tbl |>
+    slice_sample(n = n_rows * 0.95) |>
+    # simulate value differences
+    mutate(across(temp:wind_dir, \(x) ifelse(runif(n()) < .05, x + 1, x)))
+  list(a = tbl_a, b = tbl_b)
+}
+
+bench_out <- bench::press(
+  n_rows = c(1e5, 1e6, 2e6),
+  {
+    tbl <- generate_example_data(n_rows)
+    bench::mark(
+      versus =
+        versus::compare(tbl$a, tbl$b, by = c(origin, time_hour)),
+      arsenal =
+        arsenal::comparedf(tbl$a, tbl$b, by = c("origin", "time_hour")),
+      diffdf =
+        diffdf::diffdf(tbl$a, tbl$b, keys = c("origin", "time_hour"), suppress_warnings = TRUE),
+      min_iterations = 2,
+      max_iterations = 2,
+      check = FALSE
+    )
+  }
+)
+```
+
+### Benchmark results:
+
+```{r, eval=FALSE}
+# benchmark run on 2020 i7 MBP with 32GB of memory
+bench_out |>
+  summary() |>
+  mutate(across(n_rows, scales::comma)) |>
+  select(1:6) |>
+  print(n = Inf)
+#> # A tibble: 9 × 6
+#>   expression n_rows         min   median `itr/sec` mem_alloc
+#>   <bch:expr> <chr>     <bch:tm> <bch:tm>     <dbl> <bch:byt>
+#> 1 versus     100,000    93.09ms 101.54ms   9.85      74.59MB
+#> 2 arsenal    100,000   980.79ms    1.12s   0.895    396.96MB
+#> 3 diffdf     100,000      4.46s    4.47s   0.224    555.37MB
+#> 4 versus     1,000,000 579.47ms 591.52ms   1.69     653.33MB
+#> 5 arsenal    1,000,000   12.39s   12.49s   0.0801     3.89GB
+#> 6 diffdf     1,000,000   53.95s    54.8s   0.0182     5.35GB
+#> 7 versus     2,000,000    1.16s    1.27s   0.787      1.27GB
+#> 8 arsenal    2,000,000   26.14s   27.67s   0.0361     7.54GB
+#> 9 diffdf     2,000,000    2.05m    2.05m   0.00813   10.83GB
+```
