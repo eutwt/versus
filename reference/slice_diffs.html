@@ -41,7 +41,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Show rows which have differing values in a comparison</h1>
-      <small class="dont-index">Source: <a href="https://github.com/eutwt/versus/blob/HEAD/R/slice.R" class="external-link"><code>R/slice.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/eutwt/versus/blob/HEAD/R/slice-diffs.R" class="external-link"><code>R/slice-diffs.R</code></a></small>
       <div class="d-none name"><code>slice_diffs.Rd</code></div>
     </div>
 
@@ -68,7 +68,7 @@ create <code>comparison</code></p></dd>
 
 
 <dt>column</dt>
-<dd><p>&lt;<code><a href="versus_tidy_select.html">tidy-select</a></code>&gt;. A row will be in the output of slice functions if
+<dd><p>&lt;<code><a href="versus_tidy_select.html">tidy-select</a></code>&gt;. A row will be in the output if
 the comparison shows differing values for any columns matching this argument</p></dd>
 
 
@@ -83,26 +83,20 @@ the comparison shows differing values for any columns matching this argument</p>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <dl><dt><code>slice_diffs()</code></dt>
-<dd><p>The input <code>table</code> is filtered to only the rows for which
+<dd><p>The input <code>table</code> is filtered to the rows for which
 <code>comparison</code> shows differing values for one of the columns in the supplied
 <code>column</code> argument</p></dd>
 
 <dt><code>slice_diffs_both()</code></dt>
 <dd><p>The output of <code>slice_diffs()</code> for both input
 tables with the rows interleaved and a column <code>table</code> indicating which table the row
-is from. The output contains only those columns present in both tables.</p></dd>
+is from. The output contains only columns present in both tables.</p></dd>
 
 </dl></div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">comp</span> <span class="op">&lt;-</span> <span class="fu"><a href="compare.html">compare</a></span><span class="op">(</span><span class="va">example_df_a</span>, <span class="va">example_df_b</span>, by <span class="op">=</span> <span class="va">car</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">example_df_a</span> <span class="op">|&gt;</span> <span class="fu">slice_diffs</span><span class="op">(</span><span class="va">comp</span>, <span class="va">disp</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 2 × 9</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   car              mpg   cyl  disp    hp  drat    wt    vs    am</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> Datsun 710      22.8    <span style="color: #BB0000;">NA</span>   109    93  3.85  2.32     1     1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> Hornet 4 Drive  21.4     6   259   110  3.08  3.22     1     0</span>
 <span class="r-in"><span><span class="va">example_df_a</span> <span class="op">|&gt;</span> <span class="fu">slice_diffs</span><span class="op">(</span><span class="va">comp</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">disp</span>, <span class="va">mpg</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 4 × 9</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   car              mpg   cyl  disp    hp  drat    wt    vs    am</span>
