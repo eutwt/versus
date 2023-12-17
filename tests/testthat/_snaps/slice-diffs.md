@@ -1,7 +1,7 @@
 # slice_diffs_both works
 
     Code
-      as_tibble(out)
+      out
     Output
       # A tibble: 4 x 13
         table car      mpg   cyl  disp    hp  drat wt     qsec    vs    am  gear  carb
@@ -14,7 +14,7 @@
 # slice_diffs_both works with multi-variable `by`
 
     Code
-      as_tibble(out)
+      out
     Output
       # A tibble: 4 x 13
         table car       vs  gear   mpg   cyl  disp    hp  drat wt     qsec    am  carb

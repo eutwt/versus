@@ -1,13 +1,13 @@
 test_that("slice_diffs_both works", {
   comp <- compare(test_df_a, test_df_b, by = car)
   out <- slice_diffs_both(test_df_a, test_df_b, comp, mpg)
-  expect_snapshot(as_tibble(out))
+  expect_snapshot(out)
 })
 
 test_that("slice_diffs_both works with multi-variable `by`", {
   comp <- compare(test_df_a, test_df_b, by = c(car, vs, gear))
   out <- slice_diffs_both(test_df_a, test_df_b, comp, mpg)
-  expect_snapshot(as_tibble(out))
+  expect_snapshot(out)
 })
 
 test_that("Error when `comparison` isn't a comparison", {

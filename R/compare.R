@@ -109,6 +109,7 @@ print.vs_compare <- function(x, ...) {
     class(x) <- "list"
     print(x)
   })
+  invisible(x)
 }
 
 
@@ -158,7 +159,7 @@ get_unmatched_rows <- function(table_a, table_b, by, matches) {
     a = fsubset(table_a, matches$needles$a, by),
     b = fsubset(table_b, matches$haystack$b, by)
   )
-  as_tibble(rowbind(unmatched, idcol = "table", id.factor = FALSE))
+  as_tibble(bind_rows(unmatched, .id = "table"))
 }
 
 converge <- function(table_a, table_b, by, matches) {
@@ -241,16 +242,16 @@ rethrow_match_relationship <- function(table_a, table_b, by) {
 }
 
 validate_tables <- function(table_a, table_b, coerce, call = caller_env()) {
-  ensure_data_frame(table_a, call = call)
-  ensure_data_frame(table_b, call = call)
-  ensure_well_named(table_a, call = call)
-  ensure_well_named(table_b, call = call)
+  assert_data_frame(table_a, call = call)
+  assert_data_frame(table_b, call = call)
+  assert_well_named(table_a, call = call)
+  assert_well_named(table_b, call = call)
   if (!coerce) {
-    ensure_same_class(table_a, table_b, call = call)
+    assert_same_class(table_a, table_b, call = call)
   }
 }
 
-ensure_well_named <- function(table, call = caller_env()) {
+assert_well_named <- function(table, call = caller_env()) {
   arg_name <- deparse(substitute(table))
   try_fetch(
     vec_as_names(names(table), repair = "check_unique"),
@@ -260,7 +261,7 @@ ensure_well_named <- function(table, call = caller_env()) {
   )
 }
 
-ensure_data_frame <- function(table, call = caller_env()) {
+assert_data_frame <- function(table, call = caller_env()) {
   arg_name <- deparse(substitute(table))
   if (is.data.frame(table)) {
     return(invisible())
@@ -272,7 +273,7 @@ ensure_data_frame <- function(table, call = caller_env()) {
   cli_abort(message, call = call)
 }
 
-ensure_same_class <- function(table_a, table_b, call = caller_env()) {
+assert_same_class <- function(table_a, table_b, call = caller_env()) {
   common_cols <- intersect(names(table_a), names(table_b))
   for (col in common_cols) {
     a <- table_a[[col]][0]

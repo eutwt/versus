@@ -140,15 +140,31 @@ test_that("compare() works when table arguemnts aren't symbols", {
   expect_equal(comp$tables$expr[1], "test_df_a %>% mutate(x = 1)")
 })
 
-test_that("compare() works when the tables only have one column", {
-  a <- tibble(car = 1:4)
-  b <- tibble(car = 2:5)
+test_that("compare() works when no rows are common", {
+  a <- tibble(car = 1:2, x = 1)
+  b <- tibble(car = 5:6, x = 2)
   expect_snapshot(compare(a, b, by = car))
 })
 
-test_that("compare() works when no rows are common", {
+test_that("compare() works when no columns are common", {
+  # tables have only one column
+  a <- tibble(car = 1:4)
+  b <- tibble(car = 2:5)
+  expect_snapshot(compare(a, b, by = car))
+  # tables have more than one column
+  a <- tibble(car = 1:4, a = 1)
+  b <- tibble(car = 2:5, b = 2)
+  expect_snapshot(compare(a, b, by = car))
+})
+
+test_that("compare() works when no rows or columns are common", {
+  # tables have only one column
   a <- tibble(car = 1:2)
   b <- tibble(car = 5:6)
+  expect_snapshot(compare(a, b, by = car))
+  # tables have more than one column
+  a <- tibble(car = 1:2, a = 1)
+  b <- tibble(car = 5:6, b = 2)
   expect_snapshot(compare(a, b, by = car))
 })
 

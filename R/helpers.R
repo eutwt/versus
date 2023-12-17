@@ -31,14 +31,19 @@ is_ptype_compatible <- function(tbl_a, tbl_b) {
   !incompatible
 }
 
-table_init <- function(comparison, tbl = c("a", "b")) {
+table_init <- function(comparison, tbl = c("a", "b"), cols = c("intersection", "by")) {
   # simulate a data frame with the same classes as table_[tbl]
   tbl <- arg_match(tbl)
-  col_index <- if_else(tbl == "a", 1, 2)
+  cols <- arg_match(cols)
 
-  comparison$intersection %>%
-    with(setNames(value_diffs, column)) %>%
-    lapply(\(x) x[[col_index]][0])
+  if (cols == "intersection") {
+    value_diff_column <- if_else(tbl == "a", 1, 2)
+    comparison$intersection %>%
+      with(setNames(value_diffs, column)) %>%
+      lapply(\(x) x[[value_diff_column]][0])
+  } else if (cols == "by") {
+    fsubset(comparison$unmatched_rows, 0, comparison$by$column)
+  }
 }
 
 get_cols_from_comparison <- function(
@@ -46,7 +51,7 @@ get_cols_from_comparison <- function(
     column,
     allow_empty = FALSE,
     call = caller_env()) {
-  template_a <- table_init(comparison, tbl = "a")
+  template_a <- table_init(comparison, tbl = "a", cols = "intersection")
 
   rethrow_oob <- function(e) {
     column_arg <- shorten(glue("column = {as_label(column)}"), 50)
@@ -126,6 +131,57 @@ contents <- function(table) {
   out_vec <- map_chr(table, \(x) paste(class(x), collapse = ", "))
   enframe(out_vec, name = "column", value = "class")
 }
+
+# slice_() helpers ------------
+
+assert_has_columns <- function(table, col_names, type, call = caller_env()) {
+  arg_name <- deparse(substitute(table))
+  col_present <- col_names %in% names(table)
+  if (all(col_present)) {
+    return(invisible())
+  }
+  missing_col <- col_names[which.max(!col_present)]
+  message <- c(
+    "`{arg_name}` is missing some columns from `comparison`",
+    "column `{missing_col}` is not present in `{arg_name}`"
+  )
+  cli_abort(message, call = call)
+}
+
+assert_ptype_compatible <- function(table, slicer, call = caller_env()) {
+  col_compatible <- is_ptype_compatible(
+    fsubset(table, j = names(slicer)),
+    slicer
+  )
+  if (all(col_compatible)) {
+    return(invisible())
+  }
+  col <- names(slicer)[which.max(!col_compatible)]
+  class_table <- class(table[[col]])
+  class_comparison <- class(slicer[[col]])
+  message <- c(
+    "`by` columns in `table` must be compatible with those in `comparison`",
+    "`{col}` class in `table`: {.cls {class_table}}",
+    "`{col}` class in `comparison`: {.cls {class_comparison}}"
+  )
+  cli_abort(message, call = call)
+}
+
+ensure_ptype_compatible <- function(slice_list) {
+  # if the column types are incompatible, convert them to character first
+  col_compatible <- is_ptype_compatible(slice_list$a, slice_list$b)
+  if (all(col_compatible)) {
+    return(slice_list)
+  }
+  incompatible_cols <- names(col_compatible)[!col_compatible]
+  cols_char <- dottize(incompatible_cols, 30)
+  cli_alert_info("Columns converted to character: {cols_char}")
+
+  slice_list %>%
+    map(\(x) mutate(x, across(all_of(incompatible_cols), as.character)))
+}
+
+# test objects ------------
 
 test_df_a <- mtcars %>%
   rownames_to_column("car") %>%
