@@ -167,6 +167,20 @@ assert_ptype_compatible <- function(table, slicer, call = caller_env()) {
   cli_abort(message, call = call)
 }
 
+ensure_ptype_compatible <- function(slice_list) {
+  # if the column types are incompatible, convert them to character first
+  col_compatible <- is_ptype_compatible(slice_list$a, slice_list$b)
+  if (all(col_compatible)) {
+    return(slice_list)
+  }
+  incompatible_cols <- names(col_compatible)[!col_compatible]
+  cols_char <- dottize(incompatible_cols, 30)
+  cli_alert_info("Columns converted to character: {cols_char}")
+
+  slice_list %>%
+    map(\(x) mutate(x, across(all_of(incompatible_cols), as.character)))
+}
+
 # test objects ------------
 
 test_df_a <- mtcars %>%

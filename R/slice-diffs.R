@@ -66,18 +66,8 @@ slice_diffs_both <- function(table_a, table_b, comparison, column = everything()
   }
 
   diffs <- list("a" = table_a, "b" = table_b) %>%
-    imap(slice_diffs_for_interleave)
-
-  # if the column types are incompatible, convert them to character first
-  is_incompatible <- !is_ptype_compatible(diffs$a, diffs$b)
-  if (any(is_incompatible)) {
-    incompatible_cols <- names(is_incompatible)[is_incompatible]
-    cols_char <- dottize(incompatible_cols, 30)
-    cli_alert_info("Columns converted to character: {cols_char}")
-
-    diffs <- diffs %>%
-      map(\(x) mutate(x, across(all_of(incompatible_cols), as.character)))
-  }
+    imap(slice_diffs_for_interleave) %>%
+    ensure_ptype_compatible()
 
   vec_interleave(!!!diffs)
 }

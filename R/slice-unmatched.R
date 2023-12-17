@@ -44,18 +44,8 @@ slice_unmatched_both <- function(table_a, table_b, comparison) {
 
   unmatched <- list("a" = table_a, "b" = table_b) %>%
     map(slice_unmatched, comparison) %>%
-    map(fsubset, j = required_columns)
-
-  # if the column types are incompatible, convert them to character first
-  is_incompatible <- !is_ptype_compatible(unmatched$a, unmatched$b)
-  if (any(is_incompatible)) {
-    incompatible_cols <- names(is_incompatible)[is_incompatible]
-    cols_char <- dottize(incompatible_cols, 30)
-    cli_alert_info("Columns converted to character: {cols_char}")
-
-    unmatched <- unmatched %>%
-      map(\(x) mutate(x, across(all_of(incompatible_cols), as.character)))
-  }
+    map(fsubset, j = required_columns) %>%
+    ensure_ptype_compatible()
 
   bind_rows(unmatched, .id = "table")
 }
