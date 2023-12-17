@@ -46,3 +46,22 @@ test_that("dottize works", {
     glue("mpg, cyl, disp, hp, drat, ...")
   )
 })
+
+test_that("ensure_ptype_compatible() works", {
+  needing_coerce <- list(a = test_df_a, b = test_df_b) %>%
+    map(fsubset, j = setdiff(names(test_df_a), "extracol_a"))
+  post_coerce <- needing_coerce %>%
+    map(\(x) mutate(x, wt = as.character(wt)))
+
+  # when coercion is needed
+  expect_identical(
+    ensure_ptype_compatible(needing_coerce),
+    post_coerce
+  )
+
+  # when coercion is not needed
+  expect_identical(
+    ensure_ptype_compatible(post_coerce),
+    post_coerce
+  )
+})
