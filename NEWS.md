@@ -1,5 +1,8 @@
 # versus (development version)
 
+* A new function `slice_unmatched()` is added, used to get the rows from
+  input tables a comparison shows as not existing in the other table
+
 # versus 0.2.1
 
 * Patch to avoid error when input is data.table
