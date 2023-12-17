@@ -109,6 +109,7 @@ print.vs_compare <- function(x, ...) {
     class(x) <- "list"
     print(x)
   })
+  invisible(x)
 }
 
 
