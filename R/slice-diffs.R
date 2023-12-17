@@ -38,15 +38,15 @@ slice_diffs <- function(table, comparison, column = everything()) {
     pre_stack_fun = select_by_vars
   )
 
-  join(
+  out <- join(
     table,
     by_vals_with_diffs,
     on = comparison$by$column,
     how = "semi",
     verbose = FALSE,
     overid = 2
-  ) %>%
-    as_tibble()
+  )
+  as_tibble(out)
 }
 
 #' @rdname slice_diffs
