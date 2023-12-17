@@ -47,6 +47,8 @@ bench_out <- bench::press(
         versus::compare(tbl$a, tbl$b, by = c(origin, time_hour)),
       arsenal =
         arsenal::comparedf(tbl$a, tbl$b, by = c("origin", "time_hour")),
+      dataCompareR =
+        dataCompareR::rCompare(tbl$a, tbl$b, keys = c("origin", "time_hour")),
       diffdf =
         diffdf::diffdf(tbl$a, tbl$b, keys = c("origin", "time_hour"), suppress_warnings = TRUE),
       min_iterations = 2,
@@ -66,16 +68,19 @@ bench_out |>
   mutate(across(n_rows, scales::comma)) |>
   select(1:6) |>
   print(n = Inf)
-#> # A tibble: 9 × 6
-#>   expression n_rows         min   median `itr/sec` mem_alloc
-#>   <bch:expr> <chr>     <bch:tm> <bch:tm>     <dbl> <bch:byt>
-#> 1 versus     100,000    93.09ms 101.54ms   9.85      74.59MB
-#> 2 arsenal    100,000   980.79ms    1.12s   0.895    396.96MB
-#> 3 diffdf     100,000      4.46s    4.47s   0.224    555.37MB
-#> 4 versus     1,000,000 579.47ms 591.52ms   1.69     653.33MB
-#> 5 arsenal    1,000,000   12.39s   12.49s   0.0801     3.89GB
-#> 6 diffdf     1,000,000   53.95s    54.8s   0.0182     5.35GB
-#> 7 versus     2,000,000    1.16s    1.27s   0.787      1.27GB
-#> 8 arsenal    2,000,000   26.14s   27.67s   0.0361     7.54GB
-#> 9 diffdf     2,000,000    2.05m    2.05m   0.00813   10.83GB
+#> # A tibble: 12 × 6
+#>    expression   n_rows         min   median `itr/sec` mem_alloc
+#>    <bch:expr>   <chr>     <bch:tm> <bch:tm>     <dbl> <bch:byt>
+#>  1 versus       100,000    69.66ms  70.23ms  14.2       65.03MB
+#>  2 arsenal      100,000   748.77ms 760.06ms   1.32     389.01MB
+#>  3 dataCompareR 100,000      1.16s    1.22s   0.823    265.43MB
+#>  4 diffdf       100,000      3.87s     4.3s   0.232    554.98MB
+#>  5 versus       1,000,000 533.15ms 591.89ms   1.69     653.39MB
+#>  6 arsenal      1,000,000   12.51s   12.58s   0.0795     3.77GB
+#>  7 dataCompareR 1,000,000   15.26s   15.98s   0.0626     2.63GB
+#>  8 diffdf       1,000,000   52.24s   55.23s   0.0181     5.35GB
+#>  9 versus       2,000,000    1.23s    1.26s   0.795      1.27GB
+#> 10 arsenal      2,000,000   26.23s   26.79s   0.0373     7.54GB
+#> 11 dataCompareR 2,000,000   35.36s   35.42s   0.0282     5.27GB
+#> 12 diffdf       2,000,000    1.87m    1.96m   0.00849    10.7GB
 ```
