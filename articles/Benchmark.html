@@ -128,6 +128,8 @@ memory while others take over 10 seconds and multiple GB of memory.</p>
 <span>        <span class="fu">versus</span><span class="fu">::</span><span class="fu"><a href="../reference/compare.html">compare</a></span><span class="op">(</span><span class="va">tbl</span><span class="op">$</span><span class="va">a</span>, <span class="va">tbl</span><span class="op">$</span><span class="va">b</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">origin</span>, <span class="va">time_hour</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>      arsenal <span class="op">=</span></span>
 <span>        <span class="fu">arsenal</span><span class="fu">::</span><span class="fu">comparedf</span><span class="op">(</span><span class="va">tbl</span><span class="op">$</span><span class="va">a</span>, <span class="va">tbl</span><span class="op">$</span><span class="va">b</span>, by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"origin"</span>, <span class="st">"time_hour"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>      dataCompareR <span class="op">=</span></span>
+<span>        <span class="fu">dataCompareR</span><span class="fu">::</span><span class="fu">rCompare</span><span class="op">(</span><span class="va">tbl</span><span class="op">$</span><span class="va">a</span>, <span class="va">tbl</span><span class="op">$</span><span class="va">b</span>, keys <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"origin"</span>, <span class="st">"time_hour"</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>      diffdf <span class="op">=</span></span>
 <span>        <span class="fu">diffdf</span><span class="fu">::</span><span class="fu">diffdf</span><span class="op">(</span><span class="va">tbl</span><span class="op">$</span><span class="va">a</span>, <span class="va">tbl</span><span class="op">$</span><span class="va">b</span>, keys <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"origin"</span>, <span class="st">"time_hour"</span><span class="op">)</span>, suppress_warnings <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
 <span>      min_iterations <span class="op">=</span> <span class="fl">2</span>,</span>
@@ -147,18 +149,21 @@ memory while others take over 10 seconds and multiple GB of memory.</p>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/across.html" class="external-link">across</a></span><span class="op">(</span><span class="va">n_rows</span>, <span class="fu">scales</span><span class="fu">::</span><span class="va">comma</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span>n <span class="op">=</span> <span class="cn">Inf</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 9 × 6</span></span>
-<span><span class="co">#&gt;   expression n_rows         min   median `itr/sec` mem_alloc</span></span>
-<span><span class="co">#&gt;   &lt;bch:expr&gt; &lt;chr&gt;     &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;</span></span>
-<span><span class="co">#&gt; 1 versus     100,000    93.09ms 101.54ms   9.85      74.59MB</span></span>
-<span><span class="co">#&gt; 2 arsenal    100,000   980.79ms    1.12s   0.895    396.96MB</span></span>
-<span><span class="co">#&gt; 3 diffdf     100,000      4.46s    4.47s   0.224    555.37MB</span></span>
-<span><span class="co">#&gt; 4 versus     1,000,000 579.47ms 591.52ms   1.69     653.33MB</span></span>
-<span><span class="co">#&gt; 5 arsenal    1,000,000   12.39s   12.49s   0.0801     3.89GB</span></span>
-<span><span class="co">#&gt; 6 diffdf     1,000,000   53.95s    54.8s   0.0182     5.35GB</span></span>
-<span><span class="co">#&gt; 7 versus     2,000,000    1.16s    1.27s   0.787      1.27GB</span></span>
-<span><span class="co">#&gt; 8 arsenal    2,000,000   26.14s   27.67s   0.0361     7.54GB</span></span>
-<span><span class="co">#&gt; 9 diffdf     2,000,000    2.05m    2.05m   0.00813   10.83GB</span></span></code></pre></div>
+<span><span class="co">#&gt; # A tibble: 12 × 6</span></span>
+<span><span class="co">#&gt;    expression   n_rows         min   median `itr/sec` mem_alloc</span></span>
+<span><span class="co">#&gt;    &lt;bch:expr&gt;   &lt;chr&gt;     &lt;bch:tm&gt; &lt;bch:tm&gt;     &lt;dbl&gt; &lt;bch:byt&gt;</span></span>
+<span><span class="co">#&gt;  1 versus       100,000    69.66ms  70.23ms  14.2       65.03MB</span></span>
+<span><span class="co">#&gt;  2 arsenal      100,000   748.77ms 760.06ms   1.32     389.01MB</span></span>
+<span><span class="co">#&gt;  3 dataCompareR 100,000      1.16s    1.22s   0.823    265.43MB</span></span>
+<span><span class="co">#&gt;  4 diffdf       100,000      3.87s     4.3s   0.232    554.98MB</span></span>
+<span><span class="co">#&gt;  5 versus       1,000,000 533.15ms 591.89ms   1.69     653.39MB</span></span>
+<span><span class="co">#&gt;  6 arsenal      1,000,000   12.51s   12.58s   0.0795     3.77GB</span></span>
+<span><span class="co">#&gt;  7 dataCompareR 1,000,000   15.26s   15.98s   0.0626     2.63GB</span></span>
+<span><span class="co">#&gt;  8 diffdf       1,000,000   52.24s   55.23s   0.0181     5.35GB</span></span>
+<span><span class="co">#&gt;  9 versus       2,000,000    1.23s    1.26s   0.795      1.27GB</span></span>
+<span><span class="co">#&gt; 10 arsenal      2,000,000   26.23s   26.79s   0.0373     7.54GB</span></span>
+<span><span class="co">#&gt; 11 dataCompareR 2,000,000   35.36s   35.42s   0.0282     5.27GB</span></span>
+<span><span class="co">#&gt; 12 diffdf       2,000,000    1.87m    1.96m   0.00849    10.7GB</span></span></code></pre></div>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
