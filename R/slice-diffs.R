@@ -66,7 +66,7 @@ slice_diffs_both <- function(table_a, table_b, comparison, column = everything()
   }
 
   diffs <- list("a" = table_a, "b" = table_b) %>%
-    imap(\(x, nm) slice_diffs_for_interleave(x, nm))
+    imap(slice_diffs_for_interleave)
 
   # if the column types are incompatible, convert them to character first
   is_incompatible <- !is_ptype_compatible(diffs$a, diffs$b)
