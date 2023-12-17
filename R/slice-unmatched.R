@@ -23,15 +23,15 @@ slice_unmatched <- function(table, comparison) {
   assert_has_columns(table, comparison$by$column)
   assert_ptype_compatible(table, table_init(comparison, cols = "by"))
 
-  join(
+  out <- join(
     table,
     comparison$unmatched_rows,
     on = comparison$by$column,
     how = "semi",
     verbose = FALSE,
     overid = 2
-  ) %>%
-    as_tibble()
+  )
+  as_tibble(out)
 }
 
 #' @rdname slice_unmatched
