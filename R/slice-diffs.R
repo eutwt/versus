@@ -25,7 +25,7 @@
 #' @export
 slice_diffs <- function(table, comparison, column = everything()) {
   column <- enquo(column)
-  validate_comparison(enquo(comparison))
+  assert_is_comparison(enquo(comparison))
   assert_has_columns(table, comparison$by$column)
   assert_ptype_compatible(table, table_init(comparison, cols = "by"))
 
@@ -52,7 +52,7 @@ slice_diffs <- function(table, comparison, column = everything()) {
 #' @rdname slice_diffs
 #' @export
 slice_diffs_both <- function(table_a, table_b, comparison, column = everything()) {
-  validate_comparison(enquo(comparison))
+  assert_is_comparison(enquo(comparison))
   required_columns <- with(comparison, c(by$column, intersection$column))
   assert_has_columns(table_a, required_columns)
   assert_has_columns(table_b, required_columns)

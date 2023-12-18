@@ -26,7 +26,7 @@
 #' @export
 value_diffs <- function(comparison, column) {
   column <- enquo(column)
-  validate_comparison(enquo(comparison))
+  assert_is_comparison(enquo(comparison))
   column_loc <- get_cols_from_comparison(comparison, column)
   if (length(column_loc) != 1) {
     cols_selected <- dottize(names(column_loc), 30)
@@ -42,7 +42,7 @@ value_diffs <- function(comparison, column) {
 #' @export
 value_diffs_stacked <- function(comparison, column) {
   column <- enquo(column)
-  validate_comparison(enquo(comparison))
+  assert_is_comparison(enquo(comparison))
 
   conform <- function(value_diffs, col_name) {
     out <- value_diffs %>%

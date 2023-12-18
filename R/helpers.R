@@ -5,7 +5,7 @@ fsubset <- function(x, i, j) {
   ss(x, i, j, check = check(i))
 }
 
-validate_comparison <- function(comparison_quo, call = caller_env()) {
+assert_is_comparison <- function(comparison_quo, call = caller_env()) {
   comparison_label <- shorten(as_label(comparison_quo), 40)
   message <- c(
     "Problem with argument `comparison = {comparison_label}`",

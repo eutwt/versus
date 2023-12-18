@@ -19,7 +19,7 @@
 #' @rdname slice_unmatched
 #' @export
 slice_unmatched <- function(table, comparison) {
-  validate_comparison(enquo(comparison))
+  assert_is_comparison(enquo(comparison))
   assert_has_columns(table, comparison$by$column)
   assert_ptype_compatible(table, table_init(comparison, cols = "by"))
 
@@ -37,7 +37,7 @@ slice_unmatched <- function(table, comparison) {
 #' @rdname slice_unmatched
 #' @export
 slice_unmatched_both <- function(table_a, table_b, comparison) {
-  validate_comparison(enquo(comparison))
+  assert_is_comparison(enquo(comparison))
   required_columns <- with(comparison, c(by$column, intersection$column))
   assert_has_columns(table_a, required_columns)
   assert_has_columns(table_b, required_columns)
