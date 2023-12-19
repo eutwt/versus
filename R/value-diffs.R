@@ -45,7 +45,7 @@ value_diffs_stacked <- function(comparison, column) {
   assert_is_comparison(enquo(comparison))
 
   conform <- function(value_diffs, col_name) {
-    out <- value_diffs %>%
+    value_diffs %>%
       rename_with(\(x) replace(x, seq(2), paste0("val_", c("a", "b")))) %>%
       mutate(column = .env$col_name, .before = 1)
   }
