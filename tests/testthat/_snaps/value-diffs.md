@@ -23,7 +23,7 @@
       value_diffs_stacked(comp, c(hp, drat))
     Output
       # A tibble: 0 x 4
-      # i 4 variables: column <chr>, val_a <dbl>, val_b <dbl>, car <chr>
+      # i 4 variables: column <chr>, val_a <chr>, val_b <chr>, car <chr>
 
 # Error when `comparison` isn't a comparison
 

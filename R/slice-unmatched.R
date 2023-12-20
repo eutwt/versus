@@ -1,6 +1,8 @@
 #' Show rows in only one table
 #'
 #' @inheritParams slice_diffs
+#' @param table_a The data frame\code{table_a} used to create \code{comparison}
+#' @param table_b The data frame\code{table_b} used to create \code{comparison}
 #'
 #' @return
 #' \item{\code{slice_unmatched()}}{The input \code{table} is filtered to the rows

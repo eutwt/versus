@@ -71,11 +71,23 @@ value_diffs_all <- function(comparison) {
 
 # Helpers -------------------
 
-stack_value_diffs <- function(comparison, column, pre_stack_fun, call = caller_env()) {
+identify_value_diffs <- function(comparison, column, call = caller_env()) {
   column_locs <- get_cols_from_comparison(comparison, column, call = call)
   is_selected <- seq_len(nrow(comparison$intersection)) %in% column_locs
   has_value_diffs <- comparison$intersection$n_diffs > 0
-  to_stack <- which(is_selected & has_value_diffs) %0% which.max(is_selected)
+  out <- which(is_selected & has_value_diffs)
+  setNames(out, comparison$intersection$column[out])
+}
+
+stack_value_diffs <- function(comparison, column, pre_stack_fun, call = caller_env()) {
+  to_stack <- identify_value_diffs(comparison, column, call = call)
+  if (is_empty(to_stack)) {
+    out <- replicate(3, character(0), simplify = FALSE) %>%
+      setNames(c("column", "val_a", "val_b")) %>%
+      as_tibble() %>%
+      mutate(table_init(comparison, cols = "by"))
+    return(out)
+  }
 
   Map(
     pre_stack_fun,
