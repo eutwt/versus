@@ -18,7 +18,7 @@ assert_is_comparison <- function(comparison_quo, call = caller_env()) {
   )
 
   if (identical(comparison_class, "vs_compare")) {
-    return(invisible(eval_tidy(comparison_quo)))
+    return(invisible())
   }
   cli_abort(message, call = call)
 }
