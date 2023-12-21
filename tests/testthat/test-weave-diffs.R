@@ -1,6 +1,7 @@
 test_that("weave_diffs_long works", {
-  comp <- compare(test_df_a, test_df_b, by = car)
-  out <- weave_diffs_long(test_df_a, test_df_b, comp, mpg)
+  comp <- compare(example_df_a, test_df_b, by = car)
+  a <- test_df_a %>% arrange(desc(car))
+  out <- weave_diffs_long(a, test_df_b, comp, mpg)
   expect_snapshot(out)
 })
 

@@ -18,12 +18,11 @@
 #' @rdname slice_diffs
 #' @export
 slice_diffs <- function(table, comparison, column = everything()) {
+  check_required(table)
   column <- enquo(column)
   assert_is_comparison(enquo(comparison))
   slice_diffs_impl(table, comparison, column)
 }
-
-# Helpers -------------------
 
 slice_diffs_impl <- function(table, comparison, column, call = caller_env()) {
   assert_has_columns(table, comparison$by$column, call = call)

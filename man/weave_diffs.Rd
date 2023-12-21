@@ -32,6 +32,6 @@ Combine \code{slice_diffs()} output from both tables
 }
 \examples{
 comp <- compare(example_df_a, example_df_b, by = car)
-weave_diffs_wide(example_df_a, example_df_b, comp)
-weave_diffs_long(example_df_a, example_df_b, comp)
+weave_diffs_wide(example_df_a, example_df_b, comp, column = disp)
+weave_diffs_long(example_df_a, example_df_b, comp, column = disp)
 }
