@@ -4,13 +4,13 @@
 \alias{slice_diffs}
 \title{Show rows which have differing values in a comparison}
 \usage{
-slice_diffs(table, comparison, column = everything())
+slice_diffs(comparison, table, column = everything())
 }
 \arguments{
+\item{comparison}{The output of \code{compare()}}
+
 \item{table}{A data frame. One of \code{table_a} or \code{table_b} used to
 create \code{comparison}}
-
-\item{comparison}{The output of \code{compare()}}
 
 \item{column}{<\code{\link[=versus_tidy_select]{tidy-select}}>. A row will be in the output if
 the comparison shows differing values for any columns matching this argument}

@@ -5,15 +5,15 @@
 \alias{slice_unmatched_both}
 \title{Show rows in only one table}
 \usage{
-slice_unmatched(table, comparison)
+slice_unmatched(comparison, table)
 
-slice_unmatched_both(table_a, table_b, comparison)
+slice_unmatched_both(comparison)
 }
 \arguments{
+\item{comparison}{The output of \code{compare()}}
+
 \item{table}{A data frame. One of \code{table_a} or \code{table_b} used to
 create \code{comparison}}
-
-\item{comparison}{The output of \code{compare()}}
 
 \item{table_a}{The data frame\code{table_a} used to create \code{comparison}}
 

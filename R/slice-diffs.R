@@ -17,35 +17,26 @@
 
 #' @rdname slice_diffs
 #' @export
-slice_diffs <- function(table, comparison, column = everything()) {
-  check_required(table)
-  column <- enquo(column)
+slice_diffs <- function(comparison, table, column = everything()) {
   assert_is_comparison(enquo(comparison))
-  assert_has_columns(table, comparison$by$column)
-  slice_diffs_impl(table, comparison, column)
+  validate_table_arg(enquo(table))
+  column <- enquo(column)
+  slice_diffs_impl(comparison, table, column)
 }
 
-slice_diffs_impl <- function(table, comparison, column, name, call = caller_env()) {
-  init_by <- table_init(comparison, cols = "by")
-  assert_ptype_compatible(table, init_by, call = call, name = name)
-
-  select_by_vars <- function(value_diffs, col_name) {
-    fsubset(value_diffs, j = comparison$by$column)
+slice_diffs_impl <- function(comparison, table, column, j, call = caller_env()) {
+  select_row <- function(value_diffs, col_name) {
+    fsubset(value_diffs, j = paste0("row_", table))
   }
-  by_vals_with_diffs <- stack_value_diffs(
+  rows <- stack_value_diffs(
     comparison,
     column,
-    pre_stack_fun = select_by_vars,
+    pre_stack_fun = select_row,
     call = call
-  )
+  ) %>%
+    pull(1) %>%
+    funique()
 
-  out <- join(
-    table,
-    by_vals_with_diffs,
-    on = comparison$by$column,
-    how = "semi",
-    verbose = FALSE,
-    overid = 2
-  )
+  out <- fsubset(comparison$input$value[[table]], rows, j)
   as_tibble(out)
 }

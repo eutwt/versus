@@ -15,6 +15,20 @@ lock <- function(value) {
   return(env)
 }
 
+validate_table_arg <- function(table, call = caller_env()) {
+  if (identical(table, quo())) {
+    cli_abort("`table` is absent but must be supplied.", call = call)
+  }
+  table_chr <- shorten(deparse(quo_squash(table)), 30)
+  if (!(identical(table, "a") | identical(table, "b"))) {
+    msg <- c(
+      "Problem with argument `table = {table_chr}`",
+      i = '`table` must be one of `"a"` or `"b"`'
+    )
+    cli_abort(msg, call = call)
+  }
+}
+
 assert_is_comparison <- function(comparison_quo, call = caller_env()) {
   comparison_label <- shorten(as_label(comparison_quo), 40)
   message <- c(
@@ -143,40 +157,6 @@ contents <- function(table) {
 }
 
 # slice_() helpers ------------
-
-assert_has_columns <- function(table, col_names, type, call = caller_env()) {
-  arg_name <- deparse(substitute(table))
-  col_present <- col_names %in% names(table)
-  if (all(col_present)) {
-    return(invisible())
-  }
-  missing_col <- col_names[which.max(!col_present)]
-  message <- c(
-    "`{arg_name}` is missing some columns from `comparison`",
-    "column `{missing_col}` is not present in `{arg_name}`"
-  )
-  cli_abort(message, call = call)
-}
-
-assert_ptype_compatible <- function(table, slicer, call = caller_env(), name) {
-  col_compatible <- is_ptype_compatible(
-    fsubset(table, j = names(slicer)),
-    slicer
-  )
-  if (all(col_compatible)) {
-    return(invisible())
-  }
-  col <- names(slicer)[which.max(!col_compatible)]
-  class_table <- class(table[[col]])
-  class_comparison <- class(slicer[[col]])
-  table_name <- if (missing(name)) "table" else glue("table_{name}")
-  message <- c(
-    "`by` columns in `{table_name}` must be compatible with those in `comparison`",
-    "`{col}` class in `table`: {.cls {class_table}}",
-    "`{col}` class in `comparison`: {.cls {class_comparison}}"
-  )
-  cli_abort(message, call = call)
-}
 
 ensure_ptype_compatible <- function(slice_list) {
   # if the column types are incompatible, convert them to character first
