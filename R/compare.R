@@ -96,7 +96,8 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE) {
     by = tbl_contents$by,
     intersection = tbl_contents$compare,
     unmatched_cols = tbl_contents$unmatched_cols,
-    unmatched_rows = unmatched_rows
+    unmatched_rows = unmatched_rows,
+    input = lock(list(a = table_a, b = table_b))
   )
   structure(out, class = "vs_compare")
 }
@@ -107,7 +108,7 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE) {
 print.vs_compare <- function(x, ...) {
   local({ # need local() for Rmd
     class(x) <- "list"
-    print(x)
+    print(x[setdiff(names(x), "input")])
   })
   invisible(x)
 }

@@ -5,6 +5,13 @@ fsubset <- function(x, i, j) {
   ss(x, i, j, check = check(i))
 }
 
+lock <- function(value) {
+  env <- new.env()
+  env$value <- value
+  lockEnvironment(env, bindings = TRUE)
+  return(env)
+}
+
 assert_is_comparison <- function(comparison_quo, call = caller_env()) {
   comparison_label <- shorten(as_label(comparison_quo), 40)
   message <- c(

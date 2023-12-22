@@ -178,7 +178,10 @@ test_that("compare() works when inputs are data tables", {
   })
   df_comp <- compare(example_df_a, example_df_b, by = car)
 
-  expect_identical(dt_comp, df_comp)
+  expect_identical(
+    dt_comp[setdiff(names(dt_comp), "input")],
+    df_comp[setdiff(names(dt_comp), "input")]
+  )
 })
 
 test_that("summary() works", {
