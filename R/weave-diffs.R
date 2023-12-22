@@ -64,7 +64,7 @@ weave_diffs_wide <- function(table_a, table_b, comparison, column = everything()
     fsubset(j = c(comparison$by$column, diff_cols)) %>%
     slice_diffs_impl(comparison, column = column, name = "b")
   matches <- locate_matches(slice_a, slice_b, by = comparison$by$column)
-  slice_b <- fsubset(slice_b, matches$haystack$common, j = diff_cols)
+  slice_b <- fsubset(slice_b, matches$haystack$common, diff_cols)
 
   purrr::reduce(.init = slice_a, diff_cols, \(x, col) {
     x %>%
