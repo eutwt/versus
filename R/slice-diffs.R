@@ -20,16 +20,16 @@
 slice_diffs <- function(comparison, table, column = everything()) {
   assert_is_comparison(enquo(comparison))
   validate_table_arg(enquo(table))
-  column <- enquo(column)
-  slice_diffs_impl(comparison, table, column)
+  slice_diffs_impl(comparison, table, enquo(column))
 }
 
 slice_diffs_impl <- function(comparison, table, column, j, call = caller_env()) {
   select_row <- function(value_diffs, col_name) {
     fsubset(value_diffs, j = paste0("row_", table))
   }
+  diff_cols <- identify_diff_cols(comparison, column)
   rows <- comparison %>%
-    stack_value_diffs(column, preproc = select_row, call = call) %>%
+    stack_value_diffs(diff_cols, preproc = select_row, call = call) %>%
     pull(1) %>%
     funique()
 

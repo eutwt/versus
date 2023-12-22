@@ -53,12 +53,17 @@ value_diffs_stacked <- function(comparison, column) {
     conform(...) %>% mutate(across(c(val_a, val_b), as.character))
   }
 
+  diff_cols <- identify_diff_cols(comparison, column)
+  if (is_empty(diff_cols)) {
+    selected <- get_cols_from_comparison(comparison, column)
+    return(conform(value_diffs(comparison, !!first(selected))))
+  }
   try_fetch(
-    stack_value_diffs(comparison, column, preproc = conform),
+    stack_value_diffs(comparison, diff_cols, preproc = conform),
     vctrs_error_ptype2 = \(e) {
       # if we can't bind_rows() due to incompatible ptypes, convert to character first
       cli_alert_info("values converted to character")
-      stack_value_diffs(comparison, column, preproc = conform_with_coerce)
+      stack_value_diffs(comparison, diff_cols, preproc = conform_with_coerce)
     }
   )
 }
@@ -71,24 +76,15 @@ value_diffs_all <- function(comparison) {
 
 # Helpers -------------------
 
-identify_value_diffs <- function(comparison, column, call = caller_env()) {
-  column_locs <- get_cols_from_comparison(comparison, column, call = call)
-  is_selected <- seq_len(nrow(comparison$intersection)) %in% column_locs
+identify_diff_cols <- function(comparison, column, call = caller_env()) {
+  selected_cols <- get_cols_from_comparison(comparison, column, call = call)
+  is_selected <- seq_len(nrow(comparison$intersection)) %in% selected_cols
   has_value_diffs <- comparison$intersection$n_diffs > 0
   out <- which(is_selected & has_value_diffs)
   setNames(out, comparison$intersection$column[out])
 }
 
-stack_value_diffs <- function(comparison, column, preproc, call = caller_env()) {
-  to_stack <- identify_value_diffs(comparison, column, call = call)
-  if (is_empty(to_stack)) {
-    out <- replicate(3, character(0), simplify = FALSE) %>%
-      setNames(c("column", "val_a", "val_b")) %>%
-      as_tibble() %>%
-      mutate(table_init(comparison, cols = "by"))
-    return(out)
-  }
-
+stack_value_diffs <- function(comparison, to_stack, preproc, call = caller_env()) {
   Map(
     preproc,
     comparison$intersection$value_diffs[to_stack],
