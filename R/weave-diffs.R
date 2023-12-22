@@ -22,12 +22,12 @@
 weave_diffs_long <- function(table_a, table_b, comparison, column = everything()) {
   check_required(table_a)
   check_required(table_b)
-  column <- enquo(column)
   assert_is_comparison(enquo(comparison))
   required_columns <- with(comparison, c(by$column, intersection$column))
   assert_has_columns(table_a, required_columns)
   assert_has_columns(table_b, required_columns)
   call <- current_env()
+  column <- enquo(column)
 
   diff <- list("a" = table_a, "b" = table_b) %>%
     Map(f = \(x, nm) {
@@ -47,15 +47,15 @@ weave_diffs_long <- function(table_a, table_b, comparison, column = everything()
 weave_diffs_wide <- function(table_a, table_b, comparison, column = everything()) {
   check_required(table_a)
   check_required(table_b)
-  column <- enquo(column)
   assert_is_comparison(enquo(comparison))
   required_columns <- with(comparison, c(by$column, intersection$column))
   assert_has_columns(table_a, required_columns)
   assert_has_columns(table_b, required_columns)
+  column <- enquo(column)
 
   slice_a <- table_a %>%
     fsubset(j = required_columns) %>%
-    slice_diffs_impl(comparison = comparison, column = column, name = "a")
+    slice_diffs_impl(comparison, column, name = "a")
   diff_cols <- names(identify_value_diffs(comparison, column))
   if (is_empty(diff_cols)) {
     return(slice_a)
