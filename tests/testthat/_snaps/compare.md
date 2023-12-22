@@ -198,17 +198,17 @@
       # A tibble: 11 x 5
          column n_diffs class_a class_b   value_diffs     
          <chr>    <int> <chr>   <chr>     <list>          
-       1 mpg          2 numeric numeric   <tibble [2 x 3]>
-       2 cyl          1 numeric numeric   <tibble [1 x 3]>
-       3 disp         2 numeric numeric   <tibble [2 x 3]>
-       4 hp           0 numeric numeric   <tibble [0 x 3]>
-       5 drat         0 numeric numeric   <tibble [0 x 3]>
-       6 wt           0 numeric character <tibble [0 x 3]>
-       7 qsec         0 numeric numeric   <tibble [0 x 3]>
-       8 vs           0 numeric numeric   <tibble [0 x 3]>
-       9 am           0 numeric numeric   <tibble [0 x 3]>
-      10 gear         0 numeric numeric   <tibble [0 x 3]>
-      11 carb         0 numeric numeric   <tibble [0 x 3]>
+       1 mpg          2 numeric numeric   <tibble [2 x 5]>
+       2 cyl          1 numeric numeric   <tibble [1 x 5]>
+       3 disp         2 numeric numeric   <tibble [2 x 5]>
+       4 hp           0 numeric numeric   <tibble [0 x 5]>
+       5 drat         0 numeric numeric   <tibble [0 x 5]>
+       6 wt           0 numeric character <tibble [0 x 5]>
+       7 qsec         0 numeric numeric   <tibble [0 x 5]>
+       8 vs           0 numeric numeric   <tibble [0 x 5]>
+       9 am           0 numeric numeric   <tibble [0 x 5]>
+      10 gear         0 numeric numeric   <tibble [0 x 5]>
+      11 carb         0 numeric numeric   <tibble [0 x 5]>
       
       $unmatched_cols
       # A tibble: 1 x 2
@@ -217,14 +217,14 @@
       1 a     extracol_a
       
       $unmatched_rows
-      # A tibble: 5 x 2
-        table car       
-        <chr> <chr>     
-      1 a     Mazda RX4 
-      2 a     extra_a   
-      3 b     Merc 280C 
-      4 b     Merc 450SE
-      5 b     extra_b   
+      # A tibble: 5 x 3
+        table car          row
+        <chr> <chr>      <int>
+      1 a     Mazda RX4      1
+      2 a     extra_a       11
+      3 b     Merc 280C     10
+      4 b     Merc 450SE    11
+      5 b     extra_b       12
       
 
 ---
@@ -232,14 +232,14 @@
     Code
       value_diffs_all(comp)
     Output
-      # A tibble: 5 x 4
-        column val_a val_b car           
-        <chr>  <dbl> <dbl> <chr>         
-      1 mpg     14.3  16.3 Duster 360    
-      2 mpg     24.4  26.4 Merc 240D     
-      3 cyl      6    NA   Hornet 4 Drive
-      4 disp   109   108   Datsun 710    
-      5 disp   259   258   Hornet 4 Drive
+      # A tibble: 5 x 6
+        column val_a val_b car            row_a row_b
+        <chr>  <dbl> <dbl> <chr>          <int> <int>
+      1 mpg     14.3  16.3 Duster 360         7     6
+      2 mpg     24.4  26.4 Merc 240D          8     7
+      3 cyl      6    NA   Hornet 4 Drive     4     3
+      4 disp   109   108   Datsun 710         3     2
+      5 disp   259   258   Hornet 4 Drive     4     3
 
 # example comparison with allow_bothNA = FALSE
 
@@ -263,17 +263,17 @@
       # A tibble: 11 x 5
          column n_diffs class_a class_b   value_diffs     
          <chr>    <int> <chr>   <chr>     <list>          
-       1 mpg          2 numeric numeric   <tibble [2 x 3]>
-       2 cyl          1 numeric numeric   <tibble [1 x 3]>
-       3 disp         2 numeric numeric   <tibble [2 x 3]>
-       4 hp           0 numeric numeric   <tibble [0 x 3]>
-       5 drat         0 numeric numeric   <tibble [0 x 3]>
-       6 wt           0 numeric character <tibble [0 x 3]>
-       7 qsec         0 numeric numeric   <tibble [0 x 3]>
-       8 vs           0 numeric numeric   <tibble [0 x 3]>
-       9 am           0 numeric numeric   <tibble [0 x 3]>
-      10 gear         0 numeric numeric   <tibble [0 x 3]>
-      11 carb         0 numeric numeric   <tibble [0 x 3]>
+       1 mpg          2 numeric numeric   <tibble [2 x 5]>
+       2 cyl          1 numeric numeric   <tibble [1 x 5]>
+       3 disp         2 numeric numeric   <tibble [2 x 5]>
+       4 hp           0 numeric numeric   <tibble [0 x 5]>
+       5 drat         0 numeric numeric   <tibble [0 x 5]>
+       6 wt           0 numeric character <tibble [0 x 5]>
+       7 qsec         0 numeric numeric   <tibble [0 x 5]>
+       8 vs           0 numeric numeric   <tibble [0 x 5]>
+       9 am           0 numeric numeric   <tibble [0 x 5]>
+      10 gear         0 numeric numeric   <tibble [0 x 5]>
+      11 carb         0 numeric numeric   <tibble [0 x 5]>
       
       $unmatched_cols
       # A tibble: 1 x 2
@@ -282,14 +282,14 @@
       1 a     extracol_a
       
       $unmatched_rows
-      # A tibble: 5 x 2
-        table car       
-        <chr> <chr>     
-      1 a     Mazda RX4 
-      2 a     extra_a   
-      3 b     Merc 280C 
-      4 b     Merc 450SE
-      5 b     extra_b   
+      # A tibble: 5 x 3
+        table car          row
+        <chr> <chr>      <int>
+      1 a     Mazda RX4      1
+      2 a     extra_a       11
+      3 b     Merc 280C     10
+      4 b     Merc 450SE    11
+      5 b     extra_b       12
       
 
 ---
@@ -297,14 +297,14 @@
     Code
       value_diffs_all(comp)
     Output
-      # A tibble: 5 x 4
-        column val_a val_b car           
-        <chr>  <dbl> <dbl> <chr>         
-      1 mpg     14.3  16.3 Duster 360    
-      2 mpg     24.4  26.4 Merc 240D     
-      3 cyl     NA    NA   Datsun 710    
-      4 disp   109   108   Datsun 710    
-      5 disp   259   258   Hornet 4 Drive
+      # A tibble: 5 x 6
+        column val_a val_b car            row_a row_b
+        <chr>  <dbl> <dbl> <chr>          <int> <int>
+      1 mpg     14.3  16.3 Duster 360         7     6
+      2 mpg     24.4  26.4 Merc 240D          8     7
+      3 cyl     NA    NA   Datsun 710         3     2
+      4 disp   109   108   Datsun 710         3     2
+      5 disp   259   258   Hornet 4 Drive     4     3
 
 # compare() works when no rows are common
 
@@ -335,13 +335,13 @@
       # i 2 variables: table <chr>, column <chr>
       
       $unmatched_rows
-      # A tibble: 4 x 2
-        table   car
-        <chr> <int>
-      1 a         1
-      2 a         2
-      3 b         5
-      4 b         6
+      # A tibble: 4 x 3
+        table   car   row
+        <chr> <int> <int>
+      1 a         1     1
+      2 a         2     2
+      3 b         5     1
+      4 b         6     2
       
 
 # compare() works when no columns are common
@@ -372,11 +372,11 @@
       # i 2 variables: table <chr>, column <chr>
       
       $unmatched_rows
-      # A tibble: 2 x 2
-        table   car
-        <chr> <int>
-      1 a         1
-      2 b         5
+      # A tibble: 2 x 3
+        table   car   row
+        <chr> <int> <int>
+      1 a         1     1
+      2 b         5     4
       
 
 ---
@@ -410,11 +410,11 @@
       2 b     b     
       
       $unmatched_rows
-      # A tibble: 2 x 2
-        table   car
-        <chr> <int>
-      1 a         1
-      2 b         5
+      # A tibble: 2 x 3
+        table   car   row
+        <chr> <int> <int>
+      1 a         1     1
+      2 b         5     4
       
 
 # compare() works when no rows or columns are common
@@ -445,13 +445,13 @@
       # i 2 variables: table <chr>, column <chr>
       
       $unmatched_rows
-      # A tibble: 4 x 2
-        table   car
-        <chr> <int>
-      1 a         1
-      2 a         2
-      3 b         5
-      4 b         6
+      # A tibble: 4 x 3
+        table   car   row
+        <chr> <int> <int>
+      1 a         1     1
+      2 a         2     2
+      3 b         5     1
+      4 b         6     2
       
 
 ---
@@ -485,12 +485,12 @@
       2 b     b     
       
       $unmatched_rows
-      # A tibble: 4 x 2
-        table   car
-        <chr> <int>
-      1 a         1
-      2 a         2
-      3 b         5
-      4 b         6
+      # A tibble: 4 x 3
+        table   car   row
+        <chr> <int> <int>
+      1 a         1     1
+      2 a         2     2
+      3 b         5     1
+      4 b         6     2
       
 

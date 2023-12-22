@@ -1,8 +1,11 @@
 fsubset <- function(x, i, j) {
-  check <- function(i) {
+  if (!missing(i) && is_null(i)) {
+    i <- 0
+  }
+  is_zero <- function(i) {
     length(i) == 1 && i == 0
   }
-  ss(x, i, j, check = check(i))
+  ss(x, i, j, check = is_zero(i))
 }
 
 lock <- function(value) {

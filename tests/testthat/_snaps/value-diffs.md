@@ -3,19 +3,19 @@
     Code
       value_diffs(comp, mpg)
     Output
-      # A tibble: 2 x 3
-        mpg_a mpg_b car       
-        <dbl> <dbl> <chr>     
-      1  14.3  16.3 Duster 360
-      2  24.4  26.4 Merc 240D 
+      # A tibble: 2 x 5
+        mpg_a mpg_b car        row_a row_b
+        <dbl> <dbl> <chr>      <int> <int>
+      1  14.3  16.3 Duster 360     7     6
+      2  24.4  26.4 Merc 240D      8     7
 
 # value_diffs works when the supplied columns have no diffs 
 
     Code
       value_diffs(comp, hp)
     Output
-      # A tibble: 0 x 3
-      # i 3 variables: hp_a <dbl>, hp_b <dbl>, car <chr>
+      # A tibble: 0 x 5
+      # i 5 variables: hp_a <dbl>, hp_b <dbl>, car <chr>, row_a <int>, row_b <int>
 
 ---
 
@@ -96,41 +96,41 @@
     Code
       value_diffs_stacked(comp, c(mpg, disp))
     Output
-      # A tibble: 4 x 4
-        column val_a val_b car           
-        <chr>  <dbl> <dbl> <chr>         
-      1 mpg     14.3  16.3 Duster 360    
-      2 mpg     24.4  26.4 Merc 240D     
-      3 disp   109   108   Datsun 710    
-      4 disp   259   258   Hornet 4 Drive
+      # A tibble: 4 x 6
+        column val_a val_b car            row_a row_b
+        <chr>  <dbl> <dbl> <chr>          <int> <int>
+      1 mpg     14.3  16.3 Duster 360         7     6
+      2 mpg     24.4  26.4 Merc 240D          8     7
+      3 disp   109   108   Datsun 710         3     2
+      4 disp   259   258   Hornet 4 Drive     4     3
 
 ---
 
     Code
       value_diffs_stacked(comp, where(is.numeric))
     Output
-      # A tibble: 5 x 4
-        column val_a val_b car           
-        <chr>  <dbl> <dbl> <chr>         
-      1 mpg     14.3  16.3 Duster 360    
-      2 mpg     24.4  26.4 Merc 240D     
-      3 cyl      6    NA   Hornet 4 Drive
-      4 disp   109   108   Datsun 710    
-      5 disp   259   258   Hornet 4 Drive
+      # A tibble: 5 x 6
+        column val_a val_b car            row_a row_b
+        <chr>  <dbl> <dbl> <chr>          <int> <int>
+      1 mpg     14.3  16.3 Duster 360         7     6
+      2 mpg     24.4  26.4 Merc 240D          8     7
+      3 cyl      6    NA   Hornet 4 Drive     4     3
+      4 disp   109   108   Datsun 710         3     2
+      5 disp   259   258   Hornet 4 Drive     4     3
 
 # value_diffs_all() works
 
     Code
       value_diffs_all(comp)
     Output
-      # A tibble: 5 x 4
-        column val_a val_b car           
-        <chr>  <dbl> <dbl> <chr>         
-      1 mpg     14.3  16.3 Duster 360    
-      2 mpg     24.4  26.4 Merc 240D     
-      3 cyl      6    NA   Hornet 4 Drive
-      4 disp   109   108   Datsun 710    
-      5 disp   259   258   Hornet 4 Drive
+      # A tibble: 5 x 6
+        column val_a val_b car            row_a row_b
+        <chr>  <dbl> <dbl> <chr>          <int> <int>
+      1 mpg     14.3  16.3 Duster 360         7     6
+      2 mpg     24.4  26.4 Merc 240D          8     7
+      3 cyl      6    NA   Hornet 4 Drive     4     3
+      4 disp   109   108   Datsun 710         3     2
+      5 disp   259   258   Hornet 4 Drive     4     3
 
 # value_diffs_all coerces to char on incompatible ptypes
 
@@ -139,12 +139,12 @@
     Message
       i values converted to character
     Output
-      # A tibble: 5 x 4
-        column val_a val_b car           
-        <chr>  <chr> <chr> <chr>         
-      1 mpg    14.3  16.3  Duster 360    
-      2 mpg    24.4  26.4  Merc 240D     
-      3 cyl    6     <NA>  Hornet 4 Drive
-      4 disp   109   108   Datsun 710    
-      5 disp   259   258   Hornet 4 Drive
+      # A tibble: 5 x 6
+        column val_a val_b car            row_a row_b
+        <chr>  <chr> <chr> <chr>          <int> <int>
+      1 mpg    14.3  16.3  Duster 360         7     6
+      2 mpg    24.4  26.4  Merc 240D          8     7
+      3 cyl    6     <NA>  Hornet 4 Drive     4     3
+      4 disp   109   108   Datsun 710         3     2
+      5 disp   259   258   Hornet 4 Drive     4     3
 

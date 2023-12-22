@@ -142,14 +142,7 @@ locate_matches <- function(table_a, table_b, by) {
     matches$needles == -2, "b",
     default = "common"
   )
-  split_matches <- function(x, g) {
-    out <- gsplit(x, g, use.g.names = TRUE)
-    out$a <- out$a %||% 0
-    out$b <- out$b %||% 0
-    out$common <- out$common %||% 0
-    out
-  }
-  out <- lapply(matches, split_matches, match_group)
+  out <- lapply(matches, gsplit, match_group, use.g.names = TRUE)
   out$haystack$a <- NULL
   out$needles$b <- NULL
   out
@@ -160,7 +153,8 @@ get_unmatched_rows <- function(table_a, table_b, by, matches) {
     a = fsubset(table_a, matches$needles$a, by),
     b = fsubset(table_b, matches$haystack$b, by)
   )
-  as_tibble(bind_rows(unmatched, .id = "table"))
+  as_tibble(bind_rows(unmatched, .id = "table")) %>%
+    mutate(row = with(matches, c(needles$a, haystack$b)) %||% integer(0))
 }
 
 converge <- function(table_a, table_b, by, matches) {
@@ -194,7 +188,8 @@ get_contents <- function(table_a, table_b, by) {
   out$compare <- tbl_contents$intersection %>%
     filter(!column %in% by)
 
-  out$unmatched_cols <- tbl_contents$unmatched_rows
+  out$unmatched_cols <- tbl_contents$unmatched_rows %>%
+    select(-row)
 
   out
 }
@@ -206,8 +201,10 @@ get_value_diffs <- function(col, table_a, table_b, by, matches, allow_both_NA) {
 
   vals <- tibble(a = col_a[not_equal], b = col_b[not_equal]) %>%
     frename(paste0(col, c("_a", "_b")))
-  by_cols <- fsubset(table_a, matches$needles$common[not_equal], by)
-  as_tibble(add_vars(vals, by_cols))
+  row_a <- matches$needles$common[not_equal]
+  by_cols <- fsubset(table_a, row_a, by)
+  row_nums <- tibble(row_a, row_b = matches$haystack$common[not_equal])
+  as_tibble(add_vars(vals, by_cols, row_nums))
 }
 
 not_equal <- function(col_a, col_b, allow_both_NA) {
