@@ -97,7 +97,7 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE) {
     intersection = tbl_contents$compare,
     unmatched_cols = tbl_contents$unmatched_cols,
     unmatched_rows = unmatched_rows,
-    input = lock(list(a = table_a, b = table_b))
+    input = store_tables(table_a, table_b)
   )
   structure(out, class = "vs_compare")
 }
@@ -215,6 +215,14 @@ not_equal <- function(col_a, col_b, allow_both_NA) {
     out <- fcoalesce(neq, is.na(col_a), is.na(col_b))
   }
   out
+}
+
+store_tables <- function(table_a, table_b) {
+  env <- new_environment()
+  env$value <- list(a = table_a, b = table_b) %>%
+    map_if(\(x) inherits(x, "data.table"), data.table::copy)
+  lockEnvironment(env, bindings = TRUE)
+  env
 }
 
 # Error handling -------------

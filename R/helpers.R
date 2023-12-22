@@ -8,13 +8,6 @@ fsubset <- function(x, i, j) {
   ss(x, i, j, check = is_zero(i))
 }
 
-lock <- function(value) {
-  env <- new.env()
-  env$value <- value
-  lockEnvironment(env, bindings = TRUE)
-  return(env)
-}
-
 validate_table_arg <- function(table, call = caller_env()) {
   if (identical(table, quo())) {
     cli_abort("`table` is absent but must be supplied.", call = call)
