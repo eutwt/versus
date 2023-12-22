@@ -66,12 +66,12 @@ weave_diffs_wide <- function(table_a, table_b, comparison, column = everything()
   )
   matches <- locate_matches(slice_a, slice_b, by = comparison$by$column)
   slice_b <- fsubset(slice_b, matches$haystack$common, j = diff_cols)
-  for (col in diff_cols) {
-    slice_a <- slice_a %>%
-      mutate(!!"{col}_b" := slice_b[[col]], .after = all_of(col)) %>%
-      rename_with(\(x) paste0(x, "_a"), .cols = all_of(col))
-  }
-  slice_a
+
+  purrr::reduce(.init = slice_a, diff_cols, \(x, col) {
+    x %>%
+      mutate(!!glue("{col}_b") := slice_b[[col]], .after = !!sym(col)) %>%
+      rename(!!glue("{col}_a") := !!sym(col))
+  })
 }
 
 # Helpers -------------------
