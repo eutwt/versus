@@ -54,11 +54,11 @@ value_diffs_stacked <- function(comparison, column) {
   }
 
   try_fetch(
-    stack_value_diffs(comparison, column, pre_stack_fun = conform),
+    stack_value_diffs(comparison, column, preproc = conform),
     vctrs_error_ptype2 = \(e) {
       # if we can't bind_rows() due to incompatible ptypes, convert to character first
       cli_alert_info("values converted to character")
-      stack_value_diffs(comparison, column, pre_stack_fun = conform_with_coerce)
+      stack_value_diffs(comparison, column, preproc = conform_with_coerce)
     }
   )
 }
@@ -79,7 +79,7 @@ identify_value_diffs <- function(comparison, column, call = caller_env()) {
   setNames(out, comparison$intersection$column[out])
 }
 
-stack_value_diffs <- function(comparison, column, pre_stack_fun, call = caller_env()) {
+stack_value_diffs <- function(comparison, column, preproc, call = caller_env()) {
   to_stack <- identify_value_diffs(comparison, column, call = call)
   if (is_empty(to_stack)) {
     out <- replicate(3, character(0), simplify = FALSE) %>%
@@ -90,7 +90,7 @@ stack_value_diffs <- function(comparison, column, pre_stack_fun, call = caller_e
   }
 
   Map(
-    pre_stack_fun,
+    preproc,
     comparison$intersection$value_diffs[to_stack],
     comparison$intersection$column[to_stack]
   ) %>%

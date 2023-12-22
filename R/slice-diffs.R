@@ -28,12 +28,8 @@ slice_diffs_impl <- function(comparison, table, column, j, call = caller_env()) 
   select_row <- function(value_diffs, col_name) {
     fsubset(value_diffs, j = paste0("row_", table))
   }
-  rows <- stack_value_diffs(
-    comparison,
-    column,
-    pre_stack_fun = select_row,
-    call = call
-  ) %>%
+  rows <- comparison %>%
+    stack_value_diffs(column, preproc = select_row, call = call) %>%
     pull(1) %>%
     funique()
 
