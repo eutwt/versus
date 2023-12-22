@@ -19,13 +19,16 @@ validate_table_arg <- function(table, call = caller_env()) {
   if (identical(table, quo())) {
     cli_abort("`table` is absent but must be supplied.", call = call)
   }
-  table_chr <- shorten(deparse(quo_squash(table)), 30)
-  if (!(identical(table, "a") | identical(table, "b"))) {
-    msg <- c(
-      "Problem with argument `table = {table_chr}`",
-      i = '`table` must be one of `"a"` or `"b"`'
-    )
-    cli_abort(msg, call = call)
+  table_expr <- quo_squash(table)
+  table_chr <- shorten(deparse(table_expr), 30)
+  top_msg <- "Problem with argument `table = {table_chr}`"
+  if (!is_character(table_expr)) {
+    info <- '`table` must be a single character value: "a" or "b"'
+    cli_abort(c(top_msg, i = info), call = call)
+  }
+  if (!(identical(table_expr, "a") | identical(table_expr, "b"))) {
+    info <- '`table` must be either "a" or "b"'
+    cli_abort(c(top_msg, i = info), call = call)
   }
 }
 
