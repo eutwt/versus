@@ -55,7 +55,7 @@ weave_diffs_wide <- function(table_a, table_b, comparison, column = everything()
 
   slice_a <- table_a %>%
     fsubset(j = required_columns) %>%
-    slice_diffs_impl(comparison, column, name = "a")
+    slice_diffs_impl(comparison, column = column, name = "a")
   diff_cols <- names(identify_value_diffs(comparison, column))
   if (is_empty(diff_cols)) {
     return(slice_a)
