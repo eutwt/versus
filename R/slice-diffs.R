@@ -30,8 +30,8 @@ slice_diffs_impl <- function(comparison, table, column, j, call = caller_env()) 
   diff_cols <- identify_diff_cols(comparison, column)
   rows <- comparison %>%
     stack_value_diffs(diff_cols, preproc = select_row, call = call) %>%
-    pull(1) %>%
-    funique()
+    distinct() %>%
+    pull(1)
 
   out <- fsubset(comparison$input$value[[table]], rows, j)
   as_tibble(out)
