@@ -27,18 +27,19 @@ weave_diffs_long <- function(table_a, table_b, comparison, column = everything()
   required_columns <- with(comparison, c(by$column, intersection$column))
   assert_has_columns(table_a, required_columns)
   assert_has_columns(table_b, required_columns)
+  call <- current_env()
 
-  diffs <- list("a" = table_a, "b" = table_b) %>%
-    map(slice_diffs_for_weave,
-      j = required_columns,
-      column = column,
-      comparison = comparison
-    ) %>%
-    imap(\(x, nm) mutate(x, table = nm, .before = 1)) %>%
+  diff <- list("a" = table_a, "b" = table_b) %>%
+    Map(f = \(x, nm) {
+      fsubset(x, j = required_columns) %>%
+        slice_diffs_impl(comparison, column, name = nm, call = call) %>%
+        mutate(table = nm, .before = 1)
+    }, ., names(.)) %>%
     ensure_ptype_compatible()
 
-  matches <- locate_matches(diffs$a, diffs$b, by = comparison$by$column)
-  vec_interleave(diffs$a, fsubset(diffs$b, matches$haystack$common))
+  matches <- locate_matches(diff$a, diff$b, by = comparison$by$column)
+  diff$b <- fsubset(diff$b, matches$haystack$common)
+  vec_interleave(!!!diff)
 }
 
 #' @rdname weave_diffs
@@ -53,17 +54,15 @@ weave_diffs_wide <- function(table_a, table_b, comparison, column = everything()
   assert_has_columns(table_b, required_columns)
 
   slice_a <- table_a %>%
-    slice_diffs_for_weave(j = required_columns, column = column, comparison = comparison)
+    fsubset(j = required_columns) %>%
+    slice_diffs_impl(comparison = comparison, column = column, name = "a")
   diff_cols <- names(identify_value_diffs(comparison, column))
   if (is_empty(diff_cols)) {
     return(slice_a)
   }
-  slice_b <- slice_diffs_for_weave(
-    table_b,
-    j = c(comparison$by$column, diff_cols),
-    column = column,
-    comparison = comparison
-  )
+  slice_b <- table_b %>%
+    fsubset(j = c(comparison$by$column, diff_cols)) %>%
+    slice_diffs_impl(comparison, column = column, name = "b")
   matches <- locate_matches(slice_a, slice_b, by = comparison$by$column)
   slice_b <- fsubset(slice_b, matches$haystack$common, j = diff_cols)
 
@@ -72,12 +71,4 @@ weave_diffs_wide <- function(table_a, table_b, comparison, column = everything()
       mutate(!!glue("{col}_b") := slice_b[[col]], .after = !!sym(col)) %>%
       rename(!!glue("{col}_a") := !!sym(col))
   })
-}
-
-# Helpers -------------------
-
-slice_diffs_for_weave <- function(df, j, column, comparison) {
-  df %>%
-    fsubset(j = j) %>%
-    slice_diffs_impl(comparison, column)
 }

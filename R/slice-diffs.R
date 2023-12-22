@@ -21,12 +21,13 @@ slice_diffs <- function(table, comparison, column = everything()) {
   check_required(table)
   column <- enquo(column)
   assert_is_comparison(enquo(comparison))
+  assert_has_columns(table, comparison$by$column)
   slice_diffs_impl(table, comparison, column)
 }
 
-slice_diffs_impl <- function(table, comparison, column, call = caller_env()) {
-  assert_has_columns(table, comparison$by$column, call = call)
-  assert_ptype_compatible(table, table_init(comparison, cols = "by"), call = call)
+slice_diffs_impl <- function(table, comparison, column, name, call = caller_env()) {
+  init_by <- table_init(comparison, cols = "by")
+  assert_ptype_compatible(table, init_by, call = call, name = name)
 
   select_by_vars <- function(value_diffs, col_name) {
     fsubset(value_diffs, j = comparison$by$column)

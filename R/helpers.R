@@ -148,7 +148,7 @@ assert_has_columns <- function(table, col_names, type, call = caller_env()) {
   cli_abort(message, call = call)
 }
 
-assert_ptype_compatible <- function(table, slicer, call = caller_env()) {
+assert_ptype_compatible <- function(table, slicer, call = caller_env(), name) {
   col_compatible <- is_ptype_compatible(
     fsubset(table, j = names(slicer)),
     slicer
@@ -159,8 +159,9 @@ assert_ptype_compatible <- function(table, slicer, call = caller_env()) {
   col <- names(slicer)[which.max(!col_compatible)]
   class_table <- class(table[[col]])
   class_comparison <- class(slicer[[col]])
+  table_name <- if (missing(name)) "table" else glue("table_{name}")
   message <- c(
-    "`by` columns in `table` must be compatible with those in `comparison`",
+    "`by` columns in `{table_name}` must be compatible with those in `comparison`",
     "`{col}` class in `table`: {.cls {class_table}}",
     "`{col}` class in `comparison`: {.cls {class_comparison}}"
   )
