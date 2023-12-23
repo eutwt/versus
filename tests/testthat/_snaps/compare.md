@@ -249,7 +249,7 @@
       # A tibble: 1 x 5
         column n_diffs class_a class_b diff_rows       
         <chr>    <int> <chr>   <chr>   <list>          
-      1 x            0 numeric numeric <tibble [0 x 0]>
+      1 x            0 numeric numeric <tibble [0 x 2]>
       
       $unmatched_cols
       # A tibble: 0 x 2

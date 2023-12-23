@@ -204,8 +204,8 @@ get_diff_rows <- function(col, table_a, table_b, by, matches, allow_both_NA) {
   col_b <- fsubset(table_b, matches$haystack$common, col)[[1]]
   not_equal <- which(not_equal(col_a, col_b, allow_both_NA))
   tibble(
-    row_a = matches$needles$common[not_equal],
-    row_b = matches$haystack$common[not_equal]
+    row_a = matches$needles$common[not_equal] %||% integer(0),
+    row_b = matches$haystack$common[not_equal] %||% integer(0)
   )
 }
 
