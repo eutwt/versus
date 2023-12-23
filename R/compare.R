@@ -214,7 +214,7 @@ not_equal <- function(col_a, col_b, allow_both_NA) {
   if (allow_both_NA) {
     out <- fcoalesce(neq, is.na(col_a) != is.na(col_b))
   } else {
-    out <- fcoalesce(neq, is.na(col_a), is.na(col_b))
+    out <- fcoalesce(neq, is.na(col_a) | is.na(col_b))
   }
   out
 }

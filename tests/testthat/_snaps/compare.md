@@ -227,57 +227,6 @@
       5 b     extra_b       12
       
 
-# example comparison with allow_bothNA = FALSE
-
-    Code
-      comp
-    Output
-      $tables
-      # A tibble: 2 x 4
-        table   expr       nrow  ncol
-        <chr>   <chr>     <int> <int>
-      1 table_a test_df_a    11    13
-      2 table_b test_df_b    12    12
-      
-      $by
-      # A tibble: 1 x 3
-        column class_a   class_b  
-        <chr>  <chr>     <chr>    
-      1 car    character character
-      
-      $intersection
-      # A tibble: 11 x 5
-         column n_diffs class_a class_b   diff_rows       
-         <chr>    <int> <chr>   <chr>     <list>          
-       1 mpg          2 numeric numeric   <tibble [2 x 2]>
-       2 cyl          1 numeric numeric   <tibble [1 x 2]>
-       3 disp         2 numeric numeric   <tibble [2 x 2]>
-       4 hp           0 numeric numeric   <tibble [0 x 2]>
-       5 drat         0 numeric numeric   <tibble [0 x 2]>
-       6 wt           0 numeric character <tibble [0 x 2]>
-       7 qsec         0 numeric numeric   <tibble [0 x 2]>
-       8 vs           0 numeric numeric   <tibble [0 x 2]>
-       9 am           0 numeric numeric   <tibble [0 x 2]>
-      10 gear         0 numeric numeric   <tibble [0 x 2]>
-      11 carb         0 numeric numeric   <tibble [0 x 2]>
-      
-      $unmatched_cols
-      # A tibble: 1 x 2
-        table column    
-        <chr> <chr>     
-      1 a     extracol_a
-      
-      $unmatched_rows
-      # A tibble: 5 x 3
-        table car          row
-        <chr> <chr>      <int>
-      1 a     Mazda RX4      1
-      2 a     extra_a       11
-      3 b     Merc 280C     10
-      4 b     Merc 450SE    11
-      5 b     extra_b       12
-      
-
 # compare() works when no rows are common
 
     Code

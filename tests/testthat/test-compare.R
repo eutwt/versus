@@ -126,13 +126,24 @@ test_that("Error on different classes with coerce = FALSE", {
 test_that("example comparison", {
   comp <- compare(test_df_a, test_df_b, by = car)
   expect_snapshot(comp)
-  expect_snapshot(value_diffs_all(comp))
 })
 
-test_that("example comparison with allow_bothNA = FALSE", {
-  comp <- compare(test_df_a, test_df_b, by = car, allow_both_NA = FALSE)
-  expect_snapshot(comp)
-  expect_snapshot(value_diffs_all(comp))
+test_that("allow_bothNA works", {
+  comp <- compare(
+    tibble(x = 1, y = NA),
+    tibble(x = 1, y = NA),
+    by = x,
+    allow_both_NA = FALSE
+  )
+  expect_equal(1, filter(comp$intersection, column == "y")$n_diffs)
+
+  comp <- compare(
+    tibble(x = 1, y = NA),
+    tibble(x = 1, y = NA),
+    by = x,
+    allow_both_NA = TRUE
+  )
+  expect_equal(0, filter(comp$intersection, column == "y")$n_diffs)
 })
 
 test_that("compare() works when table arguemnts aren't symbols", {
