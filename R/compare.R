@@ -251,19 +251,20 @@ rethrow_match_relationship <- function(table_a, table_b, by) {
 validate_tables <- function(table_a, table_b, coerce, call = caller_env()) {
   assert_data_frame(table_a, call = call)
   assert_data_frame(table_b, call = call)
-  assert_well_named(table_a, call = call)
-  assert_well_named(table_b, call = call)
+  assert_unique_names(table_a, call = call)
+  assert_unique_names(table_b, call = call)
   if (!coerce) {
     assert_same_class(table_a, table_b, call = call)
   }
 }
 
-assert_well_named <- function(table, call = caller_env()) {
+assert_unique_names <- function(table, call = caller_env()) {
   arg_name <- deparse(substitute(table))
   withCallingHandlers(
     vec_as_names(names(table), repair = "check_unique"),
     error = function(e) {
-      abort(c(glue("Problem with `{arg_name}`"), cnd_message(e)), call = call)
+      msg <- strsplit(cnd_message(e), "\n")[[1]]
+      cli_abort(c("Problem with `{arg_name}`: {msg[1]}", msg[-1]), call = call)
     }
   )
 }

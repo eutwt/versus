@@ -8,7 +8,7 @@ fsubset <- function(x, i, j) {
   ss(x, i, j, check = is_zero(i))
 }
 
-validate_table_arg <- function(table, call = caller_env()) {
+assert_table_is_a_or_b <- function(table, call = caller_env()) {
   if (identical(table, quo())) {
     cli_abort("`table` is absent but must be supplied.", call = call)
   }

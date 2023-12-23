@@ -21,7 +21,7 @@
 #' @rdname slice_unmatched
 #' @export
 slice_unmatched <- function(comparison, table) {
-  validate_table_arg(enquo(table))
+  assert_table_is_a_or_b(enquo(table))
   assert_is_comparison(enquo(comparison))
   slice_unmatched_impl(comparison, table)
 }

@@ -19,7 +19,7 @@
 #' @export
 slice_diffs <- function(comparison, table, column = everything()) {
   assert_is_comparison(enquo(comparison))
-  validate_table_arg(enquo(table))
+  assert_table_is_a_or_b(enquo(table))
   slice_diffs_impl(comparison, table, enquo(column))
 }
 
