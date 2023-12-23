@@ -3,14 +3,11 @@
 \name{value_diffs}
 \alias{value_diffs}
 \alias{value_diffs_stacked}
-\alias{value_diffs_all}
 \title{Show the differing values from a comparison}
 \usage{
 value_diffs(comparison, column)
 
-value_diffs_stacked(comparison, column)
-
-value_diffs_all(comparison)
+value_diffs_stacked(comparison, column = everything())
 }
 \arguments{
 \item{comparison}{The output of \code{compare()}}

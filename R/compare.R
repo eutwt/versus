@@ -79,8 +79,8 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE) {
     matches = matches
   )
 
-  tbl_contents$compare$value_diffs <- tbl_contents$compare$column %>%
-    lapply(get_value_diffs,
+  tbl_contents$compare$diff_rows <- tbl_contents$compare$column %>%
+    lapply(get_diff_rows,
       table_a = table_a,
       table_b = table_b,
       by = by_vars,
@@ -89,7 +89,7 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE) {
     )
 
   tbl_contents$compare <- tbl_contents$compare %>%
-    mutate(n_diffs = map_int(value_diffs, nrow), .after = column)
+    mutate(n_diffs = map_int(diff_rows, nrow), .after = column)
 
   out <- list(
     tables = table_summ,
@@ -120,8 +120,10 @@ summary.vs_compare <- function(object, ...) {
     value_diffs = sum(object$intersection$n_diffs) > 0,
     unmatched_cols = nrow(object$unmatched_cols) > 0,
     unmatched_rows = nrow(object$unmatched_rows) > 0,
-    class_diffs = object$intersection$value_diffs %>%
-      map_lgl(\(x) !identical(x[[1]][0], x[[2]][0])) %>%
+    class_diffs = object$input$value %>%
+      lapply(fsubset, j = object$intersection$column) %>%
+      lapply(lapply, class) %>%
+      pmap_lgl(Negate(identical)) %>%
       any()
   )
   enframe(out_vec, name = "difference", value = "found")
@@ -194,17 +196,14 @@ get_contents <- function(table_a, table_b, by) {
   out
 }
 
-get_value_diffs <- function(col, table_a, table_b, by, matches, allow_both_NA) {
+get_diff_rows <- function(col, table_a, table_b, by, matches, allow_both_NA) {
   col_a <- fsubset(table_a, matches$needles$common, col)[[1]]
   col_b <- fsubset(table_b, matches$haystack$common, col)[[1]]
   not_equal <- which(not_equal(col_a, col_b, allow_both_NA))
-
-  vals <- tibble(a = col_a[not_equal], b = col_b[not_equal]) %>%
-    frename(paste0(col, c("_a", "_b")))
-  row_a <- matches$needles$common[not_equal]
-  by_cols <- fsubset(table_a, row_a, by)
-  row_nums <- tibble(row_a, row_b = matches$haystack$common[not_equal])
-  as_tibble(add_vars(vals, by_cols, row_nums))
+  tibble(
+    row_a = matches$needles$common[not_equal],
+    row_b = matches$haystack$common[not_equal]
+  )
 }
 
 not_equal <- function(col_a, col_b, allow_both_NA) {
@@ -220,7 +219,7 @@ not_equal <- function(col_a, col_b, allow_both_NA) {
 store_tables <- function(table_a, table_b) {
   env <- new_environment()
   env$value <- list(a = table_a, b = table_b) %>%
-    map_if(\(x) inherits(x, "data.table"), data.table::copy)
+    map_if(\(x) inherits(x, "data.table"), compose(as_tibble, copy))
   lockEnvironment(env, bindings = TRUE)
   env
 }

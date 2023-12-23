@@ -43,9 +43,9 @@ assert_is_comparison <- function(comparison_quo, call = caller_env()) {
   cli_abort(message, call = call)
 }
 
-is_ptype_compatible <- function(tbl_a, tbl_b) {
-  incompatible <- map2_lgl(tbl_a, tbl_b, \(col_a, col_b) {
-    cnd <- catch_cnd(vec_ptype_common(col_a, col_b))
+is_ptype_compatible <- function(...) {
+  incompatible <- pmap_lgl(list(...), \(...) {
+    cnd <- catch_cnd(vec_ptype_common(...))
     inherits(cnd, "vctrs_error_ptype2")
   })
   !incompatible
@@ -55,15 +55,7 @@ table_init <- function(comparison, tbl = c("a", "b"), cols = c("intersection", "
   # simulate a data frame with the same classes as table_[tbl]
   tbl <- arg_match(tbl)
   cols <- arg_match(cols)
-
-  if (cols == "intersection") {
-    value_diff_column <- if_else(tbl == "a", 1, 2)
-    comparison$intersection %>%
-      with(setNames(value_diffs, column)) %>%
-      lapply(\(x) x[[value_diff_column]][0])
-  } else if (cols == "by") {
-    fsubset(comparison$unmatched_rows, 0, comparison$by$column)
-  }
+  fsubset(comparison$input$value[[tbl]], 0, comparison[[cols]]$column)
 }
 
 get_cols_from_comparison <- function(
@@ -156,7 +148,7 @@ contents <- function(table) {
 
 ensure_ptype_compatible <- function(slice_list) {
   # if the column types are incompatible, convert them to character first
-  col_compatible <- is_ptype_compatible(slice_list$a, slice_list$b)
+  col_compatible <- exec(is_ptype_compatible, !!!slice_list)
   if (all(col_compatible)) {
     return(slice_list)
   }

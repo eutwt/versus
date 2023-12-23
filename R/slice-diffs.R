@@ -28,8 +28,9 @@ slice_diffs_impl <- function(comparison, table, column, j, call = caller_env()) 
     fsubset(value_diffs, j = paste0("row_", table))
   }
   diff_cols <- identify_diff_cols(comparison, column)
-  rows <- comparison %>%
-    stack_value_diffs(diff_cols, preproc = select_row, call = call) %>%
+  rows <- fsubset(comparison$intersection, diff_cols, "diff_rows")[[1]] %>%
+    lapply(fsubset, j = paste0("row_", table)) %>%
+    bind_rows() %>%
     distinct() %>%
     pull(1)
 

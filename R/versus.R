@@ -12,7 +12,8 @@
 #' @importFrom vctrs vec_locate_matches vec_as_names
 #' @importFrom vctrs vec_interleave vec_ptype_common %0%
 #' @importFrom purrr map imap map_int map_lgl map2_lgl map_chr reduce map_if
+#' @importFrom purrr pmap pmap_lgl compose
 #' @importFrom tibble tibble rownames_to_column enframe
 #' @importFrom collapse ss add_vars frename gsplit
-#' @importFrom data.table fcase fcoalesce
+#' @importFrom data.table fcase fcoalesce copy
 "_PACKAGE"

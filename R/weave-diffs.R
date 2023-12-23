@@ -42,7 +42,7 @@ weave_diffs_col <- function(comparison, column = everything()) {
   column <- enquo(column)
 
   out_cols <- with(comparison, c(by$column, intersection$column))
-  diff_cols <- names(identify_value_diffs(comparison, column))
+  diff_cols <- names(identify_diff_cols(comparison, column))
   slice_a <- slice_diffs_impl(comparison, "a", column, j = out_cols)
   if (is_empty(diff_cols)) {
     return(slice_a)
