@@ -24,9 +24,6 @@ slice_diffs <- function(comparison, table, column = everything()) {
 }
 
 slice_diffs_impl <- function(comparison, table, column, j, call = caller_env()) {
-  select_row <- function(value_diffs, col_name) {
-    fsubset(value_diffs, j = paste0("row_", table))
-  }
   diff_cols <- identify_diff_cols(comparison, column)
   rows <- fsubset(comparison$intersection, diff_cols, "diff_rows")[[1]] %>%
     lapply(fsubset, j = paste0("row_", table)) %>%

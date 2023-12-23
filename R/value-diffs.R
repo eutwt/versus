@@ -53,11 +53,9 @@ value_diffs_stacked <- function(comparison, column = everything()) {
       mutate(column = .env$col_name, .before = 1)
   }
 
-  diff_cols <- identify_diff_cols(comparison, column)
-  if (is_empty(diff_cols)) {
-    selected <- get_cols_from_comparison(comparison, column)
-    return(get_value_diff_for_stack(comparison, first(names(selected))))
-  }
+  diff_cols <- identify_diff_cols(comparison, column) %0%
+    get_cols_from_comparison(comparison, column)
+
   names(diff_cols) %>%
     lapply(get_value_diff_for_stack, comparison = comparison) %>%
     ensure_ptype_compatible() %>%
@@ -71,8 +69,10 @@ assert_is_single_column <- function(column_loc, call = caller_env()) {
     return(invisible())
   }
   cols_selected <- dottize(names(column_loc), 30)
-  cli_abort(c("Must select only one column.",
+  message <- c(
+    "Must select only one column.",
     i = "Columns selected: {cols_selected}",
     i = "For multiple columns, use `value_diffs_stacked()`"
-  ))
+  )
+  cli_abort(message, call = call)
 }
