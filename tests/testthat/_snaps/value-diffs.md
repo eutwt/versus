@@ -135,7 +135,7 @@
 # value_diffs_stacked() coerces to char on incompatible ptypes
 
     Code
-      as_tibble(value_diffs_stacked(comp))
+      value_diffs_stacked(comp)
     Message
       i Columns converted to character: val_a
     Output
