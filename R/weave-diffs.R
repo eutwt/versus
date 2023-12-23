@@ -26,8 +26,8 @@ weave_diffs_row <- function(comparison, column = everything()) {
 
   out_cols <- with(comparison, c(by$column, intersection$column))
   diff <- comparison$input$value %>%
-    Map(f = \(x, nm) {
-      slice_diffs_impl(comparison, nm, column, j = out_cols, call = call) %>%
+    Map(f = \(x, table) {
+      slice_diffs_impl(comparison, table, column, j = out_cols, call = call) %>%
         mutate(table = nm, .before = 1)
     }, ., names(.)) %>%
     ensure_ptype_compatible()
