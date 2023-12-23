@@ -1,9 +1,9 @@
 get_by_vars <- function(by_quo, table_a, table_b, call = caller_env()) {
-  cols_a <- try_fetch(
+  cols_a <- withCallingHandlers(
     eval_select(by_quo, table_a, allow_rename = FALSE, allow_empty = FALSE),
     error = rethrow_by_select_error("table_a", call)
   )
-  cols_b <- try_fetch(
+  cols_b <- withCallingHandlers(
     eval_select(by_quo, table_b, allow_rename = FALSE, allow_empty = FALSE),
     error = rethrow_by_select_error("table_b", call)
   )

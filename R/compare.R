@@ -64,7 +64,7 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE) {
 
   tbl_contents <- get_contents(table_a, table_b, by_vars)
 
-  matches <- try_fetch(
+  matches <- withCallingHandlers(
     locate_matches(table_a, table_b, by = by_vars),
     vctrs_error_matches_relationship_one_to_one =
       rethrow_match_relationship(table_a, table_b, by = by_vars),
@@ -155,8 +155,10 @@ get_unmatched_rows <- function(table_a, table_b, by, matches) {
     a = fsubset(table_a, matches$needles$a, by),
     b = fsubset(table_b, matches$haystack$b, by)
   )
-  as_tibble(bind_rows(unmatched, .id = "table")) %>%
-    mutate(row = with(matches, c(needles$a, haystack$b)) %||% integer(0))
+  unmatched %>%
+    bind_rows(.id = "table") %>%
+    mutate(row = with(matches, c(needles$a, haystack$b)) %||% integer(0)) %>%
+    as_tibble()
 }
 
 converge <- function(table_a, table_b, by, matches) {
@@ -258,7 +260,7 @@ validate_tables <- function(table_a, table_b, coerce, call = caller_env()) {
 
 assert_well_named <- function(table, call = caller_env()) {
   arg_name <- deparse(substitute(table))
-  try_fetch(
+  withCallingHandlers(
     vec_as_names(names(table), repair = "check_unique"),
     error = function(e) {
       abort(c(glue("Problem with `{arg_name}`"), cnd_message(e)), call = call)

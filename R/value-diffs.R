@@ -28,13 +28,7 @@ value_diffs <- function(comparison, column) {
   assert_is_comparison(enquo(comparison))
   column <- enquo(column)
   column_loc <- get_cols_from_comparison(comparison, column)
-  if (length(column_loc) != 1) {
-    cols_selected <- dottize(names(column_loc), 30)
-    cli_abort(c("Must select only one column.",
-      i = "Columns selected: {cols_selected}",
-      i = "For multiple columns, use `value_diffs_stacked()`"
-    ))
-  }
+  assert_is_single_column(column_loc)
 
   diff_rows <- fsubset(comparison$intersection, column_loc, "diff_rows")[[1]][[1]]
   col <- names(column_loc)
@@ -72,10 +66,13 @@ value_diffs_stacked <- function(comparison, column = everything()) {
 
 # Helpers -------------------
 
-identify_diff_cols <- function(comparison, column, call = caller_env()) {
-  selected_cols <- get_cols_from_comparison(comparison, column, call = call)
-  is_selected <- seq_len(nrow(comparison$intersection)) %in% selected_cols
-  has_value_diffs <- comparison$intersection$n_diffs > 0
-  out <- which(is_selected & has_value_diffs)
-  setNames(out, comparison$intersection$column[out])
+assert_is_single_column <- function(column_loc, call = caller_env()) {
+  if (length(column_loc) == 1) {
+    return(invisible())
+  }
+  cols_selected <- dottize(names(column_loc), 30)
+  cli_abort(c("Must select only one column.",
+    i = "Columns selected: {cols_selected}",
+    i = "For multiple columns, use `value_diffs_stacked()`"
+  ))
 }

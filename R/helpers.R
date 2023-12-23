@@ -23,6 +23,7 @@ validate_table_arg <- function(table, call = caller_env()) {
     info <- '`table` must be either "a" or "b"'
     cli_abort(c(top_msg, i = info), call = call)
   }
+  invisible()
 }
 
 assert_is_comparison <- function(comparison_quo, call = caller_env()) {
@@ -32,7 +33,7 @@ assert_is_comparison <- function(comparison_quo, call = caller_env()) {
     i = "`comparison` must be the output of `versus::compare()`"
   )
 
-  comparison_class <- try_fetch(
+  comparison_class <- withCallingHandlers(
     class(eval_tidy(comparison_quo)),
     error = \(e) cli_abort(message, call = call)
   )
@@ -51,10 +52,10 @@ is_ptype_compatible <- function(...) {
   !incompatible
 }
 
-table_init <- function(comparison, tbl = c("a", "b"), cols = c("intersection", "by")) {
+table_init <- function(comparison, cols = c("intersection", "by"), tbl = c("a", "b")) {
   # simulate a data frame with the same classes as table_[tbl]
-  tbl <- arg_match(tbl)
   cols <- arg_match(cols)
+  tbl <- arg_match(tbl)
   fsubset(comparison$input$value[[tbl]], 0, comparison[[cols]]$column)
 }
 
@@ -63,8 +64,6 @@ get_cols_from_comparison <- function(
     column,
     allow_empty = FALSE,
     call = caller_env()) {
-  template_a <- table_init(comparison, tbl = "a", cols = "intersection")
-
   rethrow_oob <- function(e) {
     column_arg <- shorten(glue("column = {as_label(column)}"), 50)
     message <- c(
@@ -78,11 +77,21 @@ get_cols_from_comparison <- function(
     top_message <- glue("Problem with argument `{column_arg}`:")
     abort(message = c(top_message, cnd_message(e)), call = call)
   }
-  try_fetch(
-    eval_select(column, template_a, allow_empty = allow_empty),
+
+  template <- table_init(comparison, "intersection")
+  withCallingHandlers(
+    eval_select(column, template, allow_empty = allow_empty),
     vctrs_error_subscript_oob = rethrow_oob,
     error = rethrow_default
   )
+}
+
+identify_diff_cols <- function(comparison, column, call = caller_env()) {
+  selected_cols <- get_cols_from_comparison(comparison, column, call = call)
+  is_selected <- seq_len(nrow(comparison$intersection)) %in% selected_cols
+  has_value_diffs <- comparison$intersection$n_diffs > 0
+  out <- which(is_selected & has_value_diffs)
+  setNames(out, comparison$intersection$column[out])
 }
 
 shorten <- function(x, max_char = 10) {
