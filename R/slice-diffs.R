@@ -1,19 +1,20 @@
-#' Show rows which have differing values in a comparison
+#' Get rows with differing values
 #'
-#' @param table A data frame. One of \code{table_a} or \code{table_b} used to
-#' create \code{comparison}
+#' @param comparison The output of \code{compare()}
+#' @param table One of \code{"a"} or \code{"b"} indicating which of the tables used to
+#' create \code{comparison} should be sliced
 #' @param column <[`tidy-select`][versus_tidy_select]>. A row will be in the output if
 #' the comparison shows differing values for any columns matching this argument
-#' @param comparison The output of \code{compare()}
 #'
 #' @return
-#' The input \code{table} is filtered to the rows for which
-#' \code{comparison} shows differing values for one of the columns in the supplied
-#' \code{column} argument
+#' The input table is filtered to the rows for which \code{comparison}
+#' shows differing values for one of the columns selected by \code{column}
 #'
 #' @examples
 #' comp <- compare(example_df_a, example_df_b, by = car)
-#' example_df_a |> slice_diffs(comp, c(disp, mpg))
+#' comp |> slice_diffs("a", mpg)
+#' comp |> slice_diffs("b", mpg)
+#' comp |> slice_diffs("a", c(mpg, disp))
 
 #' @rdname slice_diffs
 #' @export

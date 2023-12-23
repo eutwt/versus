@@ -3,7 +3,7 @@
 \name{weave_diffs_row}
 \alias{weave_diffs_row}
 \alias{weave_diffs_col}
-\title{Combine \code{slice_diffs()} output from both tables}
+\title{Get differences in context}
 \usage{
 weave_diffs_row(comparison, column = everything())
 
@@ -14,24 +14,24 @@ weave_diffs_col(comparison, column = everything())
 
 \item{column}{<\code{\link[=versus_tidy_select]{tidy-select}}>. A row will be in the output if
 the comparison shows differing values for any columns matching this argument}
-
-\item{table_a}{The data frame\code{table_a} used to create \code{comparison}}
-
-\item{table_b}{The data frame\code{table_b} used to create \code{comparison}}
 }
 \value{
-\item{\code{weave_diffs_row()}}{The output of \code{slice_diffs()} for both input
-tables weaved together row-wise with a column \code{table} indicating which table the row
-is from. The output contains only columns present in both tables.}
-\item{\code{weave_diffs_col()}}{The output of \code{slice_diffs()} for \code{table_a}
-with columns from \code{table_b} added for columns with differing values. The
-output contains only columns present in both tables.}
+\item{\code{weave_diffs_col()}}{The input data filtered to rows where
+differing values exist for one of the columns selected by \code{column}.
+The selected columns with differences will be in the result twice, one for
+each input table.
+
+\item{\code{weave_diffs_row()}}{Input tables are filtered to rows where
+differing values exist for one of the columns selected by \code{column}.
+These two sets of rows (one for each input table) are interleaved row-wise.
 }
 \description{
-Combine \code{slice_diffs()} output from both tables
+Get differences in context
 }
 \examples{
 comp <- compare(example_df_a, example_df_b, by = car)
-weave_diffs_col(example_df_a, example_df_b, comp, column = disp)
-weave_diffs_row(example_df_a, example_df_b, comp, column = disp)
+comp |> weave_diffs_col(comp, column = disp)
+comp |> weave_diffs_col(comp, column = c(mpg, disp))
+comp |> weave_diffs_row(comp, column = disp)
+comp |> weave_diffs_row(comp, column = c(mpg, disp))
 }

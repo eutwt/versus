@@ -2,28 +2,29 @@
 % Please edit documentation in R/slice-diffs.R
 \name{slice_diffs}
 \alias{slice_diffs}
-\title{Show rows which have differing values in a comparison}
+\title{Get rows with differing values}
 \usage{
 slice_diffs(comparison, table, column = everything())
 }
 \arguments{
 \item{comparison}{The output of \code{compare()}}
 
-\item{table}{A data frame. One of \code{table_a} or \code{table_b} used to
-create \code{comparison}}
+\item{table}{One of \code{"a"} or \code{"b"} indicating which of the tables used to
+create \code{comparison} should be sliced}
 
 \item{column}{<\code{\link[=versus_tidy_select]{tidy-select}}>. A row will be in the output if
 the comparison shows differing values for any columns matching this argument}
 }
 \value{
-The input \code{table} is filtered to the rows for which
-\code{comparison} shows differing values for one of the columns in the supplied
-\code{column} argument
+The input table is filtered to the rows for which \code{comparison}
+shows differing values for one of the columns selected by \code{column}
 }
 \description{
-Show rows which have differing values in a comparison
+Get rows with differing values
 }
 \examples{
 comp <- compare(example_df_a, example_df_b, by = car)
-example_df_a |> slice_diffs(comp, c(disp, mpg))
+comp |> slice_diffs("a", mpg)
+comp |> slice_diffs("b", mpg)
+comp |> slice_diffs("a", c(mpg, disp))
 }

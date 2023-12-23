@@ -1,11 +1,8 @@
 fsubset <- function(x, i, j) {
-  if (!missing(i) && is_null(i)) {
-    i <- 0
+  if (!missing(i) && (is_null(i) || identical(i, 0))) {
+    i <- integer(0)
   }
-  is_zero <- function(i) {
-    length(i) == 1 && i == 0
-  }
-  ss(x, i, j, check = is_zero(i))
+  ss(x, i, j, check = FALSE)
 }
 
 assert_table_is_a_or_b <- function(table, call = caller_env()) {
@@ -23,7 +20,6 @@ assert_table_is_a_or_b <- function(table, call = caller_env()) {
     info <- '`table` must be either "a" or "b"'
     cli_abort(c(top_msg, i = info), call = call)
   }
-  invisible()
 }
 
 assert_is_comparison <- function(comparison_quo, call = caller_env()) {

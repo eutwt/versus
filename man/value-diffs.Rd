@@ -3,7 +3,7 @@
 \name{value_diffs}
 \alias{value_diffs}
 \alias{value_diffs_stacked}
-\title{Show the differing values from a comparison}
+\title{Get the differing values from a comparison}
 \usage{
 value_diffs(comparison, column)
 
@@ -30,7 +30,7 @@ due to incompatible types, values are converted to character first.
 \code{column = everything()}}
 }
 \description{
-Show the differing values from a comparison
+Get the differing values from a comparison
 }
 \examples{
 comp <- compare(example_df_a, example_df_b, by = car)
