@@ -153,6 +153,27 @@ contents <- function(table) {
   enframe(out_vec, name = "column", value = "class")
 }
 
+# once-per-session information / warnings
+
+info_environment <- as_environment(list(dt_copy = FALSE))
+
+inform_dt_copy <- function(table_a, table_b, info_env = info_environment) {
+  if (info_env$dt_copy) {
+    return(invisible())
+  }
+  message <- c(
+    "{symbol$info} `compare()` creates a deep copy of data.table inputs.",
+    "Use `setDF()` first for a shallow copy"
+  )
+  for (table in list(table_a, table_b)) {
+    if (inherits(table, "data.table") && object.size(table) > 25e7) {
+      cli_inform(col_grey(message))
+      info_env$dt_copy <- TRUE
+      return(invisible())
+    }
+  }
+}
+
 # slice_() helpers ------------
 
 ensure_ptype_compatible <- function(slice_list) {
