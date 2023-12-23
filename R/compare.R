@@ -123,6 +123,7 @@ summary.vs_compare <- function(object, ...) {
     class_diffs = object$input$value %>%
       lapply(fsubset, j = object$intersection$column) %>%
       lapply(lapply, class) %>%
+      unname() %>%
       pmap_lgl(Negate(identical)) %>%
       any()
   )
@@ -264,8 +265,8 @@ assert_unique_names <- function(table, call = caller_env()) {
   withCallingHandlers(
     vec_as_names(names(table), repair = "check_unique"),
     error = function(e) {
-      msg <- strsplit(cnd_message(e), "\n")[[1]]
-      cli_abort(c("Problem with `{arg_name}`: {msg[1]}", msg[-1]), call = call)
+      message <- c(glue("Problem with `{arg_name}`:"), cnd_message(e))
+      abort(message, call = call)
     }
   )
 }

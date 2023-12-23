@@ -103,7 +103,7 @@
       compare(one, two, by = mpg)
     Condition
       Error in `compare()`:
-      ! Problem with `table_b`
+      ! Problem with `table_b`:
       * Names must be unique.
       x These names are duplicated:
         * "x" at locations 1 and 2.
@@ -114,7 +114,7 @@
       compare(one, two, by = "mpg")
     Condition
       Error in `compare()`:
-      ! Problem with `table_b`
+      ! Problem with `table_b`:
       * Names must be unique.
       x These names are duplicated:
         * "x" at locations 1 and 2.
@@ -196,19 +196,19 @@
       
       $intersection
       # A tibble: 11 x 5
-         column n_diffs class_a class_b   value_diffs     
+         column n_diffs class_a class_b   diff_rows       
          <chr>    <int> <chr>   <chr>     <list>          
-       1 mpg          2 numeric numeric   <tibble [2 x 5]>
-       2 cyl          1 numeric numeric   <tibble [1 x 5]>
-       3 disp         2 numeric numeric   <tibble [2 x 5]>
-       4 hp           0 numeric numeric   <tibble [0 x 5]>
-       5 drat         0 numeric numeric   <tibble [0 x 5]>
-       6 wt           0 numeric character <tibble [0 x 5]>
-       7 qsec         0 numeric numeric   <tibble [0 x 5]>
-       8 vs           0 numeric numeric   <tibble [0 x 5]>
-       9 am           0 numeric numeric   <tibble [0 x 5]>
-      10 gear         0 numeric numeric   <tibble [0 x 5]>
-      11 carb         0 numeric numeric   <tibble [0 x 5]>
+       1 mpg          2 numeric numeric   <tibble [2 x 2]>
+       2 cyl          1 numeric numeric   <tibble [1 x 2]>
+       3 disp         2 numeric numeric   <tibble [2 x 2]>
+       4 hp           0 numeric numeric   <tibble [0 x 2]>
+       5 drat         0 numeric numeric   <tibble [0 x 2]>
+       6 wt           0 numeric character <tibble [0 x 2]>
+       7 qsec         0 numeric numeric   <tibble [0 x 2]>
+       8 vs           0 numeric numeric   <tibble [0 x 2]>
+       9 am           0 numeric numeric   <tibble [0 x 2]>
+      10 gear         0 numeric numeric   <tibble [0 x 2]>
+      11 carb         0 numeric numeric   <tibble [0 x 2]>
       
       $unmatched_cols
       # A tibble: 1 x 2
@@ -226,20 +226,6 @@
       4 b     Merc 450SE    11
       5 b     extra_b       12
       
-
----
-
-    Code
-      value_diffs_all(comp)
-    Output
-      # A tibble: 5 x 6
-        column val_a val_b car            row_a row_b
-        <chr>  <dbl> <dbl> <chr>          <int> <int>
-      1 mpg     14.3  16.3 Duster 360         7     6
-      2 mpg     24.4  26.4 Merc 240D          8     7
-      3 cyl      6    NA   Hornet 4 Drive     4     3
-      4 disp   109   108   Datsun 710         3     2
-      5 disp   259   258   Hornet 4 Drive     4     3
 
 # example comparison with allow_bothNA = FALSE
 
@@ -261,19 +247,19 @@
       
       $intersection
       # A tibble: 11 x 5
-         column n_diffs class_a class_b   value_diffs     
+         column n_diffs class_a class_b   diff_rows       
          <chr>    <int> <chr>   <chr>     <list>          
-       1 mpg          2 numeric numeric   <tibble [2 x 5]>
-       2 cyl          1 numeric numeric   <tibble [1 x 5]>
-       3 disp         2 numeric numeric   <tibble [2 x 5]>
-       4 hp           0 numeric numeric   <tibble [0 x 5]>
-       5 drat         0 numeric numeric   <tibble [0 x 5]>
-       6 wt           0 numeric character <tibble [0 x 5]>
-       7 qsec         0 numeric numeric   <tibble [0 x 5]>
-       8 vs           0 numeric numeric   <tibble [0 x 5]>
-       9 am           0 numeric numeric   <tibble [0 x 5]>
-      10 gear         0 numeric numeric   <tibble [0 x 5]>
-      11 carb         0 numeric numeric   <tibble [0 x 5]>
+       1 mpg          2 numeric numeric   <tibble [2 x 2]>
+       2 cyl          1 numeric numeric   <tibble [1 x 2]>
+       3 disp         2 numeric numeric   <tibble [2 x 2]>
+       4 hp           0 numeric numeric   <tibble [0 x 2]>
+       5 drat         0 numeric numeric   <tibble [0 x 2]>
+       6 wt           0 numeric character <tibble [0 x 2]>
+       7 qsec         0 numeric numeric   <tibble [0 x 2]>
+       8 vs           0 numeric numeric   <tibble [0 x 2]>
+       9 am           0 numeric numeric   <tibble [0 x 2]>
+      10 gear         0 numeric numeric   <tibble [0 x 2]>
+      11 carb         0 numeric numeric   <tibble [0 x 2]>
       
       $unmatched_cols
       # A tibble: 1 x 2
@@ -291,20 +277,6 @@
       4 b     Merc 450SE    11
       5 b     extra_b       12
       
-
----
-
-    Code
-      value_diffs_all(comp)
-    Output
-      # A tibble: 5 x 6
-        column val_a val_b car            row_a row_b
-        <chr>  <dbl> <dbl> <chr>          <int> <int>
-      1 mpg     14.3  16.3 Duster 360         7     6
-      2 mpg     24.4  26.4 Merc 240D          8     7
-      3 cyl     NA    NA   Datsun 710         3     2
-      4 disp   109   108   Datsun 710         3     2
-      5 disp   259   258   Hornet 4 Drive     4     3
 
 # compare() works when no rows are common
 
@@ -326,9 +298,9 @@
       
       $intersection
       # A tibble: 1 x 5
-        column n_diffs class_a class_b value_diffs     
+        column n_diffs class_a class_b diff_rows       
         <chr>    <int> <chr>   <chr>   <list>          
-      1 x            0 numeric numeric <tibble [0 x 3]>
+      1 x            0 numeric numeric <tibble [0 x 0]>
       
       $unmatched_cols
       # A tibble: 0 x 2
@@ -365,7 +337,7 @@
       $intersection
       # A tibble: 0 x 5
       # i 5 variables: column <chr>, n_diffs <int>, class_a <chr>, class_b <chr>,
-      #   value_diffs <list>
+      #   diff_rows <list>
       
       $unmatched_cols
       # A tibble: 0 x 2
@@ -400,7 +372,7 @@
       $intersection
       # A tibble: 0 x 5
       # i 5 variables: column <chr>, n_diffs <int>, class_a <chr>, class_b <chr>,
-      #   value_diffs <list>
+      #   diff_rows <list>
       
       $unmatched_cols
       # A tibble: 2 x 2
@@ -438,7 +410,7 @@
       $intersection
       # A tibble: 0 x 5
       # i 5 variables: column <chr>, n_diffs <int>, class_a <chr>, class_b <chr>,
-      #   value_diffs <list>
+      #   diff_rows <list>
       
       $unmatched_cols
       # A tibble: 0 x 2
@@ -475,7 +447,7 @@
       $intersection
       # A tibble: 0 x 5
       # i 5 variables: column <chr>, n_diffs <int>, class_a <chr>, class_b <chr>,
-      #   value_diffs <list>
+      #   diff_rows <list>
       
       $unmatched_cols
       # A tibble: 2 x 2
