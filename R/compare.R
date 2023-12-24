@@ -53,7 +53,7 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE) {
   table_chr <- names(enquos(table_a, table_b, .named = TRUE))
   validate_tables(table_a, table_b, coerce = coerce)
 
-  by_names <- get_by_names(by_quo = by, table_a = table_a, table_b = table_b)
+  by_names <- get_by_names(table_a, table_b, by = by)
 
   table_summ <- tibble(
     table = c("table_a", "table_b"),
@@ -62,7 +62,7 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE) {
     ncol = c(ncol(table_a), ncol(table_b))
   )
 
-  tbl_contents <- get_contents(table_a, table_b, by_names)
+  tbl_contents <- get_contents(table_a, table_b, by = by_names)
 
   matches <- withCallingHandlers(
     locate_matches(table_a, table_b, by = by_names),
