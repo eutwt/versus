@@ -1,5 +1,13 @@
 # versus (development version)
 
+* The `compare()` function now saves a shallow copy of the input tables. This
+  means functions using a comparison, e.g. `slice_diffs()`, now only need the
+  `comparison` argument, rather than requiring the original input tables to be
+  re-supplied.
+
+* New functions `weave_diffs_wide()` an `weave_diffs_long()` are added, which show
+  the differing values in context with other columns from the input tables. 
+
 * A new function `slice_unmatched()` is added, used to get the rows from
   input tables a comparison shows as not existing in the other table
 

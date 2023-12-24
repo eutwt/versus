@@ -55,7 +55,14 @@ in and the \code{by} columns for that row.
 }
 }
 \description{
-Compare two data frames
+\code{compare()} creates a representation of the differences between two tables,
+along with a shallow copy of the tables. This output is used
+as the \code{comparison} argument when exploring the differences further with other
+versus functions e.g. \verb{slice_*()} and \verb{weave_*()}.
+
+Note that if the input is a data.table, a deep copy is made to prevent future
+changes to the table affecting the stored comparison. To avoid a deep copy,
+use \code{setDF()} before supplying to \code{compare()}.
 }
 \examples{
 compare(example_df_a, example_df_b, by = car)

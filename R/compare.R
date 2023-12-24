@@ -1,5 +1,15 @@
 #' Compare two data frames
 #'
+#' @description
+#' `compare()` creates a representation of the differences between two tables,
+#' along with a shallow copy of the tables. This output is used
+#' as the `comparison` argument when exploring the differences further with other
+#' versus functions e.g. `slice_*()` and `weave_*()`.
+#'
+#' Note that if the input is a data.table, a deep copy is made to prevent future
+#' changes to the table affecting the stored comparison. To avoid a deep copy,
+#' use `setDF()` before supplying to `compare()`.
+#'
 #' @param table_a A data frame
 #' @param table_b A data frame
 #' @param by <[`tidy-select`][versus_tidy_select]>. Selection of columns to use when matching rows between
