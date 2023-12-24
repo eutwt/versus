@@ -108,13 +108,13 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE) {
     unmatched_rows = unmatched_rows,
     input = store_tables(table_a, table_b)
   )
-  structure(out, class = "vs_compare")
+  structure(out, class = "vs_comparison")
 }
 
 # Methods -----------
 
 #' @export
-print.vs_compare <- function(x, ...) {
+print.vs_comparison <- function(x, ...) {
   local({ # need local() for Rmd
     class(x) <- "list"
     print(x[setdiff(names(x), "input")])
@@ -124,7 +124,7 @@ print.vs_compare <- function(x, ...) {
 
 
 #' @export
-summary.vs_compare <- function(object, ...) {
+summary.vs_comparison <- function(object, ...) {
   out_vec <- c(
     value_diffs = sum(object$intersection$n_diffs) > 0,
     unmatched_cols = nrow(object$unmatched_cols) > 0,
