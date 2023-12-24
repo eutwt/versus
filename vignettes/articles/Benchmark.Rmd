@@ -12,7 +12,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-The output of `versus::compare()` is designed to contain only the minimal amount of information needed to represent the difference between two data frames: value differences, unmatched columns, and unmatched rows. While other packages offer much more functionality, the minimal approach makes versus much faster.
+The output of `versus::compare()` is designed to contain only the minimal amount of information needed to represent the difference between two data frames: rows with value differences, unmatched columns, and unmatched rows. While other packages offer much more functionality, the minimal approach makes versus much faster.
 
 Below is an example benchmark using data from the `nycflights13` package over-sampled to various sizes. In the example data, 5% of rows from each data frame are missing in the other, and in 4 out of the 15 columns, 5% of values are different.
 
@@ -30,9 +30,9 @@ generate_example_data <- function(n_rows) {
     mutate(time_hour = Sys.time() + row_number())
 
   tbl_a <- tbl |>
-    slice_sample(n = n_rows * 0.95)
+    slice_sample(n = floor(n_rows * 0.95))
   tbl_b <- tbl |>
-    slice_sample(n = n_rows * 0.95) |>
+    slice_sample(n = floor(n_rows * 0.95)) |>
     # simulate value differences
     mutate(across(temp:wind_dir, \(x) ifelse(runif(n()) < .05, x + 1, x)))
   list(a = tbl_a, b = tbl_b)
@@ -71,16 +71,16 @@ bench_out |>
 #> # A tibble: 12 × 6
 #>    expression   n_rows         min   median `itr/sec` mem_alloc
 #>    <bch:expr>   <chr>     <bch:tm> <bch:tm>     <dbl> <bch:byt>
-#>  1 versus       100,000    69.66ms  70.23ms  14.2       65.03MB
-#>  2 arsenal      100,000   748.77ms 760.06ms   1.32     389.01MB
-#>  3 dataCompareR 100,000      1.16s    1.22s   0.823    265.43MB
-#>  4 diffdf       100,000      3.87s     4.3s   0.232    554.98MB
-#>  5 versus       1,000,000 533.15ms 591.89ms   1.69     653.39MB
-#>  6 arsenal      1,000,000   12.51s   12.58s   0.0795     3.77GB
-#>  7 dataCompareR 1,000,000   15.26s   15.98s   0.0626     2.63GB
-#>  8 diffdf       1,000,000   52.24s   55.23s   0.0181     5.35GB
-#>  9 versus       2,000,000    1.23s    1.26s   0.795      1.27GB
-#> 10 arsenal      2,000,000   26.23s   26.79s   0.0373     7.54GB
-#> 11 dataCompareR 2,000,000   35.36s   35.42s   0.0282     5.27GB
-#> 12 diffdf       2,000,000    1.87m    1.96m   0.00849    10.7GB
+#>  1 versus       100,000    59.49ms  62.94ms  15.9       64.58MB
+#>  2 arsenal      100,000   958.93ms    1.09s   0.913    388.97MB
+#>  3 dataCompareR 100,000      1.41s    1.43s   0.698    265.37MB
+#>  4 diffdf       100,000      4.73s    4.75s   0.211    554.93MB
+#>  5 versus       1,000,000 536.28ms 586.81ms   1.70     648.99MB
+#>  6 arsenal      1,000,000   12.86s   13.08s   0.0765     3.89GB
+#>  7 dataCompareR 1,000,000   17.16s   17.25s   0.0580     2.63GB
+#>  8 diffdf       1,000,000    56.2s   56.93s   0.0176     5.35GB
+#>  9 versus       2,000,000    1.35s    1.37s   0.732      1.27GB
+#> 10 arsenal      2,000,000   29.47s    30.5s   0.0328     7.54GB
+#> 11 dataCompareR 2,000,000   36.16s   37.32s   0.0268     5.27GB
+#> 12 diffdf       2,000,000    2.03m    2.09m   0.00796   10.83GB
 ```
