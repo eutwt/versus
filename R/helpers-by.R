@@ -1,4 +1,4 @@
-get_by_vars <- function(by_quo, table_a, table_b, call = caller_env()) {
+get_by_names <- function(by_quo, table_a, table_b, call = caller_env()) {
   cols_a <- withCallingHandlers(
     eval_select(by_quo, table_a, allow_rename = FALSE, allow_empty = FALSE),
     error = rethrow_by_select_error("table_a", call)
