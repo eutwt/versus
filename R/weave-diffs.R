@@ -6,11 +6,11 @@
 #' \item{\code{weave_diffs_wide()}}{The input data filtered to rows where
 #' differing values exist for one of the columns selected by \code{column}.
 #' The selected columns with differences will be in the result twice, one for
-#' each input table.
+#' each input table.}
 #'
 #' \item{\code{weave_diffs_long()}}{Input tables are filtered to rows where
 #' differing values exist for one of the columns selected by \code{column}.
-#' These two sets of rows (one for each input table) are interleaved row-wise.
+#' These two sets of rows (one for each input table) are interleaved row-wise.}
 #'
 #' @examples
 #' comp <- compare(example_df_a, example_df_b, by = car)
