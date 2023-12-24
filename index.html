@@ -125,14 +125,15 @@
 <span><span class="co">#&gt;  8 Merc 450SE      4.07  16.4   180     8  276.     3  3.07     0</span></span>
 <span><span class="co">#&gt;  9 Merc 230        3.15  22.8    95     4  141.     2  3.92     1</span></span>
 <span><span class="co">#&gt; 10 Mazda RX4 Wag   2.88  21     110     6  160      4  3.9      0</span></span></code></pre></div>
-<p>Use <code><a href="reference/compare.html">compare()</a></code> to see</p>
+<p>Use <code><a href="reference/compare.html">compare()</a></code> to create a comparison of two tables.</p>
+<p>A comparison contains:</p>
 <ul>
-<li>counts of differing values in each column - <code>compare()$intersection</code>
-</li>
-<li>columns in only one table - <code>compare()$unmatched_cols</code>
-</li>
-<li>rows in only one table - <code>compare()$unmatched_rows</code>
-</li>
+<li>
+<code>compare()$intersection</code>: columns in both tables and rows with differing values</li>
+<li>
+<code>compare()$unmatched_cols</code>: columns in only one table</li>
+<li>
+<code>compare()$unmatched_rows</code>: rows in only one table</li>
 </ul>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">comparison</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/compare.html">compare</a></span><span class="op">(</span><span class="va">example_df_a</span>, <span class="va">example_df_b</span>, by <span class="op">=</span> <span class="va">car</span><span class="op">)</span></span>
