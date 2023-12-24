@@ -1,8 +1,25 @@
 fsubset <- function(x, i, j) {
-  check <- function(i) {
-    length(i) == 1 && i == 0
+  if (!missing(i) && (is_null(i) || identical(i, 0))) {
+    i <- integer(0)
   }
-  ss(x, i, j, check = check(i))
+  ss(x, i, j, check = FALSE)
+}
+
+assert_table_is_a_or_b <- function(table, call = caller_env()) {
+  if (identical(table, quo())) {
+    cli_abort("`table` is absent but must be supplied.", call = call)
+  }
+  table_expr <- quo_squash(table)
+  table_chr <- shorten(deparse(table_expr), 30)
+  top_msg <- "Problem with argument `table = {table_chr}`"
+  if (!is_character(table_expr)) {
+    info <- '`table` must be a single character value: "a" or "b"'
+    cli_abort(c(top_msg, i = info), call = call)
+  }
+  if (!(identical(table_expr, "a") | identical(table_expr, "b"))) {
+    info <- '`table` must be either "a" or "b"'
+    cli_abort(c(top_msg, i = info), call = call)
+  }
 }
 
 assert_is_comparison <- function(comparison_quo, call = caller_env()) {
@@ -12,7 +29,7 @@ assert_is_comparison <- function(comparison_quo, call = caller_env()) {
     i = "`comparison` must be the output of `versus::compare()`"
   )
 
-  comparison_class <- try_fetch(
+  comparison_class <- withCallingHandlers(
     class(eval_tidy(comparison_quo)),
     error = \(e) cli_abort(message, call = call)
   )
@@ -23,27 +40,19 @@ assert_is_comparison <- function(comparison_quo, call = caller_env()) {
   cli_abort(message, call = call)
 }
 
-is_ptype_compatible <- function(tbl_a, tbl_b) {
-  incompatible <- map2_lgl(tbl_a, tbl_b, \(col_a, col_b) {
-    cnd <- catch_cnd(vec_ptype_common(col_a, col_b))
+is_ptype_compatible <- function(...) {
+  incompatible <- pmap_lgl(list(...), \(...) {
+    cnd <- catch_cnd(vec_ptype_common(...))
     inherits(cnd, "vctrs_error_ptype2")
   })
   !incompatible
 }
 
-table_init <- function(comparison, tbl = c("a", "b"), cols = c("intersection", "by")) {
+table_init <- function(comparison, cols = c("intersection", "by"), tbl = c("a", "b")) {
   # simulate a data frame with the same classes as table_[tbl]
-  tbl <- arg_match(tbl)
   cols <- arg_match(cols)
-
-  if (cols == "intersection") {
-    value_diff_column <- if_else(tbl == "a", 1, 2)
-    comparison$intersection %>%
-      with(setNames(value_diffs, column)) %>%
-      lapply(\(x) x[[value_diff_column]][0])
-  } else if (cols == "by") {
-    fsubset(comparison$unmatched_rows, 0, comparison$by$column)
-  }
+  tbl <- arg_match(tbl)
+  fsubset(comparison$input$value[[tbl]], 0, comparison[[cols]]$column)
 }
 
 get_cols_from_comparison <- function(
@@ -51,8 +60,6 @@ get_cols_from_comparison <- function(
     column,
     allow_empty = FALSE,
     call = caller_env()) {
-  template_a <- table_init(comparison, tbl = "a", cols = "intersection")
-
   rethrow_oob <- function(e) {
     column_arg <- shorten(glue("column = {as_label(column)}"), 50)
     message <- c(
@@ -66,11 +73,21 @@ get_cols_from_comparison <- function(
     top_message <- glue("Problem with argument `{column_arg}`:")
     abort(message = c(top_message, cnd_message(e)), call = call)
   }
-  try_fetch(
-    eval_select(column, template_a, allow_empty = allow_empty),
+
+  template <- table_init(comparison, "intersection")
+  withCallingHandlers(
+    eval_select(column, template, allow_empty = allow_empty),
     vctrs_error_subscript_oob = rethrow_oob,
     error = rethrow_default
   )
+}
+
+identify_diff_cols <- function(comparison, column, call = caller_env()) {
+  selected_cols <- get_cols_from_comparison(comparison, column, call = call)
+  is_selected <- seq_len(nrow(comparison$intersection)) %in% selected_cols
+  has_value_diffs <- comparison$intersection$n_diffs > 0
+  out <- which(is_selected & has_value_diffs)
+  setNames(out, comparison$intersection$column[out])
 }
 
 shorten <- function(x, max_char = 10) {
@@ -132,44 +149,35 @@ contents <- function(table) {
   enframe(out_vec, name = "column", value = "class")
 }
 
+# once-per-session information / warnings
+
+info_envs <- new_environment()
+info_envs$dt_copy <-
+  list(informed = FALSE, is_big = \(x) object.size(x) > 25e7) %>%
+  as_environment()
+
+inform_dt_copy <- function(table_a, table_b, env = info_envs$dt_copy) {
+  if (env$informed) {
+    return(invisible())
+  }
+  message <- c(
+    "{symbol$info} `compare()` creates a deep copy of data.table inputs.",
+    "Use `setDF()` first for a shallow copy"
+  )
+  for (table in list(table_a, table_b)) {
+    if (inherits(table, "data.table") && env$is_big(table)) {
+      cli_inform(col_grey(message))
+      env$informed <- TRUE
+      return(invisible())
+    }
+  }
+}
+
 # slice_() helpers ------------
-
-assert_has_columns <- function(table, col_names, type, call = caller_env()) {
-  arg_name <- deparse(substitute(table))
-  col_present <- col_names %in% names(table)
-  if (all(col_present)) {
-    return(invisible())
-  }
-  missing_col <- col_names[which.max(!col_present)]
-  message <- c(
-    "`{arg_name}` is missing some columns from `comparison`",
-    "column `{missing_col}` is not present in `{arg_name}`"
-  )
-  cli_abort(message, call = call)
-}
-
-assert_ptype_compatible <- function(table, slicer, call = caller_env()) {
-  col_compatible <- is_ptype_compatible(
-    fsubset(table, j = names(slicer)),
-    slicer
-  )
-  if (all(col_compatible)) {
-    return(invisible())
-  }
-  col <- names(slicer)[which.max(!col_compatible)]
-  class_table <- class(table[[col]])
-  class_comparison <- class(slicer[[col]])
-  message <- c(
-    "`by` columns in `table` must be compatible with those in `comparison`",
-    "`{col}` class in `table`: {.cls {class_table}}",
-    "`{col}` class in `comparison`: {.cls {class_comparison}}"
-  )
-  cli_abort(message, call = call)
-}
 
 ensure_ptype_compatible <- function(slice_list) {
   # if the column types are incompatible, convert them to character first
-  col_compatible <- is_ptype_compatible(slice_list$a, slice_list$b)
+  col_compatible <- exec(is_ptype_compatible, !!!slice_list)
   if (all(col_compatible)) {
     return(slice_list)
   }
@@ -209,6 +217,7 @@ utils::globalVariables(c(
   "class_b",
   "column",
   "common",
+  "diff_rows",
   "unmatched",
   "versus_in_a",
   "versus_in_b",

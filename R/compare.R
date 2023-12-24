@@ -1,5 +1,15 @@
 #' Compare two data frames
 #'
+#' @description
+#' `compare()` creates a representation of the differences between two tables,
+#' along with a shallow copy of the tables. This output is used
+#' as the `comparison` argument when exploring the differences further with other
+#' versus functions e.g. `slice_*()` and `weave_*()`.
+#'
+#' Note that if the input is a data.table, a deep copy is made to prevent future
+#' changes to the table affecting the stored comparison. To avoid a deep copy,
+#' use `setDF()` before supplying to `compare()`.
+#'
 #' @param table_a A data frame
 #' @param table_b A data frame
 #' @param by <[`tidy-select`][versus_tidy_select]>. Selection of columns to use when matching rows between
@@ -53,7 +63,7 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE) {
   table_chr <- names(enquos(table_a, table_b, .named = TRUE))
   validate_tables(table_a, table_b, coerce = coerce)
 
-  by_vars <- get_by_vars(by_quo = by, table_a = table_a, table_b = table_b)
+  by_names <- get_by_names(table_a, table_b, by = by)
 
   table_summ <- tibble(
     table = c("table_a", "table_b"),
@@ -62,41 +72,41 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE) {
     ncol = c(ncol(table_a), ncol(table_b))
   )
 
-  tbl_contents <- get_contents(table_a, table_b, by_vars)
+  tbl_contents <- get_contents(table_a, table_b, by = by_names)
 
-  matches <- try_fetch(
-    locate_matches(table_a, table_b, by = by_vars),
+  matches <- withCallingHandlers(
+    locate_matches(table_a, table_b, by = by_names),
     vctrs_error_matches_relationship_one_to_one =
-      rethrow_match_relationship(table_a, table_b, by = by_vars),
+      rethrow_match_relationship(table_a, table_b, by = by_names),
     vctrs_error_ptype2 =
-      rethrow_incompatible_by_vars(table_a, table_b, by = by_vars)
+      rethrow_incompatible_by_vars(table_a, table_b, by = by_names)
   )
 
   unmatched_rows <- get_unmatched_rows(
     table_a,
     table_b,
-    by = by_vars,
+    by = by_names,
     matches = matches
   )
 
-  tbl_contents$compare$value_diffs <- tbl_contents$compare$column %>%
-    lapply(get_value_diffs,
+  tbl_contents$compare$diff_rows <- tbl_contents$compare$column %>%
+    lapply(get_diff_rows,
       table_a = table_a,
       table_b = table_b,
-      by = by_vars,
       matches = matches,
       allow_both_NA = allow_both_NA
     )
 
   tbl_contents$compare <- tbl_contents$compare %>%
-    mutate(n_diffs = map_int(value_diffs, nrow), .after = column)
+    mutate(n_diffs = map_int(diff_rows, nrow), .after = column)
 
   out <- list(
     tables = table_summ,
     by = tbl_contents$by,
     intersection = tbl_contents$compare,
     unmatched_cols = tbl_contents$unmatched_cols,
-    unmatched_rows = unmatched_rows
+    unmatched_rows = unmatched_rows,
+    input = store_tables(table_a, table_b)
   )
   structure(out, class = "vs_compare")
 }
@@ -107,7 +117,7 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE) {
 print.vs_compare <- function(x, ...) {
   local({ # need local() for Rmd
     class(x) <- "list"
-    print(x)
+    print(x[setdiff(names(x), "input")])
   })
   invisible(x)
 }
@@ -119,8 +129,11 @@ summary.vs_compare <- function(object, ...) {
     value_diffs = sum(object$intersection$n_diffs) > 0,
     unmatched_cols = nrow(object$unmatched_cols) > 0,
     unmatched_rows = nrow(object$unmatched_rows) > 0,
-    class_diffs = object$intersection$value_diffs %>%
-      map_lgl(\(x) !identical(x[[1]][0], x[[2]][0])) %>%
+    class_diffs = object$input$value %>%
+      lapply(fsubset, j = object$intersection$column) %>%
+      lapply(lapply, class) %>%
+      unname() %>%
+      pmap_lgl(Negate(identical)) %>%
       any()
   )
   enframe(out_vec, name = "difference", value = "found")
@@ -141,14 +154,7 @@ locate_matches <- function(table_a, table_b, by) {
     matches$needles == -2, "b",
     default = "common"
   )
-  split_matches <- function(x, g) {
-    out <- gsplit(x, g, use.g.names = TRUE)
-    out$a <- out$a %||% 0
-    out$b <- out$b %||% 0
-    out$common <- out$common %||% 0
-    out
-  }
-  out <- lapply(matches, split_matches, match_group)
+  out <- lapply(matches, gsplit, match_group, use.g.names = TRUE)
   out$haystack$a <- NULL
   out$needles$b <- NULL
   out
@@ -159,7 +165,10 @@ get_unmatched_rows <- function(table_a, table_b, by, matches) {
     a = fsubset(table_a, matches$needles$a, by),
     b = fsubset(table_b, matches$haystack$b, by)
   )
-  as_tibble(bind_rows(unmatched, .id = "table"))
+  unmatched %>%
+    bind_rows(.id = "table") %>%
+    mutate(row = with(matches, c(needles$a, haystack$b)) %||% integer(0)) %>%
+    as_tibble()
 }
 
 converge <- function(table_a, table_b, by, matches) {
@@ -193,20 +202,20 @@ get_contents <- function(table_a, table_b, by) {
   out$compare <- tbl_contents$intersection %>%
     filter(!column %in% by)
 
-  out$unmatched_cols <- tbl_contents$unmatched_rows
+  out$unmatched_cols <- tbl_contents$unmatched_rows %>%
+    select(-row)
 
   out
 }
 
-get_value_diffs <- function(col, table_a, table_b, by, matches, allow_both_NA) {
+get_diff_rows <- function(col, table_a, table_b, matches, allow_both_NA) {
   col_a <- fsubset(table_a, matches$needles$common, col)[[1]]
   col_b <- fsubset(table_b, matches$haystack$common, col)[[1]]
   not_equal <- which(not_equal(col_a, col_b, allow_both_NA))
-
-  vals <- tibble(a = col_a[not_equal], b = col_b[not_equal]) %>%
-    frename(paste0(col, c("_a", "_b")))
-  by_cols <- fsubset(table_a, matches$needles$common[not_equal], by)
-  as_tibble(add_vars(vals, by_cols))
+  tibble(
+    row_a = matches$needles$common[not_equal] %||% integer(0),
+    row_b = matches$haystack$common[not_equal] %||% integer(0)
+  )
 }
 
 not_equal <- function(col_a, col_b, allow_both_NA) {
@@ -214,9 +223,18 @@ not_equal <- function(col_a, col_b, allow_both_NA) {
   if (allow_both_NA) {
     out <- fcoalesce(neq, is.na(col_a) != is.na(col_b))
   } else {
-    out <- fcoalesce(neq, is.na(col_a), is.na(col_b))
+    out <- fcoalesce(neq, is.na(col_a) | is.na(col_b))
   }
   out
+}
+
+store_tables <- function(table_a, table_b) {
+  inform_dt_copy(table_a, table_b)
+  env <- new_environment()
+  env$value <- list(a = table_a, b = table_b) %>%
+    map_if(\(x) inherits(x, "data.table"), compose(as_tibble, copy))
+  lockEnvironment(env, bindings = TRUE)
+  env
 }
 
 # Error handling -------------
@@ -244,19 +262,20 @@ rethrow_match_relationship <- function(table_a, table_b, by) {
 validate_tables <- function(table_a, table_b, coerce, call = caller_env()) {
   assert_data_frame(table_a, call = call)
   assert_data_frame(table_b, call = call)
-  assert_well_named(table_a, call = call)
-  assert_well_named(table_b, call = call)
+  assert_unique_names(table_a, call = call)
+  assert_unique_names(table_b, call = call)
   if (!coerce) {
     assert_same_class(table_a, table_b, call = call)
   }
 }
 
-assert_well_named <- function(table, call = caller_env()) {
+assert_unique_names <- function(table, call = caller_env()) {
   arg_name <- deparse(substitute(table))
-  try_fetch(
+  withCallingHandlers(
     vec_as_names(names(table), repair = "check_unique"),
     error = function(e) {
-      abort(c(glue("Problem with `{arg_name}`"), cnd_message(e)), call = call)
+      message <- c(glue("Problem with `{arg_name}`:"), cnd_message(e))
+      abort(message, call = call)
     }
   )
 }

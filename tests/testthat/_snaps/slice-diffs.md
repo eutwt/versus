@@ -1,90 +1,68 @@
-# slice_diffs_both works
+# slice_diffs() works
 
     Code
-      out
+      slice_diffs(comp, "a", disp)
     Output
-      # A tibble: 4 x 13
-        table car      mpg   cyl  disp    hp  drat wt     qsec    vs    am  gear  carb
-        <chr> <chr>  <dbl> <dbl> <dbl> <dbl> <dbl> <chr> <dbl> <dbl> <dbl> <dbl> <dbl>
-      1 a     Duste~  14.3     8  360    245  3.21 3.57   15.8     0     0     3     4
-      2 b     Duste~  16.3     8  360    245  3.21 3.57   15.8     0     0     3     4
-      3 a     Merc ~  24.4     4  147.    62  3.69 3.19   20       1     0     4     2
-      4 b     Merc ~  26.4     4  147.    62  3.69 3.19   20       1     0     4     2
+      # A tibble: 2 x 9
+        car              mpg   cyl  disp    hp  drat    wt    vs    am
+        <chr>          <dbl> <int> <dbl> <int> <dbl> <dbl> <int> <int>
+      1 Datsun 710      22.8    NA   109    93  3.85  2.32     1     1
+      2 Hornet 4 Drive  21.4     6   259   110  3.08  3.22     1     0
 
-# slice_diffs_both works with multi-variable `by`
+---
 
     Code
-      out
+      slice_diffs(comp, "a", c(mpg, disp))
     Output
-      # A tibble: 4 x 13
-        table car       vs  gear   mpg   cyl  disp    hp  drat wt     qsec    am  carb
-        <chr> <chr>  <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <chr> <dbl> <dbl> <dbl>
-      1 a     Duste~     0     3  14.3     8  360    245  3.21 3.57   15.8     0     4
-      2 b     Duste~     0     3  16.3     8  360    245  3.21 3.57   15.8     0     4
-      3 a     Merc ~     1     4  24.4     4  147.    62  3.69 3.19   20       0     2
-      4 b     Merc ~     1     4  26.4     4  147.    62  3.69 3.19   20       0     2
+      # A tibble: 4 x 9
+        car              mpg   cyl  disp    hp  drat    wt    vs    am
+        <chr>          <dbl> <int> <dbl> <int> <dbl> <dbl> <int> <int>
+      1 Duster 360      14.3     8  360    245  3.21  3.57     0     0
+      2 Merc 240D       24.4     4  147.    62  3.69  3.19     1     0
+      3 Datsun 710      22.8    NA  109     93  3.85  2.32     1     1
+      4 Hornet 4 Drive  21.4     6  259    110  3.08  3.22     1     0
 
 # Error when `comparison` isn't a comparison
 
     Code
-      slice_diffs(example_df_a, disp)
+      slice_diffs(example_df_a, "a", disp)
     Condition
       Error in `slice_diffs()`:
-      ! Problem with argument `comparison = disp`
+      ! Problem with argument `comparison = example_df_a`
       i `comparison` must be the output of `versus::compare()`
+
+# Error when `table` isn't 'a' or 'b'
+
+    Code
+      slice_diffs(comp, a, disp)
+    Condition
+      Error in `slice_diffs()`:
+      ! Problem with argument `table = a`
+      i `table` must be a single character value: "a" or "b"
 
 ---
 
     Code
-      slice_diffs(example_df_a, example_df_b, disp)
+      slice_diffs(comp, disp)
     Condition
       Error in `slice_diffs()`:
-      ! Problem with argument `comparison = example_df_b`
-      i `comparison` must be the output of `versus::compare()`
+      ! Problem with argument `table = disp`
+      i `table` must be a single character value: "a" or "b"
 
 ---
 
     Code
-      slice_diffs_both(example_df_a, example_df_b, disp)
+      slice_diffs(comp, "z")
     Condition
-      Error in `slice_diffs_both()`:
-      ! Problem with argument `comparison = disp`
-      i `comparison` must be the output of `versus::compare()`
+      Error in `slice_diffs()`:
+      ! Problem with argument `table = "z"`
+      i `table` must be either "a" or "b"
 
 ---
 
     Code
-      slice_diffs_both(example_df_a, example_df_b, 1, disp)
-    Condition
-      Error in `slice_diffs_both()`:
-      ! Problem with argument `comparison = 1`
-      i `comparison` must be the output of `versus::compare()`
-
-# Error when supplied table doesn't contain cols in `comparison`
-
-    Code
-      slice_diffs(tibble(x = 1), comp, column = drat)
+      slice_diffs(comp)
     Condition
       Error in `slice_diffs()`:
-      ! `table` is missing some columns from `comparison`
-      column `car` is not present in `table`
-
----
-
-    Code
-      slice_diffs_both(test_df_a, tibble(car = 1), comp, column = drat)
-    Condition
-      Error in `slice_diffs_both()`:
-      ! `table_b` is missing some columns from `comparison`
-      column `mpg` is not present in `table_b`
-
-# Error when `by` columns in `table` aren't compatible with `comparison`
-
-    Code
-      slice_diffs(bad_table, comp, column = mpg)
-    Condition
-      Error in `slice_diffs()`:
-      ! `by` columns in `table` must be compatible with those in `comparison`
-      `vs` class in `table`: <character>
-      `vs` class in `comparison`: <numeric>
+      ! `table` is absent but must be supplied.
 

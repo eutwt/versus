@@ -81,7 +81,7 @@
       * Must select columns from `comparison$intersection`
       i column `bear` is not part of the supplied comparison
 
-# Error on value_diffs with multiple columns
+# Error on value_diffs() with multiple columns
 
     Code
       value_diffs(comp, c(mpg, disp))
@@ -91,7 +91,7 @@
       i Columns selected: mpg, disp
       i For multiple columns, use `value_diffs_stacked()`
 
-# value_diffs_stacked works
+# value_diffs_stacked() works
 
     Code
       value_diffs_stacked(comp, c(mpg, disp))
@@ -118,10 +118,10 @@
       4 disp   109   108   Datsun 710    
       5 disp   259   258   Hornet 4 Drive
 
-# value_diffs_all() works
+# value_diffs_stacked() works without column
 
     Code
-      value_diffs_all(comp)
+      value_diffs_stacked(comp)
     Output
       # A tibble: 5 x 4
         column val_a val_b car           
@@ -132,19 +132,19 @@
       4 disp   109   108   Datsun 710    
       5 disp   259   258   Hornet 4 Drive
 
-# value_diffs_all coerces to char on incompatible ptypes
+# value_diffs_stacked() coerces to char on incompatible ptypes
 
     Code
-      as_tibble(value_diffs_all(comp))
+      value_diffs_stacked(comp)
     Message
-      i values converted to character
+      i Columns converted to character: val_a
     Output
       # A tibble: 5 x 4
         column val_a val_b car           
-        <chr>  <chr> <chr> <chr>         
-      1 mpg    14.3  16.3  Duster 360    
-      2 mpg    24.4  26.4  Merc 240D     
-      3 cyl    6     <NA>  Hornet 4 Drive
+        <chr>  <chr> <dbl> <chr>         
+      1 mpg    14.3   16.3 Duster 360    
+      2 mpg    24.4   26.4 Merc 240D     
+      3 cyl    6      NA   Hornet 4 Drive
       4 disp   109   108   Datsun 710    
       5 disp   259   258   Hornet 4 Drive
 

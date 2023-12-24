@@ -1,10 +1,10 @@
-get_by_vars <- function(by_quo, table_a, table_b, call = caller_env()) {
-  cols_a <- try_fetch(
-    eval_select(by_quo, table_a, allow_rename = FALSE, allow_empty = FALSE),
+get_by_names <- function(table_a, table_b, by, call = caller_env()) {
+  cols_a <- withCallingHandlers(
+    eval_select(by, table_a, allow_rename = FALSE, allow_empty = FALSE),
     error = rethrow_by_select_error("table_a", call)
   )
-  cols_b <- try_fetch(
-    eval_select(by_quo, table_b, allow_rename = FALSE, allow_empty = FALSE),
+  cols_b <- withCallingHandlers(
+    eval_select(by, table_b, allow_rename = FALSE, allow_empty = FALSE),
     error = rethrow_by_select_error("table_b", call)
   )
   if (!identical(names(cols_a), names(cols_b))) {

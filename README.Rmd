@@ -57,16 +57,36 @@ comparison
 Use `value_diffs()` to see the values that are different.
 
 ```{r}
-value_diffs(comparison, disp)
-value_diffs_stacked(comparison, column = c(mpg, disp))
+comparison |>
+  value_diffs(disp)
+comparison |>
+  value_diffs_stacked(c(mpg, disp))
 ```
-
-Use `slice_diffs()` to get the rows with differing values from one or both tables.
+Use `weave_diffs_*()` to see the differing values in context.
 
 ```{r}
-slice_diffs(example_df_a, comparison)
-slice_diffs(example_df_b, comparison)
-slice_diffs_both(example_df_a, example_df_b, comparison)
+comparison |>
+  weave_diffs_wide(disp)
+comparison |>
+  weave_diffs_wide(c(mpg, disp))
+comparison |>
+  weave_diffs_long(disp)
+```
+
+Use `slice_diffs()` to get the rows with differing values from one table. 
+
+```{r}
+comparison |>
+  slice_diffs("a", mpg)
+```
+
+Use `slice_unmatched()` to get the rows unmatched rows from one or both tables.
+
+```{r}
+comparison |>
+  slice_unmatched("a")
+comparison |>
+  slice_unmatched_both()
 ```
 
 Use `summary()` to see what kind of differences were found

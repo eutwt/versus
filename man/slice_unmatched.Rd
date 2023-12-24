@@ -3,36 +3,35 @@
 \name{slice_unmatched}
 \alias{slice_unmatched}
 \alias{slice_unmatched_both}
-\title{Show rows in only one table}
+\title{Get rows in only one table}
 \usage{
-slice_unmatched(table, comparison)
+slice_unmatched(comparison, table)
 
-slice_unmatched_both(table_a, table_b, comparison)
+slice_unmatched_both(comparison)
 }
 \arguments{
-\item{table}{A data frame. One of \code{table_a} or \code{table_b} used to
-create \code{comparison}}
-
 \item{comparison}{The output of \code{compare()}}
 
-\item{table_a}{The data frame\code{table_a} used to create \code{comparison}}
-
-\item{table_b}{The data frame\code{table_b} used to create \code{comparison}}
+\item{table}{One of \code{"a"} or \code{"b"} indicating which of the tables used to
+create \code{comparison} should be sliced}
 }
 \value{
-\item{\code{slice_unmatched()}}{The input \code{table} is filtered to the rows
-\code{comparison} shows as only appearing in \code{table}}
+\item{\code{slice_unmatched()}}{The table identified by \code{table} is filtered
+to the rows \code{comparison} shows as not appearing in the other table}
 \item{\code{slice_unmatched_both()}}{The output of \code{slice_unmatched()} for both input
 tables row-stacked with a column \code{table} indicating which table the row
 is from. The output contains only columns present in both tables.}
 }
 \description{
-Show rows in only one table
+Get rows in only one table
 }
 \examples{
 comp <- compare(example_df_a, example_df_b, by = car)
-example_df_a |> slice_unmatched(comp)
-# slice_unmatched() output is the same as
+comp |> slice_unmatched("a")
+comp |> slice_unmatched("b")
+
+# slice_unmatched(comp, "a") output is the same as
 example_df_a |> dplyr::anti_join(example_df_b, by = comp$by$column)
-slice_unmatched_both(example_df_a, example_df_b, comp)
+
+comp |> slice_unmatched_both()
 }

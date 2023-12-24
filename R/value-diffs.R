@@ -1,5 +1,5 @@
-#' Show the differing values from a comparison
-
+#' Get the differing values from a comparison
+#'
 #' @param comparison The output of \code{compare()}
 #' @param column <[`tidy-select`][versus_tidy_select]>. The output will show the differing values
 #' for the provided columns.
@@ -25,62 +25,54 @@
 #' @rdname value-diffs
 #' @export
 value_diffs <- function(comparison, column) {
-  column <- enquo(column)
   assert_is_comparison(enquo(comparison))
+  column <- enquo(column)
   column_loc <- get_cols_from_comparison(comparison, column)
-  if (length(column_loc) != 1) {
-    cols_selected <- dottize(names(column_loc), 30)
-    cli_abort(c("Must select only one column.",
-      i = "Columns selected: {cols_selected}",
-      i = "For multiple columns, use `value_diffs_stacked()`"
-    ))
-  }
-  fsubset(comparison$intersection, column_loc, "value_diffs")[[1]][[1]]
+  assert_is_single_column(column_loc)
+
+  diff_rows <- fsubset(comparison$intersection, column_loc, "diff_rows")[[1]][[1]]
+  col <- names(column_loc)
+  a <- comparison$input$value$a %>%
+    fsubset(diff_rows$row_a, col) %>%
+    rename(!!glue("{col}_a") := !!sym(col))
+  b <- comparison$input$value$b %>%
+    fsubset(diff_rows$row_b, c(col, comparison$by$column)) %>%
+    rename(!!glue("{col}_b") := !!sym(col))
+  tibble(a, b)
 }
 
 #' @rdname value-diffs
 #' @export
-value_diffs_stacked <- function(comparison, column) {
-  column <- enquo(column)
+value_diffs_stacked <- function(comparison, column = everything()) {
   assert_is_comparison(enquo(comparison))
+  column <- enquo(column)
 
-  conform <- function(value_diffs, col_name) {
-    value_diffs %>%
-      rename_with(\(x) replace(x, seq(2), paste0("val_", c("a", "b")))) %>%
+  get_value_diff_for_stack <- function(comparison, col_name) {
+    value_diffs(comparison, all_of(col_name)) %>%
+      frename(\(x) replace(x, 1:2, paste0("val_", c("a", "b")))) %>%
       mutate(column = .env$col_name, .before = 1)
   }
-  conform_with_coerce <- function(...) {
-    conform(...) %>% mutate(across(c(val_a, val_b), as.character))
-  }
 
-  try_fetch(
-    stack_value_diffs(comparison, column, pre_stack_fun = conform),
-    vctrs_error_ptype2 = \(e) {
-      # if we can't bind_rows() due to incompatible ptypes, convert to character first
-      cli_alert_info("values converted to character")
-      stack_value_diffs(comparison, column, pre_stack_fun = conform_with_coerce)
-    }
-  )
-}
+  diff_cols <- identify_diff_cols(comparison, column) %0%
+    get_cols_from_comparison(comparison, column)
 
-#' @rdname value-diffs
-#' @export
-value_diffs_all <- function(comparison) {
-  value_diffs_stacked(comparison, everything())
+  names(diff_cols) %>%
+    lapply(get_value_diff_for_stack, comparison = comparison) %>%
+    ensure_ptype_compatible() %>%
+    bind_rows()
 }
 
 # Helpers -------------------
 
-stack_value_diffs <- function(comparison, column, pre_stack_fun, call = caller_env()) {
-  column_locs <- get_cols_from_comparison(comparison, column, call = call)
-  is_selected <- seq_len(nrow(comparison$intersection)) %in% column_locs
-  has_value_diffs <- comparison$intersection$n_diffs > 0
-  to_stack <- which(is_selected & has_value_diffs) %0% which.max(is_selected)
-
-  Map(
-    pre_stack_fun,
-    comparison$intersection$value_diffs[to_stack],
-    comparison$intersection$column[to_stack]
-  ) %>%
-    bind_rows()
+assert_is_single_column <- function(column_loc, call = caller_env()) {
+  if (length(column_loc) == 1) {
+    return(invisible())
+  }
+  cols_selected <- dottize(names(column_loc), 30)
+  message <- c(
+    "Must select only one column.",
+    i = "Columns selected: {cols_selected}",
+    i = "For multiple columns, use `value_diffs_stacked()`"
+  )
+  cli_abort(message, call = call)
 }
