@@ -61,7 +61,6 @@ get_cols_from_comparison <- function(
     allow_empty = FALSE,
     call = caller_env()) {
   rethrow_oob <- function(e) {
-    column_arg <- shorten(glue("column = {as_label(column)}"), 50)
     message <- c(
       "Must select columns from `comparison$intersection`",
       i = "column `{e$i}` is not part of the supplied comparison"
