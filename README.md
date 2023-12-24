@@ -61,11 +61,14 @@ example_df_b
 #> 10 Mazda RX4 Wag   2.88  21     110     6  160      4  3.9      0
 ```
 
-Use `compare()` to see
+Use `compare()` to create a comparison of two tables.
 
-- counts of differing values in each column - `compare()$intersection`
-- columns in only one table - `compare()$unmatched_cols`
-- rows in only one table - `compare()$unmatched_rows`
+A comparison contains:
+
+- `compare()$intersection`: columns in both tables and rows with
+  differing values
+- `compare()$unmatched_cols`: columns in only one table
+- `compare()$unmatched_rows`: rows in only one table
 
 ``` r
 comparison <- compare(example_df_a, example_df_b, by = car)
