@@ -138,16 +138,32 @@ test_that("allow_bothNA works", {
   expect_equal(1, filter(comp$intersection, column == "y")$n_diffs)
 
   comp <- compare(
+    tibble(x = 1, y = 1),
+    tibble(x = 1, y = NA),
+    by = x,
+    allow_both_NA = FALSE
+  )
+  expect_equal(1, filter(comp$intersection, column == "y")$n_diffs)
+
+  comp <- compare(
     tibble(x = 1, y = NA),
     tibble(x = 1, y = NA),
     by = x,
     allow_both_NA = TRUE
   )
   expect_equal(0, filter(comp$intersection, column == "y")$n_diffs)
+
+  comp <- compare(
+    tibble(x = 1, y = 1),
+    tibble(x = 1, y = NA),
+    by = x,
+    allow_both_NA = FALSE
+  )
+  expect_equal(1, filter(comp$intersection, column == "y")$n_diffs)
 })
 
 test_that("compare() works when table arguemnts aren't symbols", {
-  comp <- compare(test_df_a %>% mutate(x = 1), test_df_b, by = car, allow_both_NA = FALSE)
+  comp <- compare(test_df_a %>% mutate(x = 1), test_df_b, by = car)
   expect_equal(comp$tables$expr[1], "test_df_a %>% mutate(x = 1)")
 })
 
