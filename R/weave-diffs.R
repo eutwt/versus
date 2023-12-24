@@ -14,10 +14,10 @@
 #'
 #' @examples
 #' comp <- compare(example_df_a, example_df_b, by = car)
-#' comp |> weave_diffs_wide(comp, column = disp)
-#' comp |> weave_diffs_wide(comp, column = c(mpg, disp))
-#' comp |> weave_diffs_long(comp, column = disp)
-#' comp |> weave_diffs_long(comp, column = c(mpg, disp))
+#' comp |> weave_diffs_wide(disp)
+#' comp |> weave_diffs_wide(c(mpg, disp))
+#' comp |> weave_diffs_long(disp)
+#' comp |> weave_diffs_long(c(mpg, disp))
 
 #' @rdname weave_diffs
 #' @export
