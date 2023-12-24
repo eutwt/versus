@@ -83,7 +83,6 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE) {
     lapply(get_diff_rows,
       table_a = table_a,
       table_b = table_b,
-      by = by_vars,
       matches = matches,
       allow_both_NA = allow_both_NA
     )
@@ -199,7 +198,7 @@ get_contents <- function(table_a, table_b, by) {
   out
 }
 
-get_diff_rows <- function(col, table_a, table_b, by, matches, allow_both_NA) {
+get_diff_rows <- function(col, table_a, table_b, matches, allow_both_NA) {
   col_a <- fsubset(table_a, matches$needles$common, col)[[1]]
   col_b <- fsubset(table_b, matches$haystack$common, col)[[1]]
   not_equal <- which(not_equal(col_a, col_b, allow_both_NA))
