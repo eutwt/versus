@@ -415,3 +415,16 @@
       4 b         6     2
       
 
+# data.table copying displays message when input is big
+
+    Code
+      inform_dt_copy(dt, test_df_b, env = dt_copy)
+    Message
+      i `compare()` creates a deep copy of data.table inputs.
+      Use `setDF()` first for a shallow copy
+
+---
+
+    Code
+      inform_dt_copy(dt, test_df_b, env = dt_copy)
+

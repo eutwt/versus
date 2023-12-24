@@ -49,3 +49,20 @@
       ! Problem with argument `table = disp`
       i `table` must be a single character value: "a" or "b"
 
+---
+
+    Code
+      slice_diffs(comp, "z")
+    Condition
+      Error in `slice_diffs()`:
+      ! Problem with argument `table = "z"`
+      i `table` must be either "a" or "b"
+
+---
+
+    Code
+      slice_diffs(comp)
+    Condition
+      Error in `slice_diffs()`:
+      ! `table` is absent but must be supplied.
+

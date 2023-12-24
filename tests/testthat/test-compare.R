@@ -205,3 +205,11 @@ test_that("summary() works", {
     )
   )
 })
+
+test_that("data.table copying displays message when input is big", {
+  dt_copy <- list(informed = FALSE, is_big = \(x) object.size(x) > 2)
+  dt <- data.table::as.data.table(test_df_a)
+  expect_snapshot(inform_dt_copy(dt, test_df_b, env = dt_copy))
+  dt_copy <- list(informed = TRUE, is_big = \(x) object.size(x) > 2)
+  expect_snapshot(inform_dt_copy(dt, test_df_b, env = dt_copy))
+})

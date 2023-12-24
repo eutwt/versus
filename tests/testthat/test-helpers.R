@@ -65,3 +65,9 @@ test_that("ensure_ptype_compatible() works", {
     post_coerce
   )
 })
+
+test_that("fsubset() works", {
+  fun <- function(df, i, j) fsubset(df, i, j)
+  expect_identical(fun(example_df_a, NULL, 1), example_df_a[0, 1])
+  expect_identical(fun(example_df_a, 0, 1), example_df_a[0, 1])
+})

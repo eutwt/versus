@@ -20,6 +20,8 @@ test_that("Error when `table` isn't 'a' or 'b'", {
   comp <- compare(example_df_a, example_df_b, by = c(car, drat))
   expect_snapshot(slice_diffs(comp, a, disp), error = TRUE)
   expect_snapshot(slice_diffs(comp, disp), error = TRUE)
+  expect_snapshot(slice_diffs(comp, "z"), error = TRUE)
+  expect_snapshot(slice_diffs(comp), error = TRUE)
 })
 
 test_that("slice_diffs works when there are no diffs", {

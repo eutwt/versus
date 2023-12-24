@@ -151,10 +151,13 @@ contents <- function(table) {
 
 # once-per-session information / warnings
 
-info_environment <- as_environment(list(dt_copy = FALSE))
+info_envs <- new_environment()
+info_envs$dt_copy <-
+  list(informed = FALSE, is_big = \(x) object.size(x) > 25e7) %>%
+  as_environment()
 
-inform_dt_copy <- function(table_a, table_b, info_env = info_environment) {
-  if (info_env$dt_copy) {
+inform_dt_copy <- function(table_a, table_b, env = info_envs$dt_copy) {
+  if (env$informed) {
     return(invisible())
   }
   message <- c(
@@ -162,9 +165,9 @@ inform_dt_copy <- function(table_a, table_b, info_env = info_environment) {
     "Use `setDF()` first for a shallow copy"
   )
   for (table in list(table_a, table_b)) {
-    if (inherits(table, "data.table") && object.size(table) > 25e7) {
+    if (inherits(table, "data.table") && env$is_big(table)) {
       cli_inform(col_grey(message))
-      info_env$dt_copy <- TRUE
+      env$informed <- TRUE
       return(invisible())
     }
   }
