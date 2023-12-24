@@ -217,6 +217,7 @@ utils::globalVariables(c(
   "class_b",
   "column",
   "common",
+  "diff_rows",
   "unmatched",
   "versus_in_a",
   "versus_in_b",
