@@ -3,7 +3,7 @@
 #' @inheritParams slice_diffs
 #'
 #' @return
-#' \item{\code{weave_diffs_wide()}}{The input data filtered to rows where
+#' \item{\code{weave_diffs_wide()}}{The input \code{table_a} filtered to rows where
 #' differing values exist for one of the columns selected by \code{column}.
 #' The selected columns with differences will be in the result twice, one for
 #' each input table.}

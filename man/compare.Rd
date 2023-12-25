@@ -61,7 +61,7 @@ as the \code{comparison} argument when exploring the differences further with ot
 versus functions e.g. \verb{slice_*()} and \verb{weave_*()}.
 
 Note that if the input is a data.table, a deep copy is made to prevent future
-changes to the table affecting the stored comparison. To avoid a deep copy,
+changes to the table affecting the comparison. To avoid a deep copy,
 use \code{setDF()} before supplying to \code{compare()}.
 }
 \examples{
