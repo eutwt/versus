@@ -16,4 +16,5 @@
 #' @importFrom tibble tibble rownames_to_column enframe
 #' @importFrom collapse ss add_vars frename gsplit
 #' @importFrom data.table fcase fcoalesce copy
+#' @useDynLib versus, .registration = TRUE
 "_PACKAGE"

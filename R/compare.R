@@ -208,26 +208,6 @@ get_contents <- function(table_a, table_b, by) {
   out
 }
 
-get_diff_rows <- function(col, table_a, table_b, matches, allow_both_NA) {
-  col_a <- fsubset(table_a, matches$needles$common, col)[[1]]
-  col_b <- fsubset(table_b, matches$haystack$common, col)[[1]]
-  not_equal <- which(not_equal(col_a, col_b, allow_both_NA))
-  tibble(
-    row_a = matches$needles$common[not_equal] %||% integer(0),
-    row_b = matches$haystack$common[not_equal] %||% integer(0)
-  )
-}
-
-not_equal <- function(col_a, col_b, allow_both_NA) {
-  neq <- col_a != col_b
-  if (allow_both_NA) {
-    out <- fcoalesce(neq, is.na(col_a) != is.na(col_b))
-  } else {
-    out <- fcoalesce(neq, is.na(col_a) | is.na(col_b))
-  }
-  out
-}
-
 store_tables <- function(table_a, table_b) {
   inform_dt_copy(table_a, table_b)
   env <- new_environment()

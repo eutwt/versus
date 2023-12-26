@@ -29,3 +29,5 @@ Depends:
     R (>= 4.1.0)
 LazyData: true
 Config/Needs/website: rmarkdown
+LinkingTo: 
+    cpp11
