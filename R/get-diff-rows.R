@@ -15,17 +15,13 @@ can_use_cpp <- function(col, table_a, table_b, matches, allow_both_NA) {
   if (is_null(matches$needles$common) || !allow_both_NA) {
     return(FALSE)
   }
-  cpp_classes <- c("character", "integer", "numeric")
+  cpp_classes <- c("integer", "numeric")
   col_class <- unique(c(class(table_a[[col]]), class(table_b[[col]])))
   length(col_class) == 1 && col_class %in% cpp_classes
 }
 
 cpp_get_diff_rows <- function(vec_a, vec_b, idx_a, idx_b) {
   UseMethod("cpp_get_diff_rows")
-}
-
-cpp_get_diff_rows.character <- function(vec_a, vec_b, idx_a, idx_b) {
-  get_diff_rows_chr(vec_a, vec_b, idx_a, idx_b)
 }
 
 cpp_get_diff_rows.numeric <- function(vec_a, vec_b, idx_a, idx_b) {
