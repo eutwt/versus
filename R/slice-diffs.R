@@ -27,7 +27,7 @@ slice_diffs <- function(comparison, table, column = everything()) {
 slice_diffs_impl <- function(comparison, table, column, j, call = caller_env()) {
   diff_cols <- identify_diff_cols(comparison, column, call = call)
   if (is_empty(diff_cols)) {
-    out <- fsubset(comparison$input$value[[table]], 0, j)
+    out <- fsubset(comparison$input$value[[table]], integer(0), j)
     return(as_tibble(out))
   }
   rows <- fsubset(comparison$intersection, diff_cols, "diff_rows")[[1]] %>%
