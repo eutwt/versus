@@ -15,9 +15,17 @@ can_use_cpp <- function(col, table_a, table_b, matches, allow_both_NA) {
   if (!allow_both_NA) {
     return(FALSE)
   }
-  cpp_classes <- c("integer", "numeric")
-  col_class <- unique(c(class(table_a[[col]]), class(table_b[[col]])))
-  length(col_class) == 1 && col_class %in% cpp_classes
+  class_a <- class(table_a[[col]])
+  class_b <- class(table_b[[col]])
+  if (!identical(class_a, class_b)) {
+    return(FALSE)
+  }
+  for (cpp_class in c("integer", "numeric", "Date")) {
+    if (identical(class_a, cpp_class)) {
+      return(TRUE)
+    }
+  }
+  return(FALSE)
 }
 
 cpp_get_diff_rows <- function(vec_a, vec_b, idx_a, idx_b) {
@@ -25,6 +33,10 @@ cpp_get_diff_rows <- function(vec_a, vec_b, idx_a, idx_b) {
 }
 
 cpp_get_diff_rows.numeric <- function(vec_a, vec_b, idx_a, idx_b) {
+  get_diff_rows_dbl(vec_a, vec_b, idx_a, idx_b)
+}
+
+cpp_get_diff_rows.Date <- function(vec_a, vec_b, idx_a, idx_b) {
   get_diff_rows_dbl(vec_a, vec_b, idx_a, idx_b)
 }
 
