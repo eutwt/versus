@@ -39,3 +39,28 @@ data_frame get_diff_rows_dbl(doubles vec_a, doubles vec_b, integers idx_a, integ
     return std::move(out);
 }
 
+[[cpp11::register]]
+list split_matches(integers needles, integers haystack) {
+    // split `matches` into 
+    //   a = vector of rows only in `table_a` 
+    //   b = vector of rows only in `table_b`
+    //   common = tibble of indices from both tables
+    int n = needles.size();
+    writable::integers a, b, common_a, common_b;
+
+    for (int i = 0; i < n; ++i) {
+        if (needles[i] == NA_INTEGER) {
+            b.push_back(haystack[i]);
+        } else if (haystack[i] == NA_INTEGER) {
+            a.push_back(needles[i]);
+        } else {
+            common_a.push_back(needles[i]);
+            common_b.push_back(haystack[i]);
+        }
+    }
+    writable::data_frame common({"a"_nm = common_a, "b"_nm = common_b});
+    common.attr("class") = {"tbl_df", "tbl", "data.frame"};
+    writable::list out({"common"_nm = common, "a"_nm = a, "b"_nm = b});
+    return std::move(out);
+}
+

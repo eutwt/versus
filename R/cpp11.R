@@ -7,3 +7,7 @@ get_diff_rows_int <- function(vec_a, vec_b, idx_a, idx_b) {
 get_diff_rows_dbl <- function(vec_a, vec_b, idx_a, idx_b) {
   .Call(`_versus_get_diff_rows_dbl`, vec_a, vec_b, idx_a, idx_b)
 }
+
+split_matches <- function(needles, haystack) {
+  .Call(`_versus_split_matches`, needles, haystack)
+}

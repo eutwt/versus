@@ -19,11 +19,19 @@ extern "C" SEXP _versus_get_diff_rows_dbl(SEXP vec_a, SEXP vec_b, SEXP idx_a, SE
     return cpp11::as_sexp(get_diff_rows_dbl(cpp11::as_cpp<cpp11::decay_t<doubles>>(vec_a), cpp11::as_cpp<cpp11::decay_t<doubles>>(vec_b), cpp11::as_cpp<cpp11::decay_t<integers>>(idx_a), cpp11::as_cpp<cpp11::decay_t<integers>>(idx_b)));
   END_CPP11
 }
+// code.cpp
+list split_matches(integers needles, integers haystack);
+extern "C" SEXP _versus_split_matches(SEXP needles, SEXP haystack) {
+  BEGIN_CPP11
+    return cpp11::as_sexp(split_matches(cpp11::as_cpp<cpp11::decay_t<integers>>(needles), cpp11::as_cpp<cpp11::decay_t<integers>>(haystack)));
+  END_CPP11
+}
 
 extern "C" {
 static const R_CallMethodDef CallEntries[] = {
     {"_versus_get_diff_rows_dbl", (DL_FUNC) &_versus_get_diff_rows_dbl, 4},
     {"_versus_get_diff_rows_int", (DL_FUNC) &_versus_get_diff_rows_int, 4},
+    {"_versus_split_matches",     (DL_FUNC) &_versus_split_matches,     2},
     {NULL, NULL, 0}
 };
 }

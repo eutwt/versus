@@ -146,37 +146,28 @@ locate_matches <- function(table_a, table_b, by) {
     fsubset(table_a, j = by),
     fsubset(table_b, j = by),
     relationship = "one-to-one",
-    no_match = -1L,
-    remaining = -2L
+    remaining = NA_integer_
   )
-  match_group <- fcase(
-    matches$haystack == -1, "a",
-    matches$needles == -2, "b",
-    default = "common"
-  )
-  out <- lapply(matches, gsplit, match_group, use.g.names = TRUE)
-  out$haystack$a <- NULL
-  out$needles$b <- NULL
-  out
+  exec(split_matches, !!!matches)
 }
 
 get_unmatched_rows <- function(table_a, table_b, by, matches) {
   unmatched <- list(
-    a = fsubset(table_a, matches$needles$a, by),
-    b = fsubset(table_b, matches$haystack$b, by)
+    a = fsubset(table_a, matches$a, by),
+    b = fsubset(table_b, matches$b, by)
   )
   unmatched %>%
     bind_rows(.id = "table") %>%
-    mutate(row = with(matches, c(needles$a, haystack$b)) %||% integer(0)) %>%
+    mutate(row = with(matches, c(a, b))) %>%
     as_tibble()
 }
 
 converge <- function(table_a, table_b, by, matches) {
   common_cols <- setdiff(intersect(names(table_a), names(table_b)), by)
 
-  by_a <- fsubset(table_a, matches$needles$common, by)
-  common_a <- fsubset(table_a, matches$needles$common, common_cols)
-  common_b <- fsubset(table_b, matches$haystack$common, common_cols)
+  by_a <- fsubset(table_a, matches$common$a, by)
+  common_a <- fsubset(table_a, matches$common$a, common_cols)
+  common_b <- fsubset(table_b, matches$common$b, common_cols)
 
   add_vars(
     by_a,

@@ -3,8 +3,8 @@ get_diff_rows <- function(col, table_a, table_b, matches, allow_both_NA) {
     cpp_get_diff_rows(
       table_a[[col]],
       table_b[[col]],
-      matches$needles$common,
-      matches$haystack$common
+      matches$common$a,
+      matches$common$b
     )
   } else {
     r_get_diff_rows(col, table_a, table_b, matches, allow_both_NA)
@@ -12,7 +12,7 @@ get_diff_rows <- function(col, table_a, table_b, matches, allow_both_NA) {
 }
 
 can_use_cpp <- function(col, table_a, table_b, matches, allow_both_NA) {
-  if (is_null(matches$needles$common) || !allow_both_NA) {
+  if (!allow_both_NA) {
     return(FALSE)
   }
   cpp_classes <- c("integer", "numeric")
@@ -33,13 +33,11 @@ cpp_get_diff_rows.integer <- function(vec_a, vec_b, idx_a, idx_b) {
 }
 
 r_get_diff_rows <- function(col, table_a, table_b, matches, allow_both_NA) {
-  col_a <- fsubset(table_a, matches$needles$common, col)[[1]]
-  col_b <- fsubset(table_b, matches$haystack$common, col)[[1]]
-  not_equal <- which(not_equal(col_a, col_b, allow_both_NA))
-  tibble(
-    row_a = matches$needles$common[not_equal] %||% integer(0),
-    row_b = matches$haystack$common[not_equal] %||% integer(0)
-  )
+  col_a <- fsubset(table_a, matches$common$a, col)[[1]]
+  col_b <- fsubset(table_b, matches$common$b, col)[[1]]
+  matches$common %>%
+    fsubset(not_equal(col_a, col_b, allow_both_NA)) %>%
+    rename_with(\(x) paste0("row_", x))
 }
 
 not_equal <- function(col_a, col_b, allow_both_NA) {
