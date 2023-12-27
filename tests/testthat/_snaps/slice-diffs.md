@@ -66,3 +66,22 @@
       Error in `slice_diffs()`:
       ! `table` is absent but must be supplied.
 
+# Error on slice_diffs() with empty selection
+
+    Code
+      slice_diffs(comp, "a", where(is.factor))
+    Condition
+      Error in `slice_diffs()`:
+      ! Problem with argument `column = where(is.factor)`:
+      * Must select at least one item.
+
+# Error on value_diffs when column doesn't exist
+
+    Code
+      slice_diffs(comp, "a", bear)
+    Condition
+      Error in `slice_diffs()`:
+      ! Problem with argument `column = bear`:
+      * Must select columns from `comparison$intersection`
+      i column `bear` is not part of the supplied comparison
+

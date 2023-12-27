@@ -33,3 +33,13 @@ test_that("slice_diffs works when there are no diffs", {
   comp <- compare(example_df_a, example_df_b, by = car)
   expect_identical(slice_diffs(comp, "a", wt), as_tibble(example_df_a[0, ]))
 })
+
+test_that("Error on slice_diffs() with empty selection", {
+  comp <- compare(test_df_a, test_df_b, by = car)
+  expect_snapshot(slice_diffs(comp, "a", where(is.factor)), error = TRUE)
+})
+
+test_that("Error on value_diffs when column doesn't exist", {
+  comp <- compare(test_df_a, test_df_b, by = car)
+  expect_snapshot(slice_diffs(comp, "a", bear), error = TRUE)
+})
