@@ -100,3 +100,59 @@
       ! Problem with argument `comparison = example_df_a`
       i `comparison` must be the output of `versus::compare()`
 
+# Error when `column` isn't a comparison
+
+    Code
+      weave_diffs_long(example_df_a, disp)
+    Condition
+      Error in `weave_diffs_long()`:
+      ! Problem with argument `comparison = example_df_a`
+      i `comparison` must be the output of `versus::compare()`
+
+---
+
+    Code
+      weave_diffs_wide(example_df_a, disp)
+    Condition
+      Error in `weave_diffs_wide()`:
+      ! Problem with argument `comparison = example_df_a`
+      i `comparison` must be the output of `versus::compare()`
+
+# Error on weave_diffs() with empty selection
+
+    Code
+      weave_diffs_long(comp, where(is.factor))
+    Condition
+      Error in `weave_diffs_long()`:
+      ! Problem with argument `column = where(is.factor)`:
+      * Must select at least one item.
+
+---
+
+    Code
+      weave_diffs_wide(comp, where(is.factor))
+    Condition
+      Error in `weave_diffs_wide()`:
+      ! Problem with argument `column = where(is.factor)`:
+      * Must select at least one item.
+
+# Error on value_diffs when column doesn't exist
+
+    Code
+      weave_diffs_long(comp, bear)
+    Condition
+      Error in `weave_diffs_long()`:
+      ! Problem with argument `column = bear`:
+      * Must select columns from `comparison$intersection`
+      i column `bear` is not part of the supplied comparison
+
+---
+
+    Code
+      weave_diffs_wide(comp, bear)
+    Condition
+      Error in `weave_diffs_wide()`:
+      ! Problem with argument `column = bear`:
+      * Must select columns from `comparison$intersection`
+      i column `bear` is not part of the supplied comparison
+
