@@ -5,4 +5,7 @@
 .DS_Store
 .pre-commit-config.yaml
 docs
-todo.txt
+*.txt
+CRAN-SUBMISSION
+codecov.yml
+revdep/
