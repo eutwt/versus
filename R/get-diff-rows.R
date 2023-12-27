@@ -29,19 +29,13 @@ can_use_cpp <- function(col, table_a, table_b, matches, allow_both_NA) {
 }
 
 cpp_get_diff_rows <- function(vec_a, vec_b, idx_a, idx_b) {
-  UseMethod("cpp_get_diff_rows")
-}
-
-cpp_get_diff_rows.numeric <- function(vec_a, vec_b, idx_a, idx_b) {
-  get_diff_rows_dbl(vec_a, vec_b, idx_a, idx_b)
-}
-
-cpp_get_diff_rows.Date <- function(vec_a, vec_b, idx_a, idx_b) {
-  get_diff_rows_dbl(vec_a, vec_b, idx_a, idx_b)
-}
-
-cpp_get_diff_rows.integer <- function(vec_a, vec_b, idx_a, idx_b) {
-  get_diff_rows_int(vec_a, vec_b, idx_a, idx_b)
+  class_a <- class(vec_a)
+  if (identical(class_a, "numeric") || identical(class_a, "Date")) {
+    return(get_diff_rows_dbl(vec_a, vec_b, idx_a, idx_b))
+  }
+  if (identical(class_a, "integer")) {
+    return(get_diff_rows_int(vec_a, vec_b, idx_a, idx_b))
+  }
 }
 
 r_get_diff_rows <- function(col, table_a, table_b, matches, allow_both_NA) {

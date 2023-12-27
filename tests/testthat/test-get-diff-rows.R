@@ -1,4 +1,49 @@
-test_that("get_diff_rows_dbl()", {
+test_that("get_diff_rows_int() for numeric handles ordering", {
+  empty <- tibble(row_a = integer(0), row_b = integer(0))
+  x <- 1:2
+  expect_identical(
+    cpp_get_diff_rows(x, x, 1:2, 2:1),
+    tibble(row_a = 1:2, row_b = 2:1)
+  )
+  expect_identical(
+    cpp_get_diff_rows(x, x, 2:1, 1:2),
+    tibble(row_a = 2:1, row_b = 1:2)
+  )
+  expect_identical(cpp_get_diff_rows(x, x, 2:1, 2:1), empty)
+  expect_identical(cpp_get_diff_rows(x, x, 1:2, 1:2), empty)
+})
+
+test_that("get_diff_rows_dbl() for numeric handles ordering", {
+  empty <- tibble(row_a = integer(0), row_b = integer(0))
+  x <- c(3.1, 4.1)
+  expect_identical(
+    cpp_get_diff_rows(x, x, 1:2, 2:1),
+    tibble(row_a = 1:2, row_b = 2:1)
+  )
+  expect_identical(
+    cpp_get_diff_rows(x, x, 2:1, 1:2),
+    tibble(row_a = 2:1, row_b = 1:2)
+  )
+  expect_identical(cpp_get_diff_rows(x, x, 2:1, 2:1), empty)
+  expect_identical(cpp_get_diff_rows(x, x, 1:2, 1:2), empty)
+})
+
+test_that("get_diff_rows_dbl() for Dates handles ordering", {
+  empty <- tibble(row_a = integer(0), row_b = integer(0))
+  x <- as.Date("2023-01-01") + 0:1
+  expect_identical(
+    cpp_get_diff_rows(x, x, 1:2, 2:1),
+    tibble(row_a = 1:2, row_b = 2:1)
+  )
+  expect_identical(
+    cpp_get_diff_rows(x, x, 2:1, 1:2),
+    tibble(row_a = 2:1, row_b = 1:2)
+  )
+  expect_identical(cpp_get_diff_rows(x, x, 2:1, 2:1), empty)
+  expect_identical(cpp_get_diff_rows(x, x, 1:2, 1:2), empty)
+})
+
+test_that("get_diff_rows_dbl() for numeric handles NAs", {
   empty <- tibble(row_a = integer(0), row_b = integer(0))
   one_one <- tibble(row_a = 1L, row_b = 1L)
 
@@ -8,7 +53,7 @@ test_that("get_diff_rows_dbl()", {
   expect_identical(cpp_get_diff_rows(2.1, 1.1, 1L, 1L), one_one)
 })
 
-test_that("get_diff_rows_dbl() works for dates", {
+test_that("get_diff_rows_dbl() for Dates handles NAs", {
   empty <- tibble(row_a = integer(0), row_b = integer(0))
   one_one <- tibble(row_a = 1L, row_b = 1L)
   date_a <- as.Date("2023-01-01")
@@ -21,7 +66,7 @@ test_that("get_diff_rows_dbl() works for dates", {
   expect_identical(cpp_get_diff_rows(date_a, date_b, 1L, 1L), one_one)
 })
 
-test_that("get_diff_rows_int()", {
+test_that("get_diff_rows_int() handles NAs", {
   empty <- tibble(row_a = integer(0), row_b = integer(0))
   one_one <- tibble(row_a = 1L, row_b = 1L)
 
