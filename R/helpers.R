@@ -1,7 +1,4 @@
 fsubset <- function(x, i, j) {
-  if (!missing(i) && (is_null(i) || identical(i, 0))) {
-    i <- integer(0)
-  }
   ss(x, i, j, check = FALSE)
 }
 
@@ -52,7 +49,7 @@ table_init <- function(comparison, cols = c("intersection", "by"), tbl = c("a", 
   # simulate a data frame with the same classes as table_[tbl]
   cols <- arg_match(cols)
   tbl <- arg_match(tbl)
-  fsubset(comparison$input$value[[tbl]], 0, comparison[[cols]]$column)
+  fsubset(comparison$input$value[[tbl]], integer(0), comparison[[cols]]$column)
 }
 
 get_cols_from_comparison <- function(
