@@ -146,37 +146,51 @@ locate_matches <- function(table_a, table_b, by) {
     fsubset(table_a, j = by),
     fsubset(table_b, j = by),
     relationship = "one-to-one",
-    no_match = -1L,
-    remaining = -2L
+    remaining = NA_integer_
   )
-  match_group <- fcase(
-    matches$haystack == -1, "a",
-    matches$needles == -2, "b",
-    default = "common"
+  split_matches(matches)
+}
+
+split_matches <- function(matches) {
+  # split matches into
+  # a: rows only in table_a
+  # b: rows only in table_b
+  # common: rows in both tables
+  which_a <- whichNA(matches$haystack)
+  which_b <- whichNA(matches$needles)
+  unmatched <- c(which_a, which_b)
+  if (is_empty(unmatched)) {
+    common <- matches
+  } else {
+    common <- fsubset(matches, -unmatched, check = TRUE)
+  }
+  common <- common %>%
+    frename(c("a", "b")) %>%
+    as_tibble()
+  list(
+    common = common,
+    a = fsubset(matches, which_a, "needles")[[1]],
+    b = fsubset(matches, which_b, "haystack")[[1]]
   )
-  out <- lapply(matches, gsplit, match_group, use.g.names = TRUE)
-  out$haystack$a <- NULL
-  out$needles$b <- NULL
-  out
 }
 
 get_unmatched_rows <- function(table_a, table_b, by, matches) {
   unmatched <- list(
-    a = fsubset(table_a, matches$needles$a, by),
-    b = fsubset(table_b, matches$haystack$b, by)
+    a = fsubset(table_a, matches$a, by),
+    b = fsubset(table_b, matches$b, by)
   )
   unmatched %>%
     bind_rows(.id = "table") %>%
-    mutate(row = with(matches, c(needles$a, haystack$b)) %||% integer(0)) %>%
+    mutate(row = with(matches, c(a, b))) %>%
     as_tibble()
 }
 
 converge <- function(table_a, table_b, by, matches) {
   common_cols <- setdiff(intersect(names(table_a), names(table_b)), by)
 
-  by_a <- fsubset(table_a, matches$needles$common, by)
-  common_a <- fsubset(table_a, matches$needles$common, common_cols)
-  common_b <- fsubset(table_b, matches$haystack$common, common_cols)
+  by_a <- fsubset(table_a, matches$common$a, by)
+  common_a <- fsubset(table_a, matches$common$a, common_cols)
+  common_b <- fsubset(table_b, matches$common$b, common_cols)
 
   add_vars(
     by_a,
@@ -209,13 +223,11 @@ get_contents <- function(table_a, table_b, by) {
 }
 
 get_diff_rows <- function(col, table_a, table_b, matches, allow_both_NA) {
-  col_a <- fsubset(table_a, matches$needles$common, col)[[1]]
-  col_b <- fsubset(table_b, matches$haystack$common, col)[[1]]
-  not_equal <- which(not_equal(col_a, col_b, allow_both_NA))
-  tibble(
-    row_a = matches$needles$common[not_equal] %||% integer(0),
-    row_b = matches$haystack$common[not_equal] %||% integer(0)
-  )
+  col_a <- fsubset(table_a, matches$common$a, col)[[1]]
+  col_b <- fsubset(table_b, matches$common$b, col)[[1]]
+  matches$common %>%
+    fsubset(not_equal(col_a, col_b, allow_both_NA)) %>%
+    frename(c("row_a", "row_b"))
 }
 
 not_equal <- function(col_a, col_b, allow_both_NA) {

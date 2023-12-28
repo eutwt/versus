@@ -428,3 +428,91 @@
     Code
       inform_dt_copy(dt, test_df_b, env = dt_copy)
 
+# locate_matches() handles unmatched rows correctly
+
+    Code
+      locate_matches(tibble(x = 1), tibble(x = 1), by = "x")
+    Output
+      $common
+      # A tibble: 1 x 2
+            a     b
+        <int> <int>
+      1     1     1
+      
+      $a
+      integer(0)
+      
+      $b
+      integer(0)
+      
+
+---
+
+    Code
+      locate_matches(tibble(x = 1), tibble(x = 2), by = "x")
+    Output
+      $common
+      # A tibble: 0 x 2
+      # i 2 variables: a <int>, b <int>
+      
+      $a
+      [1] 1
+      
+      $b
+      [1] 1
+      
+
+---
+
+    Code
+      locate_matches(tibble(x = 1:2), tibble(x = 2:3), by = "x")
+    Output
+      $common
+      # A tibble: 1 x 2
+            a     b
+        <int> <int>
+      1     2     1
+      
+      $a
+      [1] 1
+      
+      $b
+      [1] 2
+      
+
+---
+
+    Code
+      locate_matches(tibble(x = 1:2), tibble(x = 2), by = "x")
+    Output
+      $common
+      # A tibble: 1 x 2
+            a     b
+        <int> <int>
+      1     2     1
+      
+      $a
+      [1] 1
+      
+      $b
+      integer(0)
+      
+
+---
+
+    Code
+      locate_matches(tibble(x = 2), tibble(x = 1:2), by = "x")
+    Output
+      $common
+      # A tibble: 1 x 2
+            a     b
+        <int> <int>
+      1     1     2
+      
+      $a
+      integer(0)
+      
+      $b
+      [1] 1
+      
+
