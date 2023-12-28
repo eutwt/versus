@@ -18,7 +18,8 @@ test_that("missing values are handled correctly", {
 
   a <- as.POSIXct('1900-01-01')
   b <- as.POSIXct('1900-01-01', tz = "UTC")
-  x <- c(NA_real_, a, a, NA_real_, a)
-  y <- c(NA_real_, a, b, a, NA_real_)
+  na <- as.POSIXct(NA)
+  x <- c(na, a, a, na, a)
+  y <- c(na, a, b, a, na)
   expect_identical(not_equal(x, y, TRUE), 3:5)
 })
