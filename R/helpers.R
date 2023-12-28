@@ -122,7 +122,7 @@ dottize <- function(vec, max_size = 20) {
 
 itemize_row <- function(df, max_lines = 3, width = 50) {
   # similar to `capture.output(glimpse(df[1,]))`, boxed by max_lines x width
-  tdf <- fsubset(df, 1) %>%
+  tdf <- vec_slice(df, 1) %>%
     map_chr(format_glimpse) %>%
     shorten(width) %>%
     enframe()
