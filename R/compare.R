@@ -153,9 +153,9 @@ locate_matches <- function(table_a, table_b, by) {
 
 split_matches <- function(matches) {
   # split matches into
+  # common: rows in both tables
   # a: rows only in table_a
   # b: rows only in table_b
-  # common: rows in both tables
   which_a <- whichNA(matches$haystack)
   which_b <- whichNA(matches$needles)
   unmatched <- c(which_a, which_b)
