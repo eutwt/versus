@@ -1,8 +1,5 @@
-fsubset <- function(x, i, j) {
-  if (!missing(i) && (is_null(i) || identical(i, 0))) {
-    i <- integer(0)
-  }
-  ss(x, i, j, check = FALSE)
+fsubset <- function(x, i, j, check = FALSE) {
+  ss(x, i, j, check = check)
 }
 
 assert_table_is_a_or_b <- function(table, call = caller_env()) {
@@ -52,7 +49,7 @@ table_init <- function(comparison, cols = c("intersection", "by"), tbl = c("a", 
   # simulate a data frame with the same classes as table_[tbl]
   cols <- arg_match(cols)
   tbl <- arg_match(tbl)
-  fsubset(comparison$input$value[[tbl]], 0, comparison[[cols]]$column)
+  fsubset(comparison$input$value[[tbl]], integer(0), comparison[[cols]]$column)
 }
 
 get_cols_from_comparison <- function(
@@ -125,7 +122,7 @@ dottize <- function(vec, max_size = 20) {
 
 itemize_row <- function(df, max_lines = 3, width = 50) {
   # similar to `capture.output(glimpse(df[1,]))`, boxed by max_lines x width
-  tdf <- fsubset(df, 1) %>%
+  tdf <- vec_slice(df, 1) %>%
     map_chr(format_glimpse) %>%
     shorten(width) %>%
     enframe()

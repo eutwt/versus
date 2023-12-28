@@ -229,3 +229,15 @@ test_that("data.table copying displays message when input is big", {
   dt_copy <- list(informed = TRUE, is_big = \(x) object.size(x) > 2)
   expect_snapshot(inform_dt_copy(dt, test_df_b, env = dt_copy))
 })
+
+test_that("locate_matches() handles unmatched rows correctly", {
+  # all common
+  expect_snapshot(locate_matches(tibble(x = 1), tibble(x = 1), by = 'x'))
+  # all different
+  expect_snapshot(locate_matches(tibble(x = 1), tibble(x = 2), by = 'x'))
+  # some different in each table
+  expect_snapshot(locate_matches(tibble(x = 1:2), tibble(x = 2:3), by = 'x'))
+  # some different in only one table
+  expect_snapshot(locate_matches(tibble(x = 1:2), tibble(x = 2), by = 'x'))
+  expect_snapshot(locate_matches(tibble(x = 2), tibble(x = 1:2), by = 'x'))
+})
