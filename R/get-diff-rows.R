@@ -7,14 +7,7 @@ get_diff_rows <- function(col, table_a, table_b, matches, allow_both_NA) {
 }
 
 not_equal <- function(col_a, col_b, allow_both_NA) {
-  classes <- unique(c(class(col_a), class(col_b)))
-  is_simple_class <- 
-    identical(classes, "character") ||
-    identical(classes, "numeric") ||
-    identical(classes, "Date") ||
-    identical(classes, "integer") ||
-    identical(classes, c("POSIXct", "POSIXt"))
-  if (is_simple_class && !is_empty(col_a)) {
+  if (is_simple_class(col_a, col_b) && !is_empty(col_a)) {
     return(col_a %!=% col_b)
   }
   is_not_equal(col_a, col_b, allow_both_NA)
@@ -30,4 +23,22 @@ is_not_equal <- function(col_a, col_b, allow_both_NA) {
   out
 }
 
-
+is_simple_class <- function(col_a, col_b) {
+  class_a <- class(col_a)
+  if (!identical(class_a, class(col_b))) {
+    return(FALSE)
+  }
+  simple_classes <- list(
+    "character",
+    "numeric",
+    "Date",
+    "integer",
+    c("POSIXct", "POSIXt")
+  )
+  for (cls in simple_classes) {
+    if (identical(class_a, cls)) {
+      return(TRUE)
+    }
+  }
+  return(FALSE)
+}
