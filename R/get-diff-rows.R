@@ -12,7 +12,8 @@ not_equal <- function(col_a, col_b, allow_both_NA) {
     identical(classes, "character") ||
     identical(classes, "numeric") ||
     identical(classes, "Date") ||
-    identical(classes, "integer")
+    identical(classes, "integer") ||
+    identical(classes, c("POSIXct", "POSIXt"))
   if (is_simple_class && !is_empty(col_a)) {
     return(col_a %!=% col_b)
   }

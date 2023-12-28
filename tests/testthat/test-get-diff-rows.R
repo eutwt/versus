@@ -15,4 +15,10 @@ test_that("missing values are handled correctly", {
   x <- c(NA_character_, 'a', 'a', NA_character_, 'a')
   y <- c(NA_character_, 'a', 'b', 'a', NA_character_)
   expect_identical(not_equal(x, y, TRUE), 3:5)
+
+  a <- as.POSIXct('1900-01-01')
+  b <- as.POSIXct('1900-01-01', tz = "UTC")
+  x <- c(NA_real_, a, a, NA_real_, a)
+  y <- c(NA_real_, a, b, a, NA_real_)
+  expect_identical(not_equal(x, y, TRUE), 3:5)
 })
