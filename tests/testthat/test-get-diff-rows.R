@@ -12,6 +12,10 @@ test_that("missing values are handled correctly", {
   y <- c(NA_integer_, 1L, 2L, 1L, NA_integer_)
   expect_identical(not_equal(x, y, TRUE), 3:5)
 
+  x <- c(NA, TRUE, TRUE, NA, TRUE)
+  y <- c(NA, TRUE, FALSE, TRUE, NA)
+  expect_identical(not_equal(x, y, TRUE), 3:5)
+
   x <- c(NA_character_, 'a', 'a', NA_character_, 'a')
   y <- c(NA_character_, 'a', 'b', 'a', NA_character_)
   expect_identical(not_equal(x, y, TRUE), 3:5)

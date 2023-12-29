@@ -7,7 +7,7 @@ get_diff_rows <- function(col, table_a, table_b, matches, allow_both_NA) {
 }
 
 not_equal <- function(col_a, col_b, allow_both_NA) {
-  if (is_simple_class(col_a, col_b) && !is_empty(col_a)) {
+  if (allow_both_NA && is_simple_class(col_a, col_b) && !is_empty(col_a)) {
     return(col_a %!=% col_b)
   }
   is_not_equal(col_a, col_b, allow_both_NA)
@@ -29,6 +29,7 @@ is_simple_class <- function(col_a, col_b) {
     return(FALSE)
   }
   simple_classes <- list(
+    "logical",
     "character",
     "numeric",
     "Date",
