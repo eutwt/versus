@@ -34,10 +34,10 @@ value_diffs <- function(comparison, column) {
   col <- names(column_loc)
   a <- comparison$input$value$a %>%
     fsubset(diff_rows$row_a, col) %>%
-    rename(!!glue("{col}_a") := !!sym(col))
+    rename("{col}_a" := !!sym(col))
   b <- comparison$input$value$b %>%
     fsubset(diff_rows$row_b, c(col, comparison$by$column)) %>%
-    rename(!!glue("{col}_b") := !!sym(col))
+    rename("{col}_b" := !!sym(col))
   tibble(a, b)
 }
 

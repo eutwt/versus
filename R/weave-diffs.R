@@ -50,7 +50,7 @@ weave_diffs_wide <- function(comparison, column = everything()) {
 
   reduce(.init = slice_a, diff_cols, \(x, col) {
     x %>%
-      mutate(!!glue("{col}_b") := slice_b[[col]], .after = !!sym(col)) %>%
-      rename(!!glue("{col}_a") := !!sym(col))
+      mutate("{col}_b" := slice_b[[col]], .after = !!sym(col)) %>%
+      rename("{col}_a" := !!sym(col))
   })
 }
