@@ -232,7 +232,8 @@ test_that("data.table copying displays message when input is big", {
 
 test_that("versus.copy_data_table option works", {
   dt <- data.table::data.table(x = 1)
-  withr::with_options(list(versus.copy_data_table = FALSE), {
+  local({
+    local_options(versus.copy_data_table = FALSE)
     comp <- compare(dt, dt, by = x)
   })
   expect_identical(comp$input$value$a, dt)
