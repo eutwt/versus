@@ -8,7 +8,8 @@
 #'
 #' Note that if the input is a data.table, a deep copy is made to prevent future
 #' changes to the table affecting the comparison. To avoid a deep copy,
-#' use `setDF()` before supplying to `compare()`.
+#' use `setDF()` before supplying to `compare()`, or set
+#' `options(versus.copy_data_table = FALSE)`.
 #'
 #' @param table_a A data frame
 #' @param table_b A data frame
@@ -241,10 +242,14 @@ not_equal <- function(col_a, col_b, allow_both_NA) {
 }
 
 store_tables <- function(table_a, table_b) {
-  inform_dt_copy(table_a, table_b)
   env <- new_environment()
-  env$value <- list(a = table_a, b = table_b) %>%
-    map_if(\(x) inherits(x, "data.table"), compose(as_tibble, copy))
+  env$value <- list(a = table_a, b = table_b)
+  dt_copy <- getOption("versus.copy_data_table", default = TRUE)
+  if (dt_copy) {
+    inform_dt_copy(table_a, table_b)
+    env$value <- env$value %>%
+      map_if(\(x) inherits(x, "data.table"), compose(as_tibble, copy))
+  }
   lockEnvironment(env, bindings = TRUE)
   env
 }

@@ -14,7 +14,7 @@ reference:
   - weave_diffs_long
   - weave_diffs_wide
 
-- title: Data
+- title: Example Data
   contents:
   - example_df_a
   - example_df_b
