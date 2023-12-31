@@ -230,6 +230,16 @@ test_that("data.table copying displays message when input is big", {
   expect_snapshot(inform_dt_copy(dt, test_df_b, env = dt_copy))
 })
 
+test_that("versus.copy_data_table option works", {
+  dt <- data.table::data.table(x = 1)
+  withr::with_options(list(versus.copy_data_table = FALSE), {
+    comp <- compare(dt, dt, by = x)
+  })
+  expect_identical(comp$input$value$a, dt)
+  comp <- compare(dt, dt, by = x)
+  expect_identical(comp$input$value$a, as_tibble(copy(dt)))
+})
+
 test_that("locate_matches() handles unmatched rows correctly", {
   # all common
   expect_snapshot(locate_matches(tibble(x = 1), tibble(x = 1), by = 'x'))
