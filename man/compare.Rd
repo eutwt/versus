@@ -63,7 +63,7 @@ versus functions e.g. \verb{slice_*()} and \verb{weave_*()}.
 Note that if the input is a data.table, a deep copy is made to prevent future
 changes to the table affecting the comparison. To avoid a deep copy,
 use \code{setDF()} before supplying to \code{compare()}, or set
-options(versus.copy_data_table = FALSE).
+\code{options(versus.copy_data_table = FALSE)}.
 }
 \examples{
 compare(example_df_a, example_df_b, by = car)
