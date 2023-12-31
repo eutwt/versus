@@ -56,15 +56,21 @@ in and the \code{by} columns for that row.
 }
 \description{
 \code{compare()} creates a representation of the differences between two tables,
-along with a shallow copy of the tables. This output is used
+along with a shallow copy \if{html}{\out{<sup id="a1">}}\href{#f1}{1}\if{html}{\out{</sup>}} of the tables. This output is used
 as the \code{comparison} argument when exploring the differences further with other
 versus functions e.g. \verb{slice_*()} and \verb{weave_*()}.
 
-Note that if the input is a data.table, a deep copy is made to prevent future
-changes to the table affecting the comparison. To avoid a deep copy,
+\if{html}{\out{<sup id="f1">}}1\if{html}{\out{</sup>}}: For data.table inputs, a deep copy is made by default. See "data.table inputs" section below for more info.
+}
+\section{data.table inputs}{
+
+If the input is a data.table, a deep copy is made so that future
+changes to the table don't affect the comparison. To avoid a deep copy,
 use \code{setDF()} before supplying to \code{compare()}, or set
 \code{options(versus.copy_data_table = FALSE)}.
 }
+
 \examples{
 compare(example_df_a, example_df_b, by = car)
+
 }
