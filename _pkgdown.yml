@@ -2,3 +2,19 @@ url: https://eutwt.github.io/versus/
 template:
   bootstrap: 5
 
+reference:
+- title: Functions
+  contents:
+  - compare
+  - slice_diffs
+  - slice_unmatched
+  - slice_unmatched_both
+  - value_diffs
+  - value_diffs_stacked
+  - weave_diffs_long
+  - weave_diffs_wide
+
+- title: Data
+  contents:
+  - example_df_a
+  - example_df_b
