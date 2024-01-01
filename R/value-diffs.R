@@ -49,7 +49,7 @@ value_diffs_stacked <- function(comparison, column = everything()) {
 
   get_value_diff_for_stack <- function(comparison, col_name) {
     value_diffs(comparison, all_of(col_name)) %>%
-      frename(\(x) replace(x, 1:2, paste0("val_", c("a", "b")))) %>%
+      frename(c("val_a", "val_b"), cols = 1:2) %>%
       mutate(column = .env$col_name, .before = 1)
   }
 
