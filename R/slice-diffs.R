@@ -21,11 +21,12 @@
 slice_diffs <- function(comparison, table, column = everything()) {
   assert_is_comparison(enquo(comparison))
   assert_table_is_a_or_b(enquo(table))
-  slice_diffs_impl(comparison, table, enquo(column))
+  diff_cols <- identify_diff_cols(comparison, column, call = call)
+  out <- slice_diffs_impl(comparison, table, diff_cols)
+  new_tbl_versus(out, diff_cols)
 }
 
-slice_diffs_impl <- function(comparison, table, column, j, call = caller_env()) {
-  diff_cols <- identify_diff_cols(comparison, column, call = call)
+slice_diffs_impl <- function(comparison, table, diff_cols, j, call = caller_env()) {
   if (is_empty(diff_cols)) {
     out <- fsubset(comparison$input$value[[table]], integer(0), j)
     return(as_tibble(out))
@@ -36,6 +37,5 @@ slice_diffs_impl <- function(comparison, table, column, j, call = caller_env()) 
     distinct() %>%
     pull(1)
 
-  out <- fsubset(comparison$input$value[[table]], rows, j)
-  as_tibble(out)
+  fsubset(comparison$input$value[[table]], rows, j)
 }
