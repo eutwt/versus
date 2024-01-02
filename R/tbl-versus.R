@@ -1,4 +1,5 @@
 #' print tables with differing values
+#' @keywords internal 
 
 #' @rdname tbl_versus
 #' @export
@@ -10,7 +11,6 @@ print.tbl_versus <- function(x, ...) {
   if (is_empty(focus_cols)) {
     return(NextMethod())
   }
-  attr(x, "diff_cols") <- get_diff_cols(x)
   attr(x, "pillar_focus") <- focus_cols
   writeLines(format(x))
   attr(x, "pillar_focus") <- NULL
@@ -21,12 +21,7 @@ print.tbl_versus <- function(x, ...) {
 #' @export
 tbl_format_header.tbl_versus <- function(x, ...) {
   default_header <- NextMethod()
-  i_focus_header <- grep('Focus columns', default_header)
-  diff_cols <- attr(x, "diff_cols") %>% 
-    dottize(console_width() - 20)
-  diff_cols_header <- glue("# Diff columns: {diff_cols}") %>% 
-    style_subtle()
-  replace(default_header, i_focus_header, diff_cols_header)
+  default_header[!grepl('Focus columns', default_header)]
 }
 
 new_tbl_versus <- function(x, diff_cols, wide = FALSE) {
@@ -49,16 +44,4 @@ get_focus_cols <- function(tvs) {
     glue_data("{col}_{tbl}") %>% 
     intersect(names(tvs))
 }
-
-get_diff_cols <- function(tvs) {
-  diff_cols <- attr(tvs, "diff_cols")
-  if (!attr(tvs, "wide")) {
-    return(intersect(diff_cols, names(tvs)))
-  }
-  vctrs::vec_expand_grid(col = diff_cols, tbl = c("a", "b")) %>% 
-    filter(glue("{col}_{tbl}") %in% names(tvs)) %>% 
-    pull(col) %>% 
-    unique()
-}
-
 
