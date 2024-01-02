@@ -21,7 +21,7 @@
 slice_diffs <- function(comparison, table, column = everything()) {
   assert_is_comparison(enquo(comparison))
   assert_table_is_a_or_b(enquo(table))
-  diff_cols <- identify_diff_cols(comparison, enquo(column), call = call)
+  diff_cols <- identify_diff_cols(comparison, enquo(column))
   out <- slice_diffs_impl(comparison, table, diff_cols)
   new_tbl_versus(out, diff_cols)
 }

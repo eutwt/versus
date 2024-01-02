@@ -28,10 +28,16 @@ test_that("slice_diffs works when there are no diffs", {
   # because there are no diff cols
   df <- rownames_to_column(mtcars, "car")
   comp <- compare(df, df, by = "car")
-  expect_identical(slice_diffs(comp, "a"), as_tibble(df[0, ]))
+  expect_identical(
+    slice_diffs(comp, "a"),
+    new_tbl_versus(df[0, ], character(0))
+  )
   # because there the supplied cols have no diffs
   comp <- compare(example_df_a, example_df_b, by = car)
-  expect_identical(slice_diffs(comp, "a", wt), as_tibble(example_df_a[0, ]))
+  expect_identical(
+    slice_diffs(comp, "a", wt),
+    new_tbl_versus(example_df_a[0, ], character(0))
+  )
 })
 
 test_that("Error on slice_diffs() with empty selection", {

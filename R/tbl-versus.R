@@ -21,7 +21,8 @@ print.tbl_versus <- function(x, ...) {
 #' @export
 tbl_format_header.tbl_versus <- function(x, ...) {
   default_header <- NextMethod()
-  default_header[!grepl('Focus columns', default_header)]
+  out <- default_header[!grepl('Focus columns', default_header)]
+  sub('A tibble: +', 'A tibble: ', out)
 }
 
 new_tbl_versus <- function(x, diff_cols, wide = FALSE) {
