@@ -140,14 +140,14 @@ Use `weave_diffs_*()` to see the differing values in context.
 ``` r
 comparison |>
   weave_diffs_wide(disp)
-#> # A tibble:      2 × 9
+#> # A tibble: 2 × 9
 #>   car              mpg   cyl disp_a disp_b    hp  drat    wt    vs
 #>   <chr>          <dbl> <int>  <dbl>  <dbl> <int> <dbl> <dbl> <int>
 #> 1 Datsun 710      22.8    NA    109    108    93  3.85  2.32     1
 #> 2 Hornet 4 Drive  21.4     6    259    258   110  3.08  3.22     1
 comparison |>
   weave_diffs_wide(c(mpg, disp))
-#> # A tibble:      4 × 10
+#> # A tibble: 4 × 10
 #>   car            mpg_a mpg_b   cyl disp_a disp_b    hp  drat    wt    vs
 #>   <chr>          <dbl> <dbl> <int>  <dbl>  <dbl> <int> <dbl> <dbl> <int>
 #> 1 Duster 360      14.3  16.3     8   360    360    245  3.21  3.57     0
@@ -156,7 +156,7 @@ comparison |>
 #> 4 Hornet 4 Drive  21.4  21.4     6   259    258    110  3.08  3.22     1
 comparison |>
   weave_diffs_long(disp)
-#> # A tibble:      4 × 9
+#> # A tibble: 4 × 9
 #>   table car              mpg   cyl  disp    hp  drat    wt    vs
 #>   <chr> <chr>          <dbl> <int> <dbl> <int> <dbl> <dbl> <int>
 #> 1 a     Datsun 710      22.8    NA   109    93  3.85  2.32     1
@@ -171,7 +171,7 @@ table.
 ``` r
 comparison |>
   slice_diffs("a", mpg)
-#> # A tibble:      2 × 9
+#> # A tibble: 2 × 9
 #>   car          mpg   cyl  disp    hp  drat    wt    vs    am
 #>   <chr>      <dbl> <int> <dbl> <int> <dbl> <dbl> <int> <int>
 #> 1 Duster 360  14.3     8  360    245  3.21  3.57     0     0
