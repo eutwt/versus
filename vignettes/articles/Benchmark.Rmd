@@ -16,7 +16,12 @@ The output of `versus::compare()` is designed to contain only the minimal amount
 
 Below is an example benchmark using data from the `nycflights13` package over-sampled to various sizes. In the example data, 5% of rows from each data frame are missing in the other, and in 4 out of the 15 columns, 5% of values are different.
 
-At 1 million rows, versus takes 0.6 seconds and less than 1GB of memory while others take over 10 seconds and multiple GB of memory.
+At 1 million rows, versus takes under half a second and half a gigabyte of memory,
+while others take over 10 seconds and multiple gigabytes of memory. This is made possible by efficient functions from `vctrs` and `collapse`. The `compare()` operation is roughly described by the steps below.
+
+* Locate matching rows between table_a and table_b with `vctrs::vec_locate_matches`
+* Subset tables according to match indices using `collapse::ss`
+* Use `collapse::%!=%` to identify differing values
 
 ### Benchmark code:
 
@@ -71,16 +76,16 @@ bench_out |>
 #> # A tibble: 12 × 6
 #>    expression   n_rows         min   median `itr/sec` mem_alloc
 #>    <bch:expr>   <chr>     <bch:tm> <bch:tm>     <dbl> <bch:byt>
-#>  1 versus       100,000    59.49ms  62.94ms  15.9       64.58MB
-#>  2 arsenal      100,000   958.93ms    1.09s   0.913    388.97MB
-#>  3 dataCompareR 100,000      1.41s    1.43s   0.698    265.37MB
-#>  4 diffdf       100,000      4.73s    4.75s   0.211    554.93MB
-#>  5 versus       1,000,000 536.28ms 586.81ms   1.70     648.99MB
-#>  6 arsenal      1,000,000   12.86s   13.08s   0.0765     3.89GB
-#>  7 dataCompareR 1,000,000   17.16s   17.25s   0.0580     2.63GB
-#>  8 diffdf       1,000,000    56.2s   56.93s   0.0176     5.35GB
-#>  9 versus       2,000,000    1.35s    1.37s   0.732      1.27GB
-#> 10 arsenal      2,000,000   29.47s    30.5s   0.0328     7.54GB
-#> 11 dataCompareR 2,000,000   36.16s   37.32s   0.0268     5.27GB
-#> 12 diffdf       2,000,000    2.03m    2.09m   0.00796   10.83GB
+#>  1 versus       100,000    41.42ms  61.31ms  16.3       40.08MB
+#>  2 arsenal      100,000   641.63ms 668.55ms   1.50        389MB
+#>  3 dataCompareR 100,000      1.09s    1.18s   0.848    265.39MB
+#>  4 diffdf       100,000      3.45s    3.54s   0.283    554.95MB
+#>  5 versus       1,000,000 383.67ms 386.76ms   2.59     403.69MB
+#>  6 arsenal      1,000,000   11.63s   11.67s   0.0857     3.77GB
+#>  7 dataCompareR 1,000,000   15.99s   16.44s   0.0608     2.63GB
+#>  8 diffdf       1,000,000   54.96s   55.04s   0.0182     5.35GB
+#>  9 versus       2,000,000    1.16s     1.2s   0.833    806.13MB
+#> 10 arsenal      2,000,000   24.05s   26.24s   0.0381     7.54GB
+#> 11 dataCompareR 2,000,000   38.77s   39.85s   0.0251     5.27GB
+#> 12 diffdf       2,000,000    1.89m    1.97m   0.00847    10.7GB
 ```
