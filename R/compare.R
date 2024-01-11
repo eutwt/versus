@@ -2,11 +2,11 @@
 #'
 #' @description
 #' `compare()` creates a representation of the differences between two tables,
-#' along with a shallow copy <sup id="a1">[1](#f1)</sup> of the tables. This output is used
+#' along with a shallow<sup>1</sup> copy of the tables. This output is used
 #' as the `comparison` argument when exploring the differences further with other
 #' versus functions e.g. `slice_*()` and `weave_*()`.
 #'
-#' <sup id="f1">1</sup>: For data.table inputs, a deep copy is made by default. See "data.table inputs" section below for more info.
+#' <sup>1</sup>: For data.table inputs, a deep copy is made by default. See "data.table inputs" section below for more info.
 #'
 #' @param table_a A data frame
 #' @param table_b A data frame

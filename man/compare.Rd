@@ -56,11 +56,11 @@ in and the \code{by} columns for that row.
 }
 \description{
 \code{compare()} creates a representation of the differences between two tables,
-along with a shallow copy \if{html}{\out{<sup id="a1">}}\href{#f1}{1}\if{html}{\out{</sup>}} of the tables. This output is used
+along with a shallow\if{html}{\out{<sup>}}1\if{html}{\out{</sup>}} copy of the tables. This output is used
 as the \code{comparison} argument when exploring the differences further with other
 versus functions e.g. \verb{slice_*()} and \verb{weave_*()}.
 
-\if{html}{\out{<sup id="f1">}}1\if{html}{\out{</sup>}}: For data.table inputs, a deep copy is made by default. See "data.table inputs" section below for more info.
+\if{html}{\out{<sup>}}1\if{html}{\out{</sup>}}: For data.table inputs, a deep copy is made by default. See "data.table inputs" section below for more info.
 }
 \section{data.table inputs}{
 
