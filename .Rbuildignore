@@ -9,7 +9,7 @@
 ^\.github$
 ^.pre-commit-config.yaml
 ^CRAN-SUBMISSION$
-todo.txt
+^.*\.txt$
 ^codecov\.yml$
 ^revdep$
 ^vignettes/articles$
