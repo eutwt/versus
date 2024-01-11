@@ -2,11 +2,9 @@
 #'
 #' @description
 #' `compare()` creates a representation of the differences between two tables,
-#' along with a shallow<sup>1</sup> copy of the tables. This output is used
+#' along with a shallow copy of the tables. This output is used
 #' as the `comparison` argument when exploring the differences further with other
 #' versus functions e.g. `slice_*()` and `weave_*()`.
-#'
-#' <sup>1</sup>: For data.table inputs, a deep copy is made by default. See "data.table inputs" section below for more info.
 #'
 #' @param table_a A data frame
 #' @param table_b A data frame
@@ -54,10 +52,9 @@
 #' compare(example_df_a, example_df_b, by = car)
 #'
 #' @section data.table inputs:
-#' If the input is a data.table, a deep copy is made so that future
-#' changes to the table don't affect the comparison. To avoid a deep copy,
-#' use `setDF()` before supplying to `compare()`, or set
-#' `options(versus.copy_data_table = FALSE)`.
+#' If the input is a data.table, you may want `compare()` to make a deep copy instead
+#' of a shallow copy, so that future changes to the table don't affect the comparison. 
+#' To achieve this, you can set `options(versus.copy_data_table = TRUE)`.
 
 #' @rdname compare
 #' @export
@@ -229,9 +226,8 @@ get_contents <- function(table_a, table_b, by) {
 store_tables <- function(table_a, table_b) {
   env <- new_environment()
   env$value <- list(a = table_a, b = table_b)
-  dt_copy <- getOption("versus.copy_data_table", default = TRUE)
+  dt_copy <- getOption("versus.copy_data_table", default = FALSE)
   if (dt_copy) {
-    inform_dt_copy(table_a, table_b)
     env$value <- env$value %>%
       map_if(\(x) inherits(x, "data.table"), compose(as_tibble, copy))
   }
