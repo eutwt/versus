@@ -21,7 +21,7 @@ Imports:
     tibble,
     pillar,
     purrr,
-    collapse (>= 2.0.0),
+    collapse (>= 2.0.9),
     data.table
 URL: https://eutwt.github.io/versus/, https://github.com/eutwt/versus
 BugReports: https://github.com/eutwt/versus/issues

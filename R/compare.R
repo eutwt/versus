@@ -226,24 +226,6 @@ get_contents <- function(table_a, table_b, by) {
   out
 }
 
-get_diff_rows <- function(col, table_a, table_b, matches, allow_both_NA) {
-  col_a <- fsubset(table_a, matches$common$a, col)[[1]]
-  col_b <- fsubset(table_b, matches$common$b, col)[[1]]
-  matches$common %>%
-    fsubset(not_equal(col_a, col_b, allow_both_NA)) %>%
-    frename(c("row_a", "row_b"))
-}
-
-not_equal <- function(col_a, col_b, allow_both_NA) {
-  neq <- col_a != col_b
-  if (allow_both_NA) {
-    out <- fcoalesce(neq, is.na(col_a) != is.na(col_b))
-  } else {
-    out <- fcoalesce(neq, is.na(col_a) | is.na(col_b))
-  }
-  out
-}
-
 store_tables <- function(table_a, table_b) {
   env <- new_environment()
   env$value <- list(a = table_a, b = table_b)
