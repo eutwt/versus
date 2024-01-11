@@ -19,7 +19,7 @@ Below is an example benchmark using data from the `nycflights13` package over-sa
 At 1 million rows, versus takes under half a second and half a gigabyte of memory,
 while others take over 10 seconds and multiple gigabytes of memory. This is made possible by efficient functions from `vctrs` and `collapse`. The `compare()` operation is roughly described by the steps below.
 
-* Locate matching rows between table_a and table_b with `vctrs::vec_locate_matches`
+* Locate matching rows between `table_a` and `table_b` with `vctrs::vec_locate_matches`
 * Subset tables according to match indices using `collapse::ss`
 * Use `collapse::%!=%` to identify differing values
 

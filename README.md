@@ -13,7 +13,8 @@ coverage](https://codecov.io/gh/eutwt/versus/branch/main/graph/badge.svg)](https
 
 <!-- badges: end -->
 
-The difference between two data frames as a list of data frames.
+A toolset for interactively exploring the differences between two data
+frames.
 
 ## Installation
 
