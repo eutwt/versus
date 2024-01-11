@@ -229,9 +229,8 @@ get_contents <- function(table_a, table_b, by) {
 store_tables <- function(table_a, table_b) {
   env <- new_environment()
   env$value <- list(a = table_a, b = table_b)
-  dt_copy <- getOption("versus.copy_data_table", default = TRUE)
+  dt_copy <- getOption("versus.copy_data_table", default = FALSE)
   if (dt_copy) {
-    inform_dt_copy(table_a, table_b)
     env$value <- env$value %>%
       map_if(\(x) inherits(x, "data.table"), compose(as_tibble, copy))
   }

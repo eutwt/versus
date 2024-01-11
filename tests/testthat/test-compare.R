@@ -222,19 +222,11 @@ test_that("summary() works", {
   )
 })
 
-test_that("data.table copying displays message when input is big", {
-  dt_copy <- list(informed = FALSE, is_big = \(x) object.size(x) > 2)
-  dt <- data.table::as.data.table(test_df_a)
-  expect_snapshot(inform_dt_copy(dt, test_df_b, env = dt_copy))
-  dt_copy <- list(informed = TRUE, is_big = \(x) object.size(x) > 2)
-  expect_snapshot(inform_dt_copy(dt, test_df_b, env = dt_copy))
-})
-
 test_that("versus.copy_data_table option works", {
   dt <- data.table::data.table(x = 1)
-  comp <- with_options(compare(dt, dt, by = x), versus.copy_data_table = FALSE)
-  expect_identical(comp$input$value$a, dt)
   comp <- compare(dt, dt, by = x)
+  expect_identical(comp$input$value$a, dt)
+  comp <- with_options(compare(dt, dt, by = x), versus.copy_data_table = TRUE)
   expect_identical(comp$input$value$a, as_tibble(copy(dt)))
 })
 
