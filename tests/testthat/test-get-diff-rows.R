@@ -20,7 +20,7 @@ test_that("missing values are handled correctly", {
   y <- c(NA_character_, 'a', 'b', 'a', NA_character_)
   expect_identical(not_equal(x, y, TRUE), 3:5)
 
-  a <- as.POSIXct('1900-01-01')
+  a <- as.POSIXct('1900-01-01', tz = "America/New_York")
   b <- as.POSIXct('1900-01-01', tz = "UTC")
   na <- as.POSIXct(NA)
   x <- c(na, a, a, na, a)
