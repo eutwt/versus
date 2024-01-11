@@ -27,3 +27,16 @@ test_that("missing values are handled correctly", {
   y <- c(na, a, b, a, na)
   expect_identical(not_equal(x, y, TRUE), 3:5)
 })
+
+test_that("is_simple_class() works", {
+  ex <- as.POSIXct('1900-01-01', tz = "UTC")
+  expect_identical(is_simple_class(1L, 1.1), FALSE)
+  expect_identical(is_simple_class(1.1, 1.1), TRUE)
+  expect_identical(is_simple_class(1L, 1L), TRUE)
+  expect_identical(is_simple_class("a", "a"), TRUE)
+  expect_identical(is_simple_class(ex, ex), TRUE)
+  expect_identical(is_simple_class(as.Date(ex), ex), FALSE)
+  expect_identical(is_simple_class(as.Date(ex), as.Date(ex)), TRUE)
+  expect_identical(is_simple_class(FALSE, FALSE), TRUE)
+  expect_identical(is_simple_class(list(1), list(1)), FALSE)
+})
