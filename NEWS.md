@@ -1,4 +1,6 @@
-# versus (development version)
+# versus 0.3.0
+
+# versus 0.3
 
 * The `compare()` function now saves a shallow copy of the input tables. This
   means functions using a comparison, e.g. `slice_diffs()`, now only need the
