@@ -63,7 +63,7 @@ versus functions e.g. \verb{slice_*()} and \verb{weave_*()}.
 \section{data.table inputs}{
 
 If the input is a data.table, you may want \code{compare()} to make a deep copy instead
-of a shallow copy, so that future changes to the table don't affect the comparison.
+of a shallow copy so that future changes to the table don't affect the comparison.
 To achieve this, you can set \code{options(versus.copy_data_table = TRUE)}.
 }
 

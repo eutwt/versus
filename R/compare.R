@@ -53,7 +53,7 @@
 #'
 #' @section data.table inputs:
 #' If the input is a data.table, you may want `compare()` to make a deep copy instead
-#' of a shallow copy, so that future changes to the table don't affect the comparison. 
+#' of a shallow copy so that future changes to the table don't affect the comparison. 
 #' To achieve this, you can set `options(versus.copy_data_table = TRUE)`.
 
 #' @rdname compare
