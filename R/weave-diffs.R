@@ -26,15 +26,17 @@ weave_diffs_long <- function(comparison, column = everything()) {
   call <- current_env()
   column <- enquo(column)
 
+  diff_cols <- identify_diff_cols(comparison, column)
   out_cols <- with(comparison, c(by$column, intersection$column))
   diff <- comparison$input$value %>%
     Map(f = \(x, table) {
-      slice_diffs_impl(comparison, table, column, j = out_cols, call = call) %>%
+      slice_diffs_impl(comparison, table, diff_cols, j = out_cols, call = call) %>%
         mutate(table = .env$table, .before = 1)
     }, ., names(.)) %>%
     ensure_ptype_compatible()
 
-  vec_interleave(!!!diff)
+  out <- vec_interleave(!!!diff)
+  new_tbl_versus(out, diff_cols)
 }
 
 #' @rdname weave_diffs
@@ -42,15 +44,17 @@ weave_diffs_long <- function(comparison, column = everything()) {
 weave_diffs_wide <- function(comparison, column = everything()) {
   assert_is_comparison(enquo(comparison))
   column <- enquo(column)
+  diff_cols <- identify_diff_cols(comparison, column)
 
   out_cols <- with(comparison, c(by$column, intersection$column))
-  diff_cols <- names(identify_diff_cols(comparison, column))
-  slice_a <- slice_diffs_impl(comparison, "a", column, j = out_cols)
-  slice_b <- slice_diffs_impl(comparison, "b", column, j = diff_cols)
+  slice_a <- slice_diffs_impl(comparison, "a", diff_cols, j = out_cols)
+  slice_b <- slice_diffs_impl(comparison, "b", diff_cols, j = names(diff_cols))
 
-  reduce(.init = slice_a, diff_cols, \(x, col) {
+  out <- reduce(.init = slice_a, names(diff_cols), \(x, col) {
     x %>%
       mutate("{col}_b" := slice_b[[col]], .after = !!sym(col)) %>%
       rename("{col}_a" := !!sym(col))
   })
+
+  new_tbl_versus(out, diff_cols, wide = TRUE)
 }
