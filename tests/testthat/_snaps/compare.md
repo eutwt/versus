@@ -145,7 +145,7 @@
     Condition
       Error in `compare()`:
       ! Problem with `table_b`:
-      * Can't subset columns that don't exist.
+      * Can't select columns that don't exist.
       x Column `x` doesn't exist.
 
 # Error on named `by`
