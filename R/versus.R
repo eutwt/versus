@@ -6,7 +6,7 @@
 #' @import cli
 #' @import dplyr
 #' @importFrom tidyselect eval_select
-#' @importFrom pillar format_glimpse
+#' @importFrom pillar format_glimpse tbl_format_header style_subtle
 #' @importFrom glue glue glue_collapse glue_data
 #' @importFrom utils capture.output head tail
 #' @importFrom vctrs vec_locate_matches vec_as_names vec_slice
