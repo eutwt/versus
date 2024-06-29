@@ -32,7 +32,7 @@
 #'    \code{table_b} and columns "n_diffs" showing the number of values which
 #'    are different between the two tables, "class_a"/"class_b" the class of the
 #'    column in each table, and "value_diffs" a (nested) data frame showing
-#'    the the values in each table which are unequal and the \code{by} columns
+#'    the the row indices with differing values
 #'  }
 #'  \item{unmatched_cols}{
 #'    A data frame with one row per column which is in one input table but
