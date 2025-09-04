@@ -1,5 +1,9 @@
 # versus (development version)
 
+* `compare()` now supports a custom function for checking equivalence between column values. The existing internal function `not_equal()` is used by default and is now exported. ([[#20](https://github.com/eutwt/versus/issues/20)])
+
+* `compare()` and `weave_diffs_wide()` both now support a `suffix` argument to allow custom suffix values for column names when comparing data frames.
+
 # versus 0.3.0
 
 # versus 0.3
@@ -10,7 +14,7 @@
   re-supplied.
 
 * New functions `weave_diffs_wide()` an `weave_diffs_long()` are added, which show
-  the differing values in context with other columns from the input tables. 
+  the differing values in context with other columns from the input tables.
 
 * A new function `slice_unmatched()` is added, used to get the rows from
   input tables a comparison shows as not existing in the other table
