@@ -22,7 +22,7 @@ compare(
 \item{table_b}{A data frame}
 
 \item{by}{<\code{\link[=versus_tidy_select]{tidy-select}}>. Selection of columns to use when matching rows between
-\code{.data_a} and \code{.data_b}. Both data frames must be unique on \code{by}.}
+\code{table_a} and \code{table_b}. Both data frames must be unique on \code{by}.}
 
 \item{...}{Additional arguments passed to \code{.f} if provided.}
 
