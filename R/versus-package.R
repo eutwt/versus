@@ -1,6 +1,7 @@
-#' @description Compare two tables
 #' @keywords internal
-#'
+"_PACKAGE"
+
+## usethis namespace: start
 #' @importFrom stats setNames
 #' @import rlang
 #' @import cli
@@ -16,4 +17,5 @@
 #' @importFrom tibble tibble rownames_to_column enframe
 #' @importFrom collapse ss add_vars frename whichNA %!=%
 #' @importFrom data.table fcoalesce copy
-"_PACKAGE"
+## usethis namespace: end
+NULL
