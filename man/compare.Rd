@@ -4,7 +4,17 @@
 \alias{compare}
 \title{Compare two data frames}
 \usage{
-compare(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE)
+compare(
+  table_a,
+  table_b,
+  by,
+  ...,
+  allow_both_NA = TRUE,
+  coerce = TRUE,
+  suffix = c("_a", "_b"),
+  .f = NULL,
+  .progress = TRUE
+)
 }
 \arguments{
 \item{table_a}{A data frame}
@@ -14,11 +24,20 @@ compare(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE)
 \item{by}{<\code{\link[=versus_tidy_select]{tidy-select}}>. Selection of columns to use when matching rows between
 \code{.data_a} and \code{.data_b}. Both data frames must be unique on \code{by}.}
 
+\item{...}{Additional arguments passed to \code{.f} if provided.}
+
 \item{allow_both_NA}{Logical. If \code{TRUE} a missing value in both data frames is
-considered as equal}
+considered as equal.}
 
 \item{coerce}{Logical. If \code{FALSE} and columns from the input tables have
 differing classes, the function throws an error.}
+
+\item{suffix}{Suffix to use for intersection between \code{table_a} and \code{table_b}.
+Defaults to \code{c("_a", "_b")}.}
+
+\item{.f}{A function that takes two columns as the first two input arguments. If \code{NULl} (default), the internal  \code{not_equal()} function is used with the \code{allow_both_NA} argument. If a function is supplied, the \code{allow_both_NA} argument is ignored and any additional arguments provided to \code{...} are passed to the function \code{.f}.}
+
+\item{.progress}{If \code{TRUE}, show progress bar when getting different rows from comparison data frames.}
 }
 \value{
 \describe{

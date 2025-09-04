@@ -9,12 +9,16 @@
 #' @param table_a A data frame
 #' @param table_b A data frame
 #' @param by <[`tidy-select`][versus_tidy_select]>. Selection of columns to use when matching rows between
-#' \code{.data_a} and \code{.data_b}. Both data frames must be unique on \code{by}.
+#' \code{table_a} and \code{table_b}. Both data frames must be unique on \code{by}.
 #' @param allow_both_NA Logical. If \code{TRUE} a missing value in both data frames is
-#' considered as equal
+#' considered as equal.
 #' @param coerce Logical. If \code{FALSE} and columns from the input tables have
 #' differing classes, the function throws an error.
-#'
+#' @param .f A function that takes two columns as the first two input arguments. If `NULl` (default), the internal  \code{not_equal()} function is used with the `allow_both_NA` argument. If a function is supplied, the `allow_both_NA` argument is ignored and any additional arguments provided to `...` are passed to the function `.f`.
+#' @param suffix Suffix to use for intersection between `table_a` and `table_b`.
+#' Defaults to `c("_a", "_b")`.
+#' @param .progress If `TRUE`, show progress bar when getting different rows from comparison data frames.
+#' @param ... Additional arguments passed to `.f` if provided.
 #' @return
 #' \describe{
 #' \item{\code{compare()}}{A list of data frames having the following elements:
@@ -53,12 +57,22 @@
 #'
 #' @section data.table inputs:
 #' If the input is a data.table, you may want `compare()` to make a deep copy instead
-#' of a shallow copy so that future changes to the table don't affect the comparison. 
+#' of a shallow copy so that future changes to the table don't affect the comparison.
 #' To achieve this, you can set `options(versus.copy_data_table = TRUE)`.
 
 #' @rdname compare
 #' @export
-compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE) {
+compare <- function(
+  table_a,
+  table_b,
+  by,
+  ...,
+  allow_both_NA = TRUE,
+  coerce = TRUE,
+  suffix = c("_a", "_b"),
+  .f = NULL,
+  .progress = TRUE
+) {
   check_required(by)
   by <- enquo(by)
   table_chr <- names(enquos(table_a, table_b, .named = TRUE))
@@ -73,7 +87,7 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE) {
     ncol = c(ncol(table_a), ncol(table_b))
   )
 
-  tbl_contents <- get_contents(table_a, table_b, by = by_names)
+  tbl_contents <- get_contents(table_a, table_b, by = by_names, suffix = suffix)
 
   matches <- withCallingHandlers(
     locate_matches(table_a, table_b, by = by_names),
@@ -90,13 +104,22 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE) {
     matches = matches
   )
 
-  tbl_contents$compare$diff_rows <- tbl_contents$compare$column %>%
-    lapply(get_diff_rows,
-      table_a = table_a,
-      table_b = table_b,
-      matches = matches,
-      allow_both_NA = allow_both_NA
-    )
+  # if (!is_empty(tbl_contents$compare$column)) {
+  tbl_contents$compare$diff_rows <- map(
+    tbl_contents$compare$column,
+    \(col) {
+      get_diff_rows(
+        col = col,
+        table_a = table_a,
+        table_b = table_b,
+        matches = matches,
+        allow_both_NA = allow_both_NA,
+        .f = .f,
+        ...
+      )
+    },
+    .progress = .progress
+  )
 
   tbl_contents$compare <- tbl_contents$compare %>%
     mutate(n_diffs = map_int(diff_rows, nrow), .after = column)
@@ -186,29 +209,35 @@ get_unmatched_rows <- function(table_a, table_b, by, matches) {
     as_tibble()
 }
 
-converge <- function(table_a, table_b, by, matches) {
+converge <- function(table_a, table_b, by, matches, suffix = c("_a", "_b")) {
   common_cols <- setdiff(intersect(names(table_a), names(table_b)), by)
 
   by_a <- fsubset(table_a, matches$common$a, by)
   common_a <- fsubset(table_a, matches$common$a, common_cols)
   common_b <- fsubset(table_b, matches$common$b, common_cols)
 
+  # TODO: Add validation for suffix parameter
   add_vars(
     by_a,
-    frename(common_a, \(nm) paste0(nm, "_a")),
-    frename(common_b, \(nm) paste0(nm, "_b"))
+    frename(common_a, \(nm) paste0(nm, suffix[[1]])),
+    frename(common_b, \(nm) paste0(nm, suffix[[2]]))
   )
 }
 
-join_split <- function(table_a, table_b, by) {
+join_split <- function(table_a, table_b, by, suffix = c("_a", "_b")) {
   matches <- locate_matches(table_a, table_b, by)
-  intersection <- converge(table_a, table_b, by, matches)
+  intersection <- converge(table_a, table_b, by, matches, suffix = suffix)
   unmatched_rows <- get_unmatched_rows(table_a, table_b, by, matches)
   list(intersection = intersection, unmatched_rows = unmatched_rows)
 }
 
-get_contents <- function(table_a, table_b, by) {
-  tbl_contents <- join_split(contents(table_a), contents(table_b), by = "column")
+get_contents <- function(table_a, table_b, by, suffix = c("_a", "_b")) {
+  tbl_contents <- join_split(
+    contents(table_a),
+    contents(table_b),
+    by = "column",
+    suffix = suffix
+  )
   out <- list()
 
   out$by <- tbl_contents$intersection %>%
