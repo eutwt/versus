@@ -3,6 +3,7 @@
 S3method(print,vs_comparison)
 S3method(summary,vs_comparison)
 export(compare)
+export(not_equal)
 export(slice_diffs)
 export(slice_unmatched)
 export(slice_unmatched_both)

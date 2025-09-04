@@ -1,16 +1,34 @@
-get_diff_rows <- function(col, table_a, table_b, matches, allow_both_NA) {
+get_diff_rows <- function(
+  col,
+  table_a,
+  table_b,
+  matches,
+  allow_both_NA = TRUE,
+  ...,
+  .f = NULL
+) {
   col_a <- fsubset(table_a, matches$common$a, col)[[1]]
   col_b <- fsubset(table_b, matches$common$b, col)[[1]]
+  if (is.null(.f)) {
+    diff_rows <- not_equal(col_a, col_b, allow_both_NA)
+  } else {
+    diff_rows <- .f(col_a, col_b, ...)
+  }
   matches$common %>%
-    fsubset(not_equal(col_a, col_b, allow_both_NA)) %>%
+    fsubset(diff_rows) %>%
     frename(c("row_a", "row_b"))
 }
 
-not_equal <- function(col_a, col_b, allow_both_NA) {
+#' Test two vectors for not equal values
+#' @param col_a,col_b Two equal length vectors, typically column values.
+#' @param allow_both_NA If `TRUE` (default), an `NA` value in `col_a` and `col_b` is treated as equal.
+#' @keywords internal
+#' @export
+not_equal <- function(col_a, col_b, allow_both_NA = TRUE) {
   if (allow_both_NA && is_simple_class(col_a, col_b) && !is_empty(col_a)) {
     return(col_a %!=% col_b)
   }
-  is_not_equal(col_a, col_b, allow_both_NA)
+  seq_along(col_a)[is_not_equal(col_a, col_b, allow_both_NA)]
 }
 
 is_not_equal <- function(col_a, col_b, allow_both_NA) {
