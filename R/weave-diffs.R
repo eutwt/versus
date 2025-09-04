@@ -1,6 +1,7 @@
 #' Get differences in context
 #'
 #' @inheritParams slice_diffs
+#' @param suffix For \code{weave_diffs_wide()}, the suffix to use for columns from table_a and columns from table_b. Defaults to \code{c("_a", "_b")}.
 #'
 #' @return
 #' \item{\code{weave_diffs_wide()}}{The input \code{table_a} filtered to rows where
@@ -15,7 +16,7 @@
 #' @examples
 #' comp <- compare(example_df_a, example_df_b, by = car)
 #' comp |> weave_diffs_wide(disp)
-#' comp |> weave_diffs_wide(c(mpg, disp))
+#' comp |> weave_diffs_wide(c(mpg, disp), suffix = c("", "_comparison"))
 #' comp |> weave_diffs_long(disp)
 #' comp |> weave_diffs_long(c(mpg, disp))
 
@@ -39,7 +40,11 @@ weave_diffs_long <- function(comparison, column = everything()) {
 
 #' @rdname weave_diffs
 #' @export
-weave_diffs_wide <- function(comparison, column = everything()) {
+weave_diffs_wide <- function(
+  comparison,
+  column = everything(),
+  suffix = c("_a", "_b")
+) {
   assert_is_comparison(enquo(comparison))
   column <- enquo(column)
 
@@ -50,7 +55,7 @@ weave_diffs_wide <- function(comparison, column = everything()) {
 
   reduce(.init = slice_a, diff_cols, \(x, col) {
     x %>%
-      mutate("{col}_b" := slice_b[[col]], .after = !!sym(col)) %>%
-      rename("{col}_a" := !!sym(col))
+      mutate("{col}{suffix[[2]]}" := slice_b[[col]], .after = !!sym(col)) %>%
+      rename("{col}{suffix[[1]]}" := !!sym(col))
   })
 }

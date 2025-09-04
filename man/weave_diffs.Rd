@@ -7,13 +7,15 @@
 \usage{
 weave_diffs_long(comparison, column = everything())
 
-weave_diffs_wide(comparison, column = everything())
+weave_diffs_wide(comparison, column = everything(), suffix = c("_a", "_b"))
 }
 \arguments{
 \item{comparison}{The output of \code{compare()}}
 
 \item{column}{<\code{\link[=versus_tidy_select]{tidy-select}}>. A row will be in the output if
 the comparison shows differing values for any columns matching this argument}
+
+\item{suffix}{For \code{weave_diffs_wide()}, the suffix to use for columns from table_a and columns from table_b. Defaults to \code{c("_a", "_b")}.}
 }
 \value{
 \item{\code{weave_diffs_wide()}}{The input \code{table_a} filtered to rows where
@@ -31,7 +33,7 @@ Get differences in context
 \examples{
 comp <- compare(example_df_a, example_df_b, by = car)
 comp |> weave_diffs_wide(disp)
-comp |> weave_diffs_wide(c(mpg, disp))
+comp |> weave_diffs_wide(c(mpg, disp), suffix = c("", "_comparison"))
 comp |> weave_diffs_long(disp)
 comp |> weave_diffs_long(c(mpg, disp))
 }
