@@ -1,6 +1,9 @@
 #' Get rows in only one table
 #'
 #' @inheritParams slice_diffs
+#' @param table_id Table identifiers. Must be a length 2 character vector.
+#' Defaults to `c("a", "b")` Typically should match the value provided to
+#' `suffix` without any separating characters.
 #'
 #' @return
 #' \item{\code{slice_unmatched()}}{The table identified by \code{table} is filtered
@@ -29,12 +32,18 @@ slice_unmatched <- function(comparison, table) {
 
 #' @rdname slice_unmatched
 #' @export
-slice_unmatched_both <- function(comparison) {
+slice_unmatched_both <- function(comparison, table_id = c("a", "b")) {
   assert_is_comparison(enquo(comparison))
 
   out_cols <- with(comparison, c(by$column, intersection$column))
 
-  c(a = "a", b = "b") %>%
+  stopifnot(
+    is.character(table_id),
+    length(table_id) == 2
+  )
+
+  id %>%
+    set_names(id) |>
     map(slice_unmatched_impl, comparison = comparison, j = out_cols) %>%
     ensure_ptype_compatible() %>%
     bind_rows(.id = "table")
