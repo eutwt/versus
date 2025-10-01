@@ -42,8 +42,8 @@ slice_unmatched_both <- function(comparison, table_id = c("a", "b")) {
     length(table_id) == 2
   )
 
-  id %>%
-    set_names(id) |>
+  table_id %>%
+    set_names(table_id) |>
     map(slice_unmatched_impl, comparison = comparison, j = out_cols) %>%
     ensure_ptype_compatible() %>%
     bind_rows(.id = "table")
