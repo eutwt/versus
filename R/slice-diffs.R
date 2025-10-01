@@ -20,7 +20,9 @@
 #' @export
 slice_diffs <- function(comparison, table, column = everything()) {
   assert_is_comparison(enquo(comparison))
-  assert_table_is_a_or_b(enquo(table))
+  # FIXME: Pull table id values from comparison
+  match_table(table, comparison)
+  # assert_table_is_a_or_b(enquo(table))
   slice_diffs_impl(comparison, table, enquo(column))
 }
 
@@ -38,4 +40,9 @@ slice_diffs_impl <- function(comparison, table, column, j, call = caller_env()) 
 
   out <- fsubset(comparison$input$value[[table]], rows, j)
   as_tibble(out)
+}
+
+match_table <- function(table, comparison) {
+  table_values <- pull_comparison_table(comparison)
+  arg_match(table, table_values)
 }

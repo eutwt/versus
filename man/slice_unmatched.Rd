@@ -7,7 +7,7 @@
 \usage{
 slice_unmatched(comparison, table)
 
-slice_unmatched_both(comparison, table_id = c("a", "b"))
+slice_unmatched_both(comparison)
 }
 \arguments{
 \item{comparison}{The output of \code{compare()}}

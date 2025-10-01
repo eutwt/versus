@@ -7,7 +7,7 @@
 \usage{
 weave_diffs_long(comparison, column = everything())
 
-weave_diffs_wide(comparison, column = everything(), suffix = c("_a", "_b"))
+weave_diffs_wide(comparison, column = everything(), suffix = NULL)
 }
 \arguments{
 \item{comparison}{The output of \code{compare()}}

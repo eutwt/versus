@@ -36,35 +36,32 @@
     Code
       slice_diffs(comp, a, disp)
     Condition
-      Error in `slice_diffs()`:
-      ! Problem with argument `table = a`
-      i `table` must be a single character value: "a" or "b"
+      Error in `match_table()`:
+      ! `table` must be a character vector, not a function.
 
 ---
 
     Code
       slice_diffs(comp, disp)
     Condition
-      Error in `slice_diffs()`:
-      ! Problem with argument `table = disp`
-      i `table` must be a single character value: "a" or "b"
+      Error:
+      ! object 'disp' not found
 
 ---
 
     Code
       slice_diffs(comp, "z")
     Condition
-      Error in `slice_diffs()`:
-      ! Problem with argument `table = "z"`
-      i `table` must be either "a" or "b"
+      Error in `match_table()`:
+      ! `table` must be one of "a" or "b", not "z".
 
 ---
 
     Code
       slice_diffs(comp)
     Condition
-      Error in `slice_diffs()`:
-      ! `table` is absent but must be supplied.
+      Error in `match_table()`:
+      ! `table` must be a character vector, not absent.
 
 # Error on slice_diffs() with empty selection
 

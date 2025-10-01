@@ -26,24 +26,21 @@
 #' @export
 slice_unmatched <- function(comparison, table) {
   assert_is_comparison(enquo(comparison))
-  assert_table_is_a_or_b(enquo(table))
+  match_table(table, comparison)
   slice_unmatched_impl(comparison, table)
 }
 
 #' @rdname slice_unmatched
 #' @export
-slice_unmatched_both <- function(comparison, table_id = c("a", "b")) {
+slice_unmatched_both <- function(comparison) {
   assert_is_comparison(enquo(comparison))
 
   out_cols <- with(comparison, c(by$column, intersection$column))
 
-  stopifnot(
-    is.character(table_id),
-    length(table_id) == 2
-  )
+  table_id <- pull_comparison_table(comparison)
 
   table_id %>%
-    set_names(table_id) |>
+    set_names(table_id) %>%
     map(slice_unmatched_impl, comparison = comparison, j = out_cols) %>%
     ensure_ptype_compatible() %>%
     bind_rows(.id = "table")
@@ -59,4 +56,8 @@ slice_unmatched_impl <- function(comparison, table, j) {
 
   out <- fsubset(comparison$input$value[[table]], rows, j)
   as_tibble(out)
+}
+
+pull_comparison_table <- function(comparison) {
+  sub("table_", "", comparison[["tables"]][["table"]])
 }

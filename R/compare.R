@@ -15,8 +15,8 @@
 #' @param coerce Logical. If \code{FALSE} and columns from the input tables have
 #' differing classes, the function throws an error.
 #' @param .f A function that takes two columns as the first two input arguments. If `NULl` (default), the internal  \code{not_equal()} function is used with the `allow_both_NA` argument. If a function is supplied, the `allow_both_NA` argument is ignored and any additional arguments provided to `...` are passed to the function `.f`.
-#' @param suffix Suffix to use for intersection between `table_a` and `table_b`.
-#' Defaults to `c("_a", "_b")`.
+#' @param table_id Table id values to use for `table_a` and `table_b`.
+#' Defaults to `c("a", "b")`.
 #' @param .progress If `TRUE`, show progress bar when getting different rows from comparison data frames.
 #' @param ... Additional arguments passed to `.f` if provided.
 #' @return
@@ -69,7 +69,7 @@ compare <- function(
   ...,
   allow_both_NA = TRUE,
   coerce = TRUE,
-  suffix = c("_a", "_b"),
+  table_id = c("a", "b"),
   .f = NULL,
   .progress = TRUE
 ) {
@@ -81,13 +81,13 @@ compare <- function(
   by_names <- get_by_names(table_a, table_b, by = by)
 
   table_summ <- tibble(
-    table = c("table_a", "table_b"),
+    table =  paste0("table_", table_id),
     expr = table_chr,
     nrow = c(nrow(table_a), nrow(table_b)),
     ncol = c(ncol(table_a), ncol(table_b))
   )
 
-  tbl_contents <- get_contents(table_a, table_b, by = by_names, suffix = suffix)
+  tbl_contents <- get_contents(table_a, table_b, by = by_names, table_id = table_id)
 
   matches <- withCallingHandlers(
     locate_matches(table_a, table_b, by = by_names),
@@ -101,7 +101,8 @@ compare <- function(
     table_a,
     table_b,
     by = by_names,
-    matches = matches
+    matches = matches,
+    table_id = table_id
   )
 
   # if (!is_empty(tbl_contents$compare$column)) {
@@ -165,17 +166,17 @@ summary.vs_comparison <- function(object, ...) {
 
 # Helpers ---------
 
-locate_matches <- function(table_a, table_b, by) {
+locate_matches <- function(table_a, table_b, by, table_id = c("a", "b")) {
   matches <- vec_locate_matches(
     fsubset(table_a, j = by),
     fsubset(table_b, j = by),
     relationship = "one-to-one",
     remaining = NA_integer_
   )
-  split_matches(matches)
+  split_matches(matches, table_id)
 }
 
-split_matches <- function(matches) {
+split_matches <- function(matches, table_id = c("a", "b")) {
   # split matches into
   # common: rows in both tables
   # a: rows only in table_a
@@ -189,34 +190,41 @@ split_matches <- function(matches) {
     common <- fsubset(matches, -unmatched, check = TRUE)
   }
   common <- common %>%
-    frename(c("a", "b")) %>%
+    frename(table_id) %>%
     as_tibble()
   list(
-    common = common,
-    a = fsubset(matches, which_a, "needles")[[1]],
-    b = fsubset(matches, which_b, "haystack")[[1]]
-  )
+    common,
+    fsubset(matches, which_a, "needles")[[1]],
+    fsubset(matches, which_b, "haystack")[[1]]
+  ) %>%
+    set_names(
+      c("common", table_id)
+    )
 }
 
-get_unmatched_rows <- function(table_a, table_b, by, matches) {
+get_unmatched_rows <- function(table_a, table_b, by, matches, table_id = c("a", "b")) {
   unmatched <- list(
-    a = fsubset(table_a, matches$a, by),
-    b = fsubset(table_b, matches$b, by)
-  )
+    fsubset(table_a, matches[[table_id[1]]], by),
+    fsubset(table_b, matches[[table_id[2]]], by)
+  ) %>%
+  set_names(table_id)
+
   unmatched %>%
     bind_rows(.id = "table") %>%
+    # FIXME: c(a, b)
     mutate(row = with(matches, c(a, b))) %>%
     as_tibble()
 }
 
-converge <- function(table_a, table_b, by, matches, suffix = c("_a", "_b")) {
+converge <- function(table_a, table_b, by, matches, table_id = c("a", "b")) {
   common_cols <- setdiff(intersect(names(table_a), names(table_b)), by)
 
-  by_a <- fsubset(table_a, matches$common$a, by)
-  common_a <- fsubset(table_a, matches$common$a, common_cols)
-  common_b <- fsubset(table_b, matches$common$b, common_cols)
+  by_a <- fsubset(table_a, matches$common[[table_id[1]]], by)
+  common_a <- fsubset(table_a, matches$common[[table_id[1]]], common_cols)
+  common_b <- fsubset(table_b, matches$common[[table_id[2]]], common_cols)
 
   # TODO: Add validation for suffix parameter
+  suffix <- paste0("_", table_id)
   add_vars(
     by_a,
     frename(common_a, \(nm) paste0(nm, suffix[[1]])),
@@ -224,19 +232,19 @@ converge <- function(table_a, table_b, by, matches, suffix = c("_a", "_b")) {
   )
 }
 
-join_split <- function(table_a, table_b, by, suffix = c("_a", "_b")) {
+join_split <- function(table_a, table_b, by, table_id = c("a", "b")) {
   matches <- locate_matches(table_a, table_b, by)
-  intersection <- converge(table_a, table_b, by, matches, suffix = suffix)
-  unmatched_rows <- get_unmatched_rows(table_a, table_b, by, matches)
+  intersection <- converge(table_a, table_b, by, matches, table_id = table_id)
+  unmatched_rows <- get_unmatched_rows(table_a, table_b, by, matches, table_id = table_id)
   list(intersection = intersection, unmatched_rows = unmatched_rows)
 }
 
-get_contents <- function(table_a, table_b, by, suffix = c("_a", "_b")) {
+get_contents <- function(table_a, table_b, by, table_id = c("a", "b")) {
   tbl_contents <- join_split(
     contents(table_a),
     contents(table_b),
     by = "column",
-    suffix = suffix
+    table_id = table_id
   )
   out <- list()
 

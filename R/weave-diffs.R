@@ -43,15 +43,22 @@ weave_diffs_long <- function(comparison, column = everything()) {
 weave_diffs_wide <- function(
   comparison,
   column = everything(),
-  suffix = c("_a", "_b")
+  suffix = NULL
 ) {
   assert_is_comparison(enquo(comparison))
   column <- enquo(column)
+  table_id <- pull_comparison_table(comparison)
+
+  if (is.null(suffix)) {
+    suffix <- paste0("_", table_id)
+  } else {
+    stopifnot(length(suffix) == 2, is.character(suffix))
+  }
 
   out_cols <- with(comparison, c(by$column, intersection$column))
   diff_cols <- names(identify_diff_cols(comparison, column))
-  slice_a <- slice_diffs_impl(comparison, "a", column, j = out_cols)
-  slice_b <- slice_diffs_impl(comparison, "b", column, j = diff_cols)
+  slice_a <- slice_diffs_impl(comparison, table_id[[1]], column, j = out_cols)
+  slice_b <- slice_diffs_impl(comparison, table_id[[2]], column, j = diff_cols)
 
   reduce(.init = slice_a, diff_cols, \(x, col) {
     x %>%
