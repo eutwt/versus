@@ -232,12 +232,12 @@ test_that("versus.copy_data_table option works", {
 
 test_that("locate_matches() handles unmatched rows correctly", {
   # all common
-  expect_snapshot(locate_matches(tibble(x = 1), tibble(x = 1), by = 'x'))
+  expect_snapshot(locate_matches(tibble(x = 1), tibble(x = 1), by = "x"))
   # all different
-  expect_snapshot(locate_matches(tibble(x = 1), tibble(x = 2), by = 'x'))
+  expect_snapshot(locate_matches(tibble(x = 1), tibble(x = 2), by = "x"))
   # some different in each table
-  expect_snapshot(locate_matches(tibble(x = 1:2), tibble(x = 2:3), by = 'x'))
+  expect_snapshot(locate_matches(tibble(x = 1:2), tibble(x = 2:3), by = "x"))
   # some different in only one table
-  expect_snapshot(locate_matches(tibble(x = 1:2), tibble(x = 2), by = 'x'))
-  expect_snapshot(locate_matches(tibble(x = 2), tibble(x = 1:2), by = 'x'))
+  expect_snapshot(locate_matches(tibble(x = 1:2), tibble(x = 2), by = "x"))
+  expect_snapshot(locate_matches(tibble(x = 2), tibble(x = 1:2), by = "x"))
 })

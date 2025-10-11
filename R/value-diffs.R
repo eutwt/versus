@@ -30,7 +30,8 @@ value_diffs <- function(comparison, column) {
   column_loc <- get_cols_from_comparison(comparison, column)
   assert_is_single_column(column_loc)
 
-  diff_rows <- fsubset(comparison$intersection, column_loc, "diff_rows")[[1]][[1]]
+  diff_rows <- fsubset(comparison$intersection, column_loc, "diff_rows") %>%
+    pluck(1, 1)
   col <- names(column_loc)
   a <- comparison$input$value$a %>%
     fsubset(diff_rows$row_a, col) %>%
