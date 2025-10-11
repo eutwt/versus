@@ -1,57 +1,21 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://eutwt.github.io/versus/404.html</loc>
-  </url>
-  <url>
-    <loc>https://eutwt.github.io/versus/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>https://eutwt.github.io/versus/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>https://eutwt.github.io/versus/articles/Benchmark.html</loc>
-  </url>
-  <url>
-    <loc>https://eutwt.github.io/versus/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>https://eutwt.github.io/versus/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://eutwt.github.io/versus/index.html</loc>
-  </url>
-  <url>
-    <loc>https://eutwt.github.io/versus/news/index.html</loc>
-  </url>
-  <url>
-    <loc>https://eutwt.github.io/versus/reference/compare.html</loc>
-  </url>
-  <url>
-    <loc>https://eutwt.github.io/versus/reference/example_df_a.html</loc>
-  </url>
-  <url>
-    <loc>https://eutwt.github.io/versus/reference/example_df_b.html</loc>
-  </url>
-  <url>
-    <loc>https://eutwt.github.io/versus/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://eutwt.github.io/versus/reference/slice_diffs.html</loc>
-  </url>
-  <url>
-    <loc>https://eutwt.github.io/versus/reference/slice_unmatched.html</loc>
-  </url>
-  <url>
-    <loc>https://eutwt.github.io/versus/reference/value-diffs.html</loc>
-  </url>
-  <url>
-    <loc>https://eutwt.github.io/versus/reference/versus-package.html</loc>
-  </url>
-  <url>
-    <loc>https://eutwt.github.io/versus/reference/versus_tidy_select.html</loc>
-  </url>
-  <url>
-    <loc>https://eutwt.github.io/versus/reference/weave_diffs.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://eutwt.github.io/versus/404.html</loc></url>
+<url><loc>https://eutwt.github.io/versus/LICENSE-text.html</loc></url>
+<url><loc>https://eutwt.github.io/versus/LICENSE.html</loc></url>
+<url><loc>https://eutwt.github.io/versus/articles/Benchmark.html</loc></url>
+<url><loc>https://eutwt.github.io/versus/articles/index.html</loc></url>
+<url><loc>https://eutwt.github.io/versus/authors.html</loc></url>
+<url><loc>https://eutwt.github.io/versus/index.html</loc></url>
+<url><loc>https://eutwt.github.io/versus/news/index.html</loc></url>
+<url><loc>https://eutwt.github.io/versus/reference/compare.html</loc></url>
+<url><loc>https://eutwt.github.io/versus/reference/example_df_a.html</loc></url>
+<url><loc>https://eutwt.github.io/versus/reference/example_df_b.html</loc></url>
+<url><loc>https://eutwt.github.io/versus/reference/index.html</loc></url>
+<url><loc>https://eutwt.github.io/versus/reference/slice_diffs.html</loc></url>
+<url><loc>https://eutwt.github.io/versus/reference/slice_unmatched.html</loc></url>
+<url><loc>https://eutwt.github.io/versus/reference/value-diffs.html</loc></url>
+<url><loc>https://eutwt.github.io/versus/reference/versus-package.html</loc></url>
+<url><loc>https://eutwt.github.io/versus/reference/versus_tidy_select.html</loc></url>
+<url><loc>https://eutwt.github.io/versus/reference/weave_diffs.html</loc></url>
 </urlset>
+
