@@ -48,7 +48,7 @@ is_ptype_compatible <- function(...) {
 }
 
 table_init <- function(comparison, cols = c("intersection", "by"), tbl = 1) {
-  # simulate a data frame with the same classes as table_[tbl]
+  # simulate a data frame with the same classes as an input table
   cols <- arg_match(cols)
   fsubset(comparison$input$value[[tbl]], integer(0), comparison[[cols]]$column)
 }
