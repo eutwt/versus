@@ -275,13 +275,10 @@ rethrow_match_relationship <- function(table_a, table_b, by) {
 }
 
 clean_table_id <- function(table_id, call = caller_env()) {
-  if (identical(table_id, c("a", "b"))) {
-    return(table_id)
-  }
   if (!is_character(table_id, n = 2)) {
     message <- c(
       "{.arg table_id} must be a string of length 2",
-      i = "{.arg table_id} is {.obj_type_friendly type} of length {length(table_id)}"
+      i = "{.arg table_id} is {.obj_type_friendly {table_id}} of length {length(table_id)}"
     )
     cli_abort(message, call = call)
   }
