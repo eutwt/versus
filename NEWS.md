@@ -2,8 +2,8 @@
 
 * New `table_id` argument in `compare()` allows custom table identifiers.
   In prior versions, tables are identified as "a" and "b". You can now provide
-  meaningful names e.g. `compare(..., table_id = c("original", "updated"))`. 
-  @elipousson
+  meaningful names e.g. `compare(..., table_id = c("original", "updated"))`, which
+  are reflected in the output of `compare()` and related functions. @elipousson
 
 # versus 0.3.0
 
