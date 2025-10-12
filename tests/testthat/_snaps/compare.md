@@ -183,10 +183,10 @@
     Output
       $tables
       # A tibble: 2 x 4
-        table   expr       nrow  ncol
-        <chr>   <chr>     <int> <int>
-      1 table_a test_df_a    11    13
-      2 table_b test_df_b    12    12
+        table expr       nrow  ncol
+        <chr> <chr>     <int> <int>
+      1 a     test_df_a    11    13
+      2 b     test_df_b    12    12
       
       $by
       # A tibble: 1 x 3
@@ -234,10 +234,10 @@
     Output
       $tables
       # A tibble: 2 x 4
-        table   expr   nrow  ncol
-        <chr>   <chr> <int> <int>
-      1 table_a a         2     2
-      2 table_b b         2     2
+        table expr   nrow  ncol
+        <chr> <chr> <int> <int>
+      1 a     a         2     2
+      2 b     b         2     2
       
       $by
       # A tibble: 1 x 3
@@ -272,10 +272,10 @@
     Output
       $tables
       # A tibble: 2 x 4
-        table   expr   nrow  ncol
-        <chr>   <chr> <int> <int>
-      1 table_a a         4     1
-      2 table_b b         4     1
+        table expr   nrow  ncol
+        <chr> <chr> <int> <int>
+      1 a     a         4     1
+      2 b     b         4     1
       
       $by
       # A tibble: 1 x 3
@@ -307,10 +307,10 @@
     Output
       $tables
       # A tibble: 2 x 4
-        table   expr   nrow  ncol
-        <chr>   <chr> <int> <int>
-      1 table_a a         4     2
-      2 table_b b         4     2
+        table expr   nrow  ncol
+        <chr> <chr> <int> <int>
+      1 a     a         4     2
+      2 b     b         4     2
       
       $by
       # A tibble: 1 x 3
@@ -345,10 +345,10 @@
     Output
       $tables
       # A tibble: 2 x 4
-        table   expr   nrow  ncol
-        <chr>   <chr> <int> <int>
-      1 table_a a         2     1
-      2 table_b b         2     1
+        table expr   nrow  ncol
+        <chr> <chr> <int> <int>
+      1 a     a         2     1
+      2 b     b         2     1
       
       $by
       # A tibble: 1 x 3
@@ -382,10 +382,10 @@
     Output
       $tables
       # A tibble: 2 x 4
-        table   expr   nrow  ncol
-        <chr>   <chr> <int> <int>
-      1 table_a a         2     2
-      2 table_b b         2     2
+        table expr   nrow  ncol
+        <chr> <chr> <int> <int>
+      1 a     a         2     2
+      2 b     b         2     2
       
       $by
       # A tibble: 1 x 3

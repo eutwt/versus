@@ -9,7 +9,7 @@
 #' @param table_a A data frame
 #' @param table_b A data frame
 #' @param by <[`tidy-select`][versus_tidy_select]>. Selection of columns to use when matching rows between
-#' \code{.data_a} and \code{.data_b}. Both data frames must be unique on \code{by}.
+#' \code{table_a} and \code{table_b}. Both data frames must be unique on \code{by}.
 #' @param allow_both_NA Logical. If \code{TRUE} a missing value in both data frames is
 #' considered as equal
 #' @param coerce Logical. If \code{FALSE} and columns from the input tables have
@@ -58,16 +58,23 @@
 
 #' @rdname compare
 #' @export
-compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE) {
+compare <- function(
+    table_a,
+    table_b,
+    by,
+    allow_both_NA = TRUE,
+    coerce = TRUE,
+    table_id = c("a", "b")) {
   check_required(by)
   by <- enquo(by)
+  table_id <- clean_table_id(table_id)
   table_chr <- names(enquos(table_a, table_b, .named = TRUE))
   validate_tables(table_a, table_b, coerce = coerce)
 
   by_names <- get_by_names(table_a, table_b, by = by)
 
   table_summ <- tibble(
-    table = c("table_a", "table_b"),
+    table = table_id,
     expr = table_chr,
     nrow = c(nrow(table_a), nrow(table_b)),
     ncol = c(ncol(table_a), ncol(table_b))
@@ -101,15 +108,16 @@ compare <- function(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE) {
   tbl_contents$compare <- tbl_contents$compare %>%
     mutate(n_diffs = map_int(diff_rows, nrow), .after = column)
 
-  out <- list(
+  list(
     tables = table_summ,
     by = tbl_contents$by,
     intersection = tbl_contents$compare,
     unmatched_cols = tbl_contents$unmatched_cols,
     unmatched_rows = unmatched_rows,
-    input = store_tables(table_a, table_b)
-  )
-  structure(out, class = "vs_comparison")
+    input = store_tables(table_a, table_b, table_id)
+  ) %>%
+    apply_table_id(table_id) %>%
+    structure(class = "vs_comparison")
 }
 
 # Methods -----------
@@ -223,9 +231,9 @@ get_contents <- function(table_a, table_b, by) {
   out
 }
 
-store_tables <- function(table_a, table_b) {
+store_tables <- function(table_a, table_b, table_id) {
   env <- new_environment()
-  env$value <- list(a = table_a, b = table_b)
+  env$value <- list(table_a, table_b) %>% setNames(table_id)
   dt_copy <- getOption("versus.copy_data_table", default = FALSE)
   if (dt_copy) {
     env$value <- env$value %>%
@@ -233,6 +241,22 @@ store_tables <- function(table_a, table_b) {
   }
   lockEnvironment(env, bindings = TRUE)
   env
+}
+
+apply_table_id <- function(comparison, table_id, call = caller_env()) {
+  if (identical(table_id, c("a", "b"))) {
+    return(comparison)
+  }
+  comparison$tables$table <- table_id
+  names(comparison$by)[2:3] <- paste0("class_", table_id)
+  names(comparison$intersection)[3:4] <- paste0("class_", table_id)
+  comparison$intersection$diff_rows <- comparison$intersection$diff_rows %>%
+    lapply(frename, paste0("row_", table_id))
+  comparison$unmatched_cols$table <- comparison$unmatched_cols$table %>%
+    recode_char(a = table_id[1], b = table_id[2])
+  comparison$unmatched_rows$table <- comparison$unmatched_rows$table %>%
+    recode_char(a = table_id[1], b = table_id[2])
+  comparison
 }
 
 # Error handling -------------
@@ -255,6 +279,30 @@ rethrow_match_relationship <- function(table_a, table_b, by) {
 
     cli_abort(c(top_msg, info, itemize_row(tbl_row)), call = call)
   }
+}
+
+clean_table_id <- function(table_id, call = caller_env()) {
+  if (identical(table_id, c("a", "b"))) {
+    return(table_id)
+  }
+  if (!is_character(table_id, n = 2)) {
+    message <- c(
+      "{.arg table_id} must be a string of length 2",
+      i = "{.arg table_id} is {.obj_type_friendly type} of length {length(table_id)}"
+    )
+    cli_abort(message, call = call)
+  }
+  attributes(table_id) <- NULL
+  new <- vec_as_names(table_id, repair = "universal", quiet = TRUE)
+  old <- table_id %|% ""
+  is_changed <- new != old
+  if (!any(is_changed)) {
+    return(table_id)
+  }
+  bullets <- paste0("`", old[is_changed], "` -> `", new[is_changed], "`")
+  message <- c("{.arg table_id} has been adjusted", set_names(bullets, "*"))
+  cli_inform(message = message)
+  new
 }
 
 validate_tables <- function(table_a, table_b, coerce, call = caller_env()) {

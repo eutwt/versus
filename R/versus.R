@@ -14,6 +14,6 @@
 #' @importFrom purrr map imap map_int map_lgl map2_lgl map_chr reduce map_if
 #' @importFrom purrr pmap pmap_lgl compose pluck
 #' @importFrom tibble tibble rownames_to_column enframe
-#' @importFrom collapse ss add_vars frename whichNA %!=%
+#' @importFrom collapse ss add_vars frename whichNA %!=% recode_char
 #' @importFrom data.table fcoalesce copy
 "_PACKAGE"
