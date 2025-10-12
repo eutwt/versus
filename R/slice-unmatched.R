@@ -31,7 +31,7 @@ slice_unmatched <- function(comparison, table) {
 #' @export
 slice_unmatched_both <- function(comparison) {
   assert_is_comparison(enquo(comparison))
-  table_id <- names(comparison$input$value)
+  table_id <- comparison$tables$table
 
   out_cols <- with(comparison, c(by$column, intersection$column))
 

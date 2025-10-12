@@ -42,7 +42,7 @@ weave_diffs_long <- function(comparison, column = everything()) {
 weave_diffs_wide <- function(comparison, column = everything()) {
   assert_is_comparison(enquo(comparison))
   column <- enquo(column)
-  table_id <- names(comparison$input$value)
+  table_id <- comparison$tables$table
 
   out_cols <- with(comparison, c(by$column, intersection$column))
   diff_cols <- names(identify_diff_cols(comparison, column))

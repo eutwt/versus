@@ -6,7 +6,7 @@ check_table_arg <- function(table, comparison, call = caller_env()) {
   if (identical(table, quo())) {
     cli_abort("`table` is absent but must be supplied.", call = call)
   }
-  table_id <- names(comparison$input$value)
+  table_id <- comparison$tables$table
   table_expr <- quo_squash(table)
   table_chr <- shorten(deparse(table_expr), 30)
   top_msg <- "Problem with argument `table = {table_chr}`"
@@ -47,10 +47,9 @@ is_ptype_compatible <- function(...) {
   !incompatible
 }
 
-table_init <- function(comparison, cols = c("intersection", "by"), tbl = c("a", "b")) {
+table_init <- function(comparison, cols = c("intersection", "by"), tbl = 1) {
   # simulate a data frame with the same classes as table_[tbl]
   cols <- arg_match(cols)
-  tbl <- arg_match(tbl)
   fsubset(comparison$input$value[[tbl]], integer(0), comparison[[cols]]$column)
 }
 

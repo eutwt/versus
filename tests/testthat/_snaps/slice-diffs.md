@@ -22,6 +22,30 @@
       3 Datsun 710      22.8    NA  109     93  3.85  2.32     1     1
       4 Hornet 4 Drive  21.4     6  259    110  3.08  3.22     1     0
 
+# slice_diffs() works with custom table_id
+
+    Code
+      slice_diffs(comp, "x", disp)
+    Output
+      # A tibble: 2 x 9
+        car              mpg   cyl  disp    hp  drat    wt    vs    am
+        <chr>          <dbl> <int> <dbl> <int> <dbl> <dbl> <int> <int>
+      1 Datsun 710      22.8    NA   109    93  3.85  2.32     1     1
+      2 Hornet 4 Drive  21.4     6   259   110  3.08  3.22     1     0
+
+---
+
+    Code
+      slice_diffs(comp, "x", c(mpg, disp))
+    Output
+      # A tibble: 4 x 9
+        car              mpg   cyl  disp    hp  drat    wt    vs    am
+        <chr>          <dbl> <int> <dbl> <int> <dbl> <dbl> <int> <int>
+      1 Duster 360      14.3     8  360    245  3.21  3.57     0     0
+      2 Merc 240D       24.4     4  147.    62  3.69  3.19     1     0
+      3 Datsun 710      22.8    NA  109     93  3.85  2.32     1     1
+      4 Hornet 4 Drive  21.4     6  259    110  3.08  3.22     1     0
+
 # Error when `comparison` isn't a comparison
 
     Code
@@ -31,7 +55,7 @@
       ! Problem with argument `comparison = example_df_a`
       i `comparison` must be the output of `versus::compare()`
 
-# Error when `table` isn't 'a' or 'b'
+# Error when `table` isn't expected - default table_id
 
     Code
       slice_diffs(comp, a, disp)
@@ -57,6 +81,50 @@
       Error in `slice_diffs()`:
       ! Problem with argument `table = "z"`
       i `table` must be either "a" or "b"
+
+---
+
+    Code
+      slice_diffs(comp)
+    Condition
+      Error in `slice_diffs()`:
+      ! `table` is absent but must be supplied.
+
+# Error when `table` isn't expected - custom table_id
+
+    Code
+      slice_diffs(comp, a, disp)
+    Condition
+      Error in `slice_diffs()`:
+      ! Problem with argument `table = a`
+      i `table` must be a single character value: "x" or "y"
+
+---
+
+    Code
+      slice_diffs(comp, disp)
+    Condition
+      Error in `slice_diffs()`:
+      ! Problem with argument `table = disp`
+      i `table` must be a single character value: "x" or "y"
+
+---
+
+    Code
+      slice_diffs(comp, "z")
+    Condition
+      Error in `slice_diffs()`:
+      ! Problem with argument `table = "z"`
+      i `table` must be either "x" or "y"
+
+---
+
+    Code
+      slice_diffs(comp, "a")
+    Condition
+      Error in `slice_diffs()`:
+      ! Problem with argument `table = "a"`
+      i `table` must be either "x" or "y"
 
 ---
 

@@ -29,7 +29,7 @@ value_diffs <- function(comparison, column) {
   column <- enquo(column)
   column_loc <- get_cols_from_comparison(comparison, column)
   assert_is_single_column(column_loc)
-  table_id <- names(comparison$input$value)
+  table_id <- comparison$tables$table
 
   diff_rows <- fsubset(comparison$intersection, column_loc, "diff_rows") %>%
     pluck(1, 1)
@@ -48,7 +48,7 @@ value_diffs <- function(comparison, column) {
 value_diffs_stacked <- function(comparison, column = everything()) {
   assert_is_comparison(enquo(comparison))
   column <- enquo(column)
-  table_id <- names(comparison$input$value)
+  table_id <- comparison$tables$table
 
   get_value_diff_for_stack <- function(comparison, col_name) {
     value_diffs(comparison, all_of(col_name)) %>%
