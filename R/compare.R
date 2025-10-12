@@ -14,6 +14,9 @@
 #' considered as equal
 #' @param coerce Logical. If \code{FALSE} and columns from the input tables have
 #' differing classes, the function throws an error.
+#' @param table_id A character vector of length 2 providing custom identifiers for
+#' \code{table_a} and \code{table_b} respectively. These identifiers are used in the
+#' output instead of the default "a" and "b".
 #'
 #' @return
 #' \describe{

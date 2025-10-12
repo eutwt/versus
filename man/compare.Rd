@@ -26,6 +26,10 @@ considered as equal}
 
 \item{coerce}{Logical. If \code{FALSE} and columns from the input tables have
 differing classes, the function throws an error.}
+
+\item{table_id}{A character vector of length 2 providing custom identifiers for
+\code{table_a} and \code{table_b} respectively. These identifiers are used in the
+output instead of the default "a" and "b".}
 }
 \value{
 \describe{
