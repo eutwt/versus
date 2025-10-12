@@ -1,5 +1,10 @@
 # versus (development version)
 
+* New `table_id` argument in `compare()` allows custom table identifiers.
+  In prior versions, tables are identified as "a" and "b". You can now provide
+  meaningful names e.g. `compare(..., table_id = c("original", "updated"))`. 
+  @elipousson
+
 # versus 0.3.0
 
 # versus 0.3
