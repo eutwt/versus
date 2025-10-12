@@ -148,3 +148,27 @@
       4 disp   109   108   Datsun 710    
       5 disp   259   258   Hornet 4 Drive
 
+# value_diffs() respects custom table_id
+
+    Code
+      value_diffs(comp, mpg)
+    Output
+      # A tibble: 2 x 3
+        mpg_original mpg_updated car       
+               <dbl>       <dbl> <chr>     
+      1         14.3        16.3 Duster 360
+      2         24.4        26.4 Merc 240D 
+
+# value_diffs_stacked() respects custom table_id
+
+    Code
+      value_diffs_stacked(comp, c(mpg, disp))
+    Output
+      # A tibble: 4 x 4
+        column val_original val_updated car           
+        <chr>         <dbl>       <dbl> <chr>         
+      1 mpg            14.3        16.3 Duster 360    
+      2 mpg            24.4        26.4 Merc 240D     
+      3 disp          109         108   Datsun 710    
+      4 disp          259         258   Hornet 4 Drive
+

@@ -35,3 +35,14 @@ test_that("Error on value_diffs when column doesn't exist", {
   expect_snapshot(weave_diffs_long(comp, bear), error = TRUE)
   expect_snapshot(weave_diffs_wide(comp, bear), error = TRUE)
 })
+
+test_that("weave_diffs_wide respects custom table_id", {
+  comp <- compare(test_df_a, test_df_b, by = car, table_id = c("original", "updated"))
+  expect_snapshot(weave_diffs_wide(comp, mpg))
+  expect_snapshot(weave_diffs_wide(comp, c(mpg, disp)))
+})
+
+test_that("weave_diffs_long respects custom table_id", {
+  comp <- compare(test_df_a, test_df_b, by = car, table_id = c("original", "updated"))
+  expect_snapshot(weave_diffs_long(comp, mpg))
+})

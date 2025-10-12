@@ -65,3 +65,24 @@ test_that("ensure_ptype_compatible() works", {
     post_coerce
   )
 })
+
+test_that("check_table_arg respects custom table_id", {
+  # Create comparisons with different table_id values
+  comp_default <- compare(test_df_a, test_df_b, by = car)
+  comp_custom <- compare(test_df_a, test_df_b, by = car, table_id = c("original", "updated"))
+  
+  # Default table_id - accepts "a" and "b"
+  expect_silent(check_table_arg(quo("a"), comp_default))
+  expect_silent(check_table_arg(quo("b"), comp_default))
+  expect_snapshot(check_table_arg(quo("original"), comp_default), error = TRUE)
+  
+  # Custom table_id - accepts "original" and "updated"
+  expect_silent(check_table_arg(quo("original"), comp_custom))
+  expect_silent(check_table_arg(quo("updated"), comp_custom))
+  expect_snapshot(check_table_arg(quo("a"), comp_custom), error = TRUE)
+  expect_snapshot(check_table_arg(quo("b"), comp_custom), error = TRUE)
+  
+  # Invalid inputs work the same regardless of table_id
+  expect_snapshot(check_table_arg(quo(c("a", "b")), comp_default), error = TRUE)
+  expect_snapshot(check_table_arg(quo(), comp_default), error = TRUE)
+})

@@ -57,3 +57,13 @@ test_that("value_diffs_stacked() coerces to char on incompatible ptypes", {
   comp <- compare(test_df_a_char_mpg, test_df_b, by = car)
   expect_snapshot(value_diffs_stacked(comp))
 })
+
+test_that("value_diffs() respects custom table_id", {
+  comp <- compare(test_df_a, test_df_b, by = car, table_id = c("original", "updated"))
+  expect_snapshot(value_diffs(comp, mpg))
+})
+
+test_that("value_diffs_stacked() respects custom table_id", {
+  comp <- compare(test_df_a, test_df_b, by = car, table_id = c("original", "updated"))
+  expect_snapshot(value_diffs_stacked(comp, c(mpg, disp)))
+})
