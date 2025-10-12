@@ -70,19 +70,44 @@ test_that("check_table_arg respects custom table_id", {
   # Create comparisons with different table_id values
   comp_default <- compare(test_df_a, test_df_b, by = car)
   comp_custom <- compare(test_df_a, test_df_b, by = car, table_id = c("original", "updated"))
-  
+
   # Default table_id - accepts "a" and "b"
   expect_silent(check_table_arg(quo("a"), comp_default))
   expect_silent(check_table_arg(quo("b"), comp_default))
   expect_snapshot(check_table_arg(quo("original"), comp_default), error = TRUE)
-  
+
   # Custom table_id - accepts "original" and "updated"
   expect_silent(check_table_arg(quo("original"), comp_custom))
   expect_silent(check_table_arg(quo("updated"), comp_custom))
   expect_snapshot(check_table_arg(quo("a"), comp_custom), error = TRUE)
   expect_snapshot(check_table_arg(quo("b"), comp_custom), error = TRUE)
-  
+
   # Invalid inputs work the same regardless of table_id
   expect_snapshot(check_table_arg(quo(c("a", "b")), comp_default), error = TRUE)
   expect_snapshot(check_table_arg(quo(), comp_default), error = TRUE)
+})
+
+test_that("clean_table_id strips attributes from named vectors", {
+  # Named vector - attributes should be stripped
+  named_vec <- c(first = "table1", second = "table2")
+  expect_identical(
+    clean_table_id(named_vec),
+    c("table1", "table2")
+  )
+
+  # Vector with custom attributes
+  vec_with_attrs <- c("x", "y")
+  attr(vec_with_attrs, "custom") <- "attribute"
+  attr(vec_with_attrs, "another") <- 123
+  expect_identical(
+    clean_table_id(vec_with_attrs),
+    c("x", "y")
+  )
+
+  # Plain vector without attributes should remain unchanged
+  plain_vec <- c("alpha", "beta")
+  expect_identical(
+    clean_table_id(plain_vec),
+    plain_vec
+  )
 })
