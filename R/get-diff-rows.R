@@ -1,9 +1,9 @@
-get_diff_rows <- function(col, table_a, table_b, matches, allow_both_NA) {
+get_diff_rows <- function(col, table_a, table_b, matches, allow_both_NA, table_id) {
   col_a <- fsubset(table_a, matches$common$a, col)[[1]]
   col_b <- fsubset(table_b, matches$common$b, col)[[1]]
   matches$common %>%
     fsubset(not_equal(col_a, col_b, allow_both_NA)) %>%
-    frename(c("row_a", "row_b"))
+    frename(paste0("row_", table_id))
 }
 
 not_equal <- function(col_a, col_b, allow_both_NA) {

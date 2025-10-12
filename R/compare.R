@@ -80,7 +80,7 @@ compare <- function(
     ncol = c(ncol(table_a), ncol(table_b))
   )
 
-  tbl_contents <- get_contents(table_a, table_b, by = by_names)
+  tbl_contents <- get_contents(table_a, table_b, by = by_names, table_id = table_id)
 
   matches <- withCallingHandlers(
     locate_matches(table_a, table_b, by = by_names),
@@ -94,7 +94,8 @@ compare <- function(
     table_a,
     table_b,
     by = by_names,
-    matches = matches
+    matches = matches,
+    table_id = table_id
   )
 
   tbl_contents$compare$diff_rows <- tbl_contents$compare$column %>%
@@ -102,7 +103,8 @@ compare <- function(
       table_a = table_a,
       table_b = table_b,
       matches = matches,
-      allow_both_NA = allow_both_NA
+      allow_both_NA = allow_both_NA,
+      table_id = table_id
     )
 
   tbl_contents$compare <- tbl_contents$compare %>%
@@ -116,7 +118,6 @@ compare <- function(
     unmatched_rows = unmatched_rows,
     input = store_tables(table_a, table_b, table_id)
   ) %>%
-    apply_table_id(table_id) %>%
     structure(class = "vs_comparison")
 }
 
@@ -183,18 +184,18 @@ split_matches <- function(matches) {
   )
 }
 
-get_unmatched_rows <- function(table_a, table_b, by, matches) {
-  unmatched <- list(
-    a = fsubset(table_a, matches$a, by),
-    b = fsubset(table_b, matches$b, by)
-  )
-  unmatched %>%
+get_unmatched_rows <- function(table_a, table_b, by, matches, table_id) {
+  list(
+    fsubset(table_a, matches$a, by),
+    fsubset(table_b, matches$b, by)
+  ) %>%
+    setNames(table_id) %>%
     bind_rows(.id = "table") %>%
     mutate(row = with(matches, c(a, b))) %>%
     as_tibble()
 }
 
-converge <- function(table_a, table_b, by, matches) {
+converge <- function(table_a, table_b, by, matches, table_id) {
   common_cols <- setdiff(intersect(names(table_a), names(table_b)), by)
 
   by_a <- fsubset(table_a, matches$common$a, by)
@@ -203,20 +204,25 @@ converge <- function(table_a, table_b, by, matches) {
 
   add_vars(
     by_a,
-    frename(common_a, \(nm) paste0(nm, "_a")),
-    frename(common_b, \(nm) paste0(nm, "_b"))
+    frename(common_a, \(nm) paste0(nm, "_", table_id[1])),
+    frename(common_b, \(nm) paste0(nm, "_", table_id[2]))
   )
 }
 
-join_split <- function(table_a, table_b, by) {
+join_split <- function(table_a, table_b, by, table_id) {
   matches <- locate_matches(table_a, table_b, by)
-  intersection <- converge(table_a, table_b, by, matches)
-  unmatched_rows <- get_unmatched_rows(table_a, table_b, by, matches)
+  intersection <- converge(table_a, table_b, by, matches, table_id)
+  unmatched_rows <- get_unmatched_rows(table_a, table_b, by, matches, table_id)
   list(intersection = intersection, unmatched_rows = unmatched_rows)
 }
 
-get_contents <- function(table_a, table_b, by) {
-  tbl_contents <- join_split(contents(table_a), contents(table_b), by = "column")
+get_contents <- function(table_a, table_b, by, table_id) {
+  tbl_contents <- join_split(
+    contents(table_a),
+    contents(table_b),
+    by = "column",
+    table_id = table_id
+  )
   out <- list()
 
   out$by <- tbl_contents$intersection %>%
@@ -241,22 +247,6 @@ store_tables <- function(table_a, table_b, table_id) {
   }
   lockEnvironment(env, bindings = TRUE)
   env
-}
-
-apply_table_id <- function(comparison, table_id, call = caller_env()) {
-  if (identical(table_id, c("a", "b"))) {
-    return(comparison)
-  }
-  comparison$tables$table <- table_id
-  names(comparison$by)[2:3] <- paste0("class_", table_id)
-  names(comparison$intersection)[3:4] <- paste0("class_", table_id)
-  comparison$intersection$diff_rows <- comparison$intersection$diff_rows %>%
-    lapply(frename, paste0("row_", table_id))
-  comparison$unmatched_cols$table <- comparison$unmatched_cols$table %>%
-    recode_char(a = table_id[1], b = table_id[2])
-  comparison$unmatched_rows$table <- comparison$unmatched_rows$table %>%
-    recode_char(a = table_id[1], b = table_id[2])
-  comparison
 }
 
 # Error handling -------------
