@@ -35,5 +35,8 @@ comp |> slice_unmatched("b")
 # slice_unmatched(comp, "a") output is the same as
 example_df_a |> dplyr::anti_join(example_df_b, by = comp$by$column)
 
+comp <- compare(example_df_a, example_df_b, by = car, table_id = c("old", "new"))
+comp |> slice_unmatched("old")
+
 comp |> slice_unmatched_both()
 }

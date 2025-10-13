@@ -17,6 +17,9 @@
 #' comp |> slice_diffs("a", mpg)
 #' comp |> slice_diffs("b", mpg)
 #' comp |> slice_diffs("a", c(mpg, disp))
+#'
+#' comp <- compare(example_df_a, example_df_b, by = car, table_id = c("old", "new"))
+#' comp |> slice_diffs("old", mpg)
 
 #' @rdname slice_diffs
 #' @export

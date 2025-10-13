@@ -12,8 +12,8 @@ value_diffs_stacked(comparison, column = everything())
 \arguments{
 \item{comparison}{The output of \code{compare()}}
 
-\item{column}{<\code{\link[=versus_tidy_select]{tidy-select}}>. The output will show the differing values
-for the provided columns.}
+\item{column}{<\code{\link[=versus_tidy_select]{tidy-select}}>. The output will show the
+differing values for the provided columns.}
 }
 \value{
 \itemize{
