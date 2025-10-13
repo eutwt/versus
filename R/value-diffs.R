@@ -15,8 +15,6 @@
 #' the \code{value_diffs()} outputs for the specified columns combined row-wise
 #' using \code{dplyr::bind_rows()}. If \code{dplyr::bind_rows()} is not possible
 #' due to incompatible types, values are converted to character first.
-#' \code{value_diffs_all()} is the same as \code{value_diffs_stacked()} with
-#' \code{column = everything()}}
 #' @examples
 #' comp <- compare(example_df_a, example_df_b, by = car)
 #' value_diffs(comp, disp)

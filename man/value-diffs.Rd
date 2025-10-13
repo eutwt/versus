@@ -26,8 +26,6 @@ input tables, plus the \code{by} columns. }
 the \code{value_diffs()} outputs for the specified columns combined row-wise
 using \code{dplyr::bind_rows()}. If \code{dplyr::bind_rows()} is not possible
 due to incompatible types, values are converted to character first.
-\code{value_diffs_all()} is the same as \code{value_diffs_stacked()} with
-\code{column = everything()}}
 }
 \description{
 Get the differing values from a comparison
