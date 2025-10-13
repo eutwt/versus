@@ -1,20 +1,22 @@
 #' Get the differing values from a comparison
 #'
 #' @param comparison The output of \code{compare()}
-#' @param column <[`tidy-select`][versus_tidy_select]>. The output will show the differing values
-#' for the provided columns.
+#' @param column <[`tidy-select`][versus_tidy_select]>. The output will show the 
+#' differing values for the provided columns.
 #'
 #' @return
-#' \item{\code{value_diffs()}}{A data frame with one row for each element
-#' of \code{col} found to be unequal between the input tables (
-#' \code{table_a} and \code{table_b} from the original \code{compare()} output)
-#' The output table has the column specified by \code{column} from each of the
-#' input tables, plus the \code{by} columns. }
-#'
-#' \item{\code{value_diffs_stacked()}, \code{value_diffs_all()}}{A data frame containing
-#' the \code{value_diffs()} outputs for the specified columns combined row-wise
-#' using \code{dplyr::bind_rows()}. If \code{dplyr::bind_rows()} is not possible
-#' due to incompatible types, values are converted to character first.
+#'   \itemize{
+#'     \item \code{value_diffs()}: A data frame with one row for each element
+#'       of \code{col} found to be unequal between the input tables (
+#'       \code{table_a} and \code{table_b} from the original \code{compare()}
+#'       output). The output table has the column specified by \code{column}
+#'       from each of the input tables, plus the \code{by} columns.
+#'     \item \code{value_diffs_stacked()}: A data frame containing the
+#'       \code{value_diffs()} outputs for the specified columns combined
+#'       row-wise using \code{dplyr::bind_rows()}. If \code{dplyr::bind_rows()}
+#'       is not possible due to incompatible types, values are converted to
+#'       character first.
+#'   }
 #' @examples
 #' comp <- compare(example_df_a, example_df_b, by = car)
 #' value_diffs(comp, disp)
