@@ -4,8 +4,7 @@
 #' @param suffix A character vector of length 2 providing suffixes appended to
 #'   the renamed columns in `weave_diffs_wide()`. Set to `NULL` (the default) to
 #'   use `paste0("_", table_id)`. The first suffix is applied to values from
-#'   `table_a`, the second to values from `table_b`. Values must not be missing
-#'   and the two suffixes must differ.
+#'   `table_a`, the second to values from `table_b`.
 #'
 #' @return
 #' \item{\code{weave_diffs_wide()}}{The input \code{table_a} filtered to rows where

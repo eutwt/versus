@@ -18,8 +18,7 @@ the comparison shows differing values for any columns matching this argument}
 \item{suffix}{A character vector of length 2 providing suffixes appended to
 the renamed columns in \code{weave_diffs_wide()}. Set to \code{NULL} (the default) to
 use \code{paste0("_", table_id)}. The first suffix is applied to values from
-\code{table_a}, the second to values from \code{table_b}. Values must not be missing
-and the two suffixes must differ.}
+\code{table_a}, the second to values from \code{table_b}.}
 }
 \value{
 \item{\code{weave_diffs_wide()}}{The input \code{table_a} filtered to rows where
