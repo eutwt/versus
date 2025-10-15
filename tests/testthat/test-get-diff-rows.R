@@ -44,13 +44,13 @@ test_that("get_diff_rows respects custom table_id", {
   table_a <- data.frame(x = 1:5, y = c(1, 2, 3, 4, 5))
   table_b <- data.frame(x = 1:5, y = c(1, 2, 9, 4, 5))
   matches <- list(common = data.frame(a = 1:5, b = 1:5))
-  
+
   # Default table_id
   result_default <- get_diff_rows("y", table_a, table_b, matches, TRUE, c("a", "b"))
   expect_named(result_default, c("row_a", "row_b"))
   expect_equal(result_default$row_a, 3)
   expect_equal(result_default$row_b, 3)
-  
+
   # Custom table_id
   result_custom <- get_diff_rows("y", table_a, table_b, matches, TRUE, c("original", "updated"))
   expect_named(result_custom, c("row_original", "row_updated"))

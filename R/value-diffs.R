@@ -1,7 +1,7 @@
 #' Get the differing values from a comparison
 #'
 #' @param comparison The output of \code{compare()}
-#' @param column <[`tidy-select`][versus_tidy_select]>. The output will show the 
+#' @param column <[`tidy-select`][versus_tidy_select]>. The output will show the
 #' differing values for the provided columns.
 #'
 #' @return
