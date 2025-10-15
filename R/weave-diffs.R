@@ -48,7 +48,7 @@ weave_diffs_wide <- function(comparison, column = everything(), suffix = NULL) {
   assert_is_comparison(enquo(comparison))
   column <- enquo(column)
   table_id <- comparison$tables$table
-  suffix <- validate_suffix(suffix, table_id)
+  suffix <- clean_suffix(suffix, table_id)
 
   out_cols <- with(comparison, c(by$column, intersection$column))
   diff_cols <- names(identify_diff_cols(comparison, column))
@@ -64,7 +64,7 @@ weave_diffs_wide <- function(comparison, column = everything(), suffix = NULL) {
   })
 }
 
-validate_suffix <- function(suffix, table_id, call = caller_env()) {
+clean_suffix <- function(suffix, table_id, call = caller_env()) {
   if (is.null(suffix)) {
     return(paste0("_", table_id))
   }
