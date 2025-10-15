@@ -198,3 +198,40 @@
       3 origi~ Merc~  24.4     4  147.    62  3.69 3.19   20       1     0     4     2
       4 updat~ Merc~  26.4     4  147.    62  3.69 3.19   20       1     0     4     2
 
+# weave_diffs_wide applies custom suffix
+
+    Code
+      out
+    Output
+      # A tibble: 2 x 13
+        car      mpg `mpg (new)`   cyl  disp    hp  drat    wt  qsec    vs    am  gear
+        <chr>  <dbl>       <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
+      1 Duste~  14.3        16.3     8  360    245  3.21  3.57  15.8     0     0     3
+      2 Merc ~  24.4        26.4     4  147.    62  3.69  3.19  20       1     0     4
+      # i 1 more variable: carb <dbl>
+
+# weave_diffs_wide validates suffix input
+
+    Code
+      weave_diffs_wide(comp, mpg, suffix = "oops")
+    Condition
+      Error in `weave_diffs_wide()`:
+      ! `suffix` must be NULL or a character vector of length 2
+      i `suffix` is a string of length 1
+
+---
+
+    Code
+      weave_diffs_wide(comp, mpg, suffix = c("dup", "dup"))
+    Condition
+      Error in `weave_diffs_wide()`:
+      ! `suffix` entries must be distinct.
+
+---
+
+    Code
+      weave_diffs_wide(comp, mpg, suffix = c("old", NA))
+    Condition
+      Error in `weave_diffs_wide()`:
+      ! `suffix` must not contain missing values.
+

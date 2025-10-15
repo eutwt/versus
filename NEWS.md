@@ -7,9 +7,14 @@
 
 * In the output of `compare()` with no `table_id` specified, the table summary 
   `compare()$tables` uses "a" and "b" as identifiers for the `table` column rather 
-  than "table_a" and "table_b". This is for consistency with the case when custom
-  ids are provided using the new `table_id` argument, so that `compare()$tables$table`
-  always matches the `table_id` argument.
+  than "table_a" and "table_b" as used in prior versions. This is for consistency
+  with the case when custom ids are provided using the new `table_id` argument,
+  so that `compare()$tables$table` always matches the `table_id` argument.
+
+* `weave_diffs_wide()` gains a `suffix` argument so column names in the wide
+  output can use custom suffixes instead of `_{table_id}`. The default keeps the
+  existing behaviour, and input validation ensures suffix vectors are length two,
+  non-missing, and distinct. @elipousson
 
 # versus 0.3.0
 
