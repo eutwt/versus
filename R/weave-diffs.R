@@ -20,6 +20,7 @@
 #' comp <- compare(example_df_a, example_df_b, by = car)
 #' comp |> weave_diffs_wide(disp)
 #' comp |> weave_diffs_wide(c(mpg, disp))
+#' comp |> weave_diffs_wide(c(mpg, disp), suffix = c("", "_new"))
 #' comp |> weave_diffs_long(disp)
 #' comp |> weave_diffs_long(c(mpg, disp))
 
