@@ -83,7 +83,7 @@ comparison |>
   slice_diffs("a", mpg)
 ```
 
-Use `slice_unmatched()` to get the rows unmatched rows from one or both tables.
+Use `slice_unmatched()` to get the unmatched rows from one or both tables.
 
 ```{r}
 comparison |>

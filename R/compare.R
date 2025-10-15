@@ -283,7 +283,10 @@ clean_table_id <- function(table_id, call = caller_env()) {
     cli_abort(message, call = call)
   }
   attributes(table_id) <- NULL
-  new <- vec_as_names(table_id, repair = "universal", quiet = TRUE)
+  new <- table_id %>%
+    vec_as_names(repair = "universal", quiet = TRUE) %>%
+    # second vec_as_names() is needed due to vctrs issue #1013
+    vec_as_names(repair = "unique", quiet = TRUE)
   old <- table_id %|% ""
   is_changed <- new != old
   if (!any(is_changed)) {

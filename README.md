@@ -66,20 +66,20 @@ Use `compare()` to create a comparison of two tables.
 
 A comparison contains:
 
-- `compare()$intersection`: columns in both tables and rows with
-  differing values
-- `compare()$unmatched_cols`: columns in only one table
-- `compare()$unmatched_rows`: rows in only one table
+-   `compare()$intersection`: columns in both tables and rows with
+    differing values
+-   `compare()$unmatched_cols`: columns in only one table
+-   `compare()$unmatched_rows`: rows in only one table
 
 ``` r
 comparison <- compare(example_df_a, example_df_b, by = car)
 comparison
 #> $tables
 #> # A tibble: 2 × 4
-#>   table   expr          nrow  ncol
-#>   <chr>   <chr>        <int> <int>
-#> 1 table_a example_df_a     9     9
-#> 2 table_b example_df_b    10     9
+#>   table expr          nrow  ncol
+#>   <chr> <chr>        <int> <int>
+#> 1 a     example_df_a     9     9
+#> 2 b     example_df_b    10     9
 #> 
 #> $by
 #> # A tibble: 1 × 3
@@ -179,7 +179,7 @@ comparison |>
 #> 2 Merc 240D   24.4     4  147.    62  3.69  3.19     1     0
 ```
 
-Use `slice_unmatched()` to get the unmatched rows from one or both
+Use `slice_unmatched()` to get the rows unmatched rows from one or both
 tables.
 
 ``` r

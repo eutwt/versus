@@ -42,3 +42,14 @@
       Error:
       ! `table` is absent but must be supplied.
 
+# clean_table_id is unaffected by vctrs issue #1013
+
+    Code
+      clean_table_id(c("", "1"))
+    Message
+      `table_id` has been adjusted
+      * `` -> `...1`
+      * `1` -> `...2`
+    Output
+      [1] "...1" "...2"
+

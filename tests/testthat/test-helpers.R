@@ -111,3 +111,7 @@ test_that("clean_table_id strips attributes from named vectors", {
     plain_vec
   )
 })
+
+test_that("clean_table_id is unaffected by vctrs issue #1013", {
+  expect_snapshot(clean_table_id(c("", "1")))
+})
