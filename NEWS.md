@@ -13,8 +13,7 @@
 
 * `weave_diffs_wide()` gains a `suffix` argument so column names in the wide
   output can use custom suffixes instead of `_{table_id}`. The default keeps the
-  existing behaviour, and input validation ensures suffix vectors are length two,
-  non-missing, and distinct. @elipousson
+  behaviour of prior versions. @elipousson
 
 # versus 0.3.0
 
