@@ -37,7 +37,10 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="versus-development-version">versus (development version)<a class="anchor" aria-label="anchor" href="#versus-development-version"></a></h2>
-</div>
+<ul><li><p>New <code>table_id</code> argument in <code><a href="../reference/compare.html">compare()</a></code> allows custom table identifiers. By default, outputs identify tables as “a” and “b”. You can now provide meaningful names e.g. <code>compare(..., table_id = c("original", "updated"))</code>, which are reflected in the output of <code><a href="../reference/compare.html">compare()</a></code> and related functions. <a href="https://github.com/elipousson" class="external-link">@elipousson</a></p></li>
+<li><p>In the output of <code><a href="../reference/compare.html">compare()</a></code> with no <code>table_id</code> specified, the table summary <code>compare()$tables</code> uses “a” and “b” as identifiers for the <code>table</code> column rather than “table_a” and “table_b” as used in prior versions. This is for consistency with the case when custom ids are provided using the new <code>table_id</code> argument, so that <code>compare()$tables$table</code> always matches the <code>table_id</code> argument.</p></li>
+<li><p><code><a href="../reference/weave_diffs.html">weave_diffs_wide()</a></code> gains a <code>suffix</code> argument so column names in the wide output can use custom suffixes instead of <code>_{table_id}</code>. The default keeps the behaviour of prior versions. <a href="https://github.com/elipousson" class="external-link">@elipousson</a></p></li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.3.0" id="versus-030">versus 0.3.0<a class="anchor" aria-label="anchor" href="#versus-030"></a></h2><p class="text-muted">CRAN release: 2024-01-11</p>
 </div>
@@ -70,7 +73,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>
