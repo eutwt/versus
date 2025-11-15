@@ -1,8 +1,10 @@
 #' Get rows with differing values
 #'
 #' @param comparison The output of \code{compare()}
-#' @param table One of \code{"a"} or \code{"b"} indicating which of the tables used to
-#' create \code{comparison} should be sliced
+#' @param table A string matching one of the identifiers supplied via
+#'   \code{table_id} when calling \code{compare()} (defaults are \code{"a"} and
+#'   \code{"b"}). Within the comparison, these identifiers are stored in
+#'   \code{comparison$tables$table}.
 #' @param column <[`tidy-select`][versus_tidy_select]>. A row will be in the output if
 #' the comparison shows differing values for any columns matching this argument
 #'
@@ -15,12 +17,15 @@
 #' comp |> slice_diffs("a", mpg)
 #' comp |> slice_diffs("b", mpg)
 #' comp |> slice_diffs("a", c(mpg, disp))
+#'
+#' comp <- compare(example_df_a, example_df_b, by = car, table_id = c("old", "new"))
+#' comp |> slice_diffs("old", mpg)
 
 #' @rdname slice_diffs
 #' @export
 slice_diffs <- function(comparison, table, column = everything()) {
   assert_is_comparison(enquo(comparison))
-  assert_table_is_a_or_b(enquo(table))
+  check_table_arg(enquo(table), comparison)
   slice_diffs_impl(comparison, table, enquo(column))
 }
 

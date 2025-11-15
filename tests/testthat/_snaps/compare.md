@@ -166,6 +166,24 @@
       ! `join_by()` is not supported
       i provide `by` columns with tidy-select, as in `dplyr::across()`
 
+# Error when table_id is not as expected
+
+    Code
+      compare(a, b, by = x, table_id = c("a", "b", "c"))
+    Condition
+      Error in `compare()`:
+      ! `table_id` must be a character vector of length 2
+      i `table_id` is a character vector of length 3
+
+---
+
+    Code
+      compare(a, b, by = x, table_id = 1:2)
+    Condition
+      Error in `compare()`:
+      ! `table_id` must be a character vector of length 2
+      i `table_id` is an integer vector of length 2
+
 # Error on different classes with coerce = FALSE
 
     Code
@@ -183,10 +201,10 @@
     Output
       $tables
       # A tibble: 2 x 4
-        table   expr       nrow  ncol
-        <chr>   <chr>     <int> <int>
-      1 table_a test_df_a    11    13
-      2 table_b test_df_b    12    12
+        table expr       nrow  ncol
+        <chr> <chr>     <int> <int>
+      1 a     test_df_a    11    13
+      2 b     test_df_b    12    12
       
       $by
       # A tibble: 1 x 3
@@ -227,6 +245,117 @@
       5 b     extra_b       12
       
 
+# example comparison with custom `table_id`
+
+    Code
+      compare(test_df_a, test_df_b, by = car, table_id = c("orignal", "updated"))
+    Output
+      $tables
+      # A tibble: 2 x 4
+        table   expr       nrow  ncol
+        <chr>   <chr>     <int> <int>
+      1 orignal test_df_a    11    13
+      2 updated test_df_b    12    12
+      
+      $by
+      # A tibble: 1 x 3
+        column class_orignal class_updated
+        <chr>  <chr>         <chr>        
+      1 car    character     character    
+      
+      $intersection
+      # A tibble: 11 x 5
+         column n_diffs class_orignal class_updated diff_rows       
+         <chr>    <int> <chr>         <chr>         <list>          
+       1 mpg          2 numeric       numeric       <tibble [2 x 2]>
+       2 cyl          1 numeric       numeric       <tibble [1 x 2]>
+       3 disp         2 numeric       numeric       <tibble [2 x 2]>
+       4 hp           0 numeric       numeric       <tibble [0 x 2]>
+       5 drat         0 numeric       numeric       <tibble [0 x 2]>
+       6 wt           0 numeric       character     <tibble [0 x 2]>
+       7 qsec         0 numeric       numeric       <tibble [0 x 2]>
+       8 vs           0 numeric       numeric       <tibble [0 x 2]>
+       9 am           0 numeric       numeric       <tibble [0 x 2]>
+      10 gear         0 numeric       numeric       <tibble [0 x 2]>
+      11 carb         0 numeric       numeric       <tibble [0 x 2]>
+      
+      $unmatched_cols
+      # A tibble: 1 x 2
+        table   column    
+        <chr>   <chr>     
+      1 orignal extracol_a
+      
+      $unmatched_rows
+      # A tibble: 5 x 3
+        table   car          row
+        <chr>   <chr>      <int>
+      1 orignal Mazda RX4      1
+      2 orignal extra_a       11
+      3 updated Merc 280C     10
+      4 updated Merc 450SE    11
+      5 updated extra_b       12
+      
+
+# example comparison with `table_id` which is not a universal name
+
+    Code
+      comp <- compare(test_df_a, test_df_b, by = car, table_id = c("first result",
+        "new"))
+    Message
+      `table_id` has been adjusted
+      * `first result` -> `first.result`
+
+---
+
+    Code
+      comp
+    Output
+      $tables
+      # A tibble: 2 x 4
+        table        expr       nrow  ncol
+        <chr>        <chr>     <int> <int>
+      1 first.result test_df_a    11    13
+      2 new          test_df_b    12    12
+      
+      $by
+      # A tibble: 1 x 3
+        column class_first.result class_new
+        <chr>  <chr>              <chr>    
+      1 car    character          character
+      
+      $intersection
+      # A tibble: 11 x 5
+         column n_diffs class_first.result class_new diff_rows       
+         <chr>    <int> <chr>              <chr>     <list>          
+       1 mpg          2 numeric            numeric   <tibble [2 x 2]>
+       2 cyl          1 numeric            numeric   <tibble [1 x 2]>
+       3 disp         2 numeric            numeric   <tibble [2 x 2]>
+       4 hp           0 numeric            numeric   <tibble [0 x 2]>
+       5 drat         0 numeric            numeric   <tibble [0 x 2]>
+       6 wt           0 numeric            character <tibble [0 x 2]>
+       7 qsec         0 numeric            numeric   <tibble [0 x 2]>
+       8 vs           0 numeric            numeric   <tibble [0 x 2]>
+       9 am           0 numeric            numeric   <tibble [0 x 2]>
+      10 gear         0 numeric            numeric   <tibble [0 x 2]>
+      11 carb         0 numeric            numeric   <tibble [0 x 2]>
+      
+      $unmatched_cols
+      # A tibble: 1 x 2
+        table        column    
+        <chr>        <chr>     
+      1 first.result extracol_a
+      
+      $unmatched_rows
+      # A tibble: 5 x 3
+        table        car          row
+        <chr>        <chr>      <int>
+      1 first.result Mazda RX4      1
+      2 first.result extra_a       11
+      3 new          Merc 280C     10
+      4 new          Merc 450SE    11
+      5 new          extra_b       12
+      
+
 # compare() works when no rows are common
 
     Code
@@ -234,10 +363,10 @@
     Output
       $tables
       # A tibble: 2 x 4
-        table   expr   nrow  ncol
-        <chr>   <chr> <int> <int>
-      1 table_a a         2     2
-      2 table_b b         2     2
+        table expr   nrow  ncol
+        <chr> <chr> <int> <int>
+      1 a     a         2     2
+      2 b     b         2     2
       
       $by
       # A tibble: 1 x 3
@@ -272,10 +401,10 @@
     Output
       $tables
       # A tibble: 2 x 4
-        table   expr   nrow  ncol
-        <chr>   <chr> <int> <int>
-      1 table_a a         4     1
-      2 table_b b         4     1
+        table expr   nrow  ncol
+        <chr> <chr> <int> <int>
+      1 a     a         4     1
+      2 b     b         4     1
       
       $by
       # A tibble: 1 x 3
@@ -307,10 +436,10 @@
     Output
       $tables
       # A tibble: 2 x 4
-        table   expr   nrow  ncol
-        <chr>   <chr> <int> <int>
-      1 table_a a         4     2
-      2 table_b b         4     2
+        table expr   nrow  ncol
+        <chr> <chr> <int> <int>
+      1 a     a         4     2
+      2 b     b         4     2
       
       $by
       # A tibble: 1 x 3
@@ -345,10 +474,10 @@
     Output
       $tables
       # A tibble: 2 x 4
-        table   expr   nrow  ncol
-        <chr>   <chr> <int> <int>
-      1 table_a a         2     1
-      2 table_b b         2     1
+        table expr   nrow  ncol
+        <chr> <chr> <int> <int>
+      1 a     a         2     1
+      2 b     b         2     1
       
       $by
       # A tibble: 1 x 3
@@ -382,10 +511,10 @@
     Output
       $tables
       # A tibble: 2 x 4
-        table   expr   nrow  ncol
-        <chr>   <chr> <int> <int>
-      1 table_a a         2     2
-      2 table_b b         2     2
+        table expr   nrow  ncol
+        <chr> <chr> <int> <int>
+      1 a     a         2     2
+      2 b     b         2     2
       
       $by
       # A tibble: 1 x 3

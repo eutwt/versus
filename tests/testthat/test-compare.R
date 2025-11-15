@@ -110,6 +110,13 @@ test_that("Error when `by` uses `join_by`", {
   expect_snapshot(compare(a, b, by = join_by(x)), error = TRUE)
 })
 
+test_that("Error when table_id is not as expected", {
+  a <- data.frame(x = 1)
+  b <- data.frame(x = 1)
+  expect_snapshot(compare(a, b, by = x, table_id = c("a", "b", "c")), error = TRUE)
+  expect_snapshot(compare(a, b, by = x, table_id = 1:2), error = TRUE)
+})
+
 test_that("Error on different classes with coerce = FALSE", {
   expect_snapshot(
     compare(test_df_a, test_df_b, by = car, coerce = FALSE),
@@ -125,6 +132,19 @@ test_that("Error on different classes with coerce = FALSE", {
 
 test_that("example comparison", {
   comp <- compare(test_df_a, test_df_b, by = car)
+  expect_snapshot(comp)
+})
+
+test_that("example comparison with custom `table_id`", {
+  expect_snapshot(
+    compare(test_df_a, test_df_b, by = car, table_id = c("orignal", "updated"))
+  )
+})
+
+test_that("example comparison with `table_id` which is not a universal name", {
+  expect_snapshot(
+    comp <- compare(test_df_a, test_df_b, by = car, table_id = c("first result", "new"))
+  )
   expect_snapshot(comp)
 })
 

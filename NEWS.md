@@ -1,5 +1,20 @@
 # versus (development version)
 
+* New `table_id` argument in `compare()` allows custom table identifiers.
+  By default, outputs identify tables as "a" and "b". You can now provide
+  meaningful names e.g. `compare(..., table_id = c("original", "updated"))`, which
+  are reflected in the output of `compare()` and related functions. @elipousson
+
+* In the output of `compare()` with no `table_id` specified, the table summary 
+  `compare()$tables` uses "a" and "b" as identifiers for the `table` column rather 
+  than "table_a" and "table_b" as used in prior versions. This is for consistency
+  with the case when custom ids are provided using the new `table_id` argument,
+  so that `compare()$tables$table` always matches the `table_id` argument.
+
+* `weave_diffs_wide()` gains a `suffix` argument so column names in the wide
+  output can use custom suffixes instead of `_{table_id}`. The default keeps the
+  behaviour of prior versions. @elipousson
+
 # versus 0.3.0
 
 # versus 0.3

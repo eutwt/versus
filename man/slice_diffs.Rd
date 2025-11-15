@@ -9,8 +9,10 @@ slice_diffs(comparison, table, column = everything())
 \arguments{
 \item{comparison}{The output of \code{compare()}}
 
-\item{table}{One of \code{"a"} or \code{"b"} indicating which of the tables used to
-create \code{comparison} should be sliced}
+\item{table}{A string matching one of the identifiers supplied via
+\code{table_id} when calling \code{compare()} (defaults are \code{"a"} and
+\code{"b"}). Within the comparison, these identifiers are stored in
+\code{comparison$tables$table}.}
 
 \item{column}{<\code{\link[=versus_tidy_select]{tidy-select}}>. A row will be in the output if
 the comparison shows differing values for any columns matching this argument}
@@ -27,4 +29,7 @@ comp <- compare(example_df_a, example_df_b, by = car)
 comp |> slice_diffs("a", mpg)
 comp |> slice_diffs("b", mpg)
 comp |> slice_diffs("a", c(mpg, disp))
+
+comp <- compare(example_df_a, example_df_b, by = car, table_id = c("old", "new"))
+comp |> slice_diffs("old", mpg)
 }

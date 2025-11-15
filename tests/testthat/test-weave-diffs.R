@@ -35,3 +35,37 @@ test_that("Error on value_diffs when column doesn't exist", {
   expect_snapshot(weave_diffs_long(comp, bear), error = TRUE)
   expect_snapshot(weave_diffs_wide(comp, bear), error = TRUE)
 })
+
+test_that("weave_diffs_wide respects custom table_id", {
+  comp <- compare(test_df_a, test_df_b, by = car, table_id = c("original", "updated"))
+  expect_snapshot(weave_diffs_wide(comp, mpg))
+  expect_snapshot(weave_diffs_wide(comp, c(mpg, disp)))
+})
+
+test_that("weave_diffs_long respects custom table_id", {
+  comp <- compare(test_df_a, test_df_b, by = car, table_id = c("original", "updated"))
+  expect_snapshot(weave_diffs_long(comp, mpg))
+})
+
+test_that("weave_diffs_wide applies custom suffix", {
+  comp <- compare(test_df_a, test_df_b, by = car)
+  out <- weave_diffs_wide(comp, mpg, suffix = c("", " (new)"))
+  expect_identical(names(out)[1:3], c("car", "mpg", "mpg (new)"))
+  expect_snapshot(out)
+})
+
+test_that("weave_diffs_wide validates suffix input", {
+  comp <- compare(test_df_a, test_df_b, by = car)
+  expect_snapshot(
+    weave_diffs_wide(comp, mpg, suffix = "oops"),
+    error = TRUE
+  )
+  expect_snapshot(
+    weave_diffs_wide(comp, mpg, suffix = c("dup", "dup")),
+    error = TRUE
+  )
+  expect_snapshot(
+    weave_diffs_wide(comp, mpg, suffix = c("old", NA)),
+    error = TRUE
+  )
+})

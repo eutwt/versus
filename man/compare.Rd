@@ -4,7 +4,14 @@
 \alias{compare}
 \title{Compare two data frames}
 \usage{
-compare(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE)
+compare(
+  table_a,
+  table_b,
+  by,
+  allow_both_NA = TRUE,
+  coerce = TRUE,
+  table_id = c("a", "b")
+)
 }
 \arguments{
 \item{table_a}{A data frame}
@@ -12,13 +19,17 @@ compare(table_a, table_b, by, allow_both_NA = TRUE, coerce = TRUE)
 \item{table_b}{A data frame}
 
 \item{by}{<\code{\link[=versus_tidy_select]{tidy-select}}>. Selection of columns to use when matching rows between
-\code{.data_a} and \code{.data_b}. Both data frames must be unique on \code{by}.}
+\code{table_a} and \code{table_b}. Both data frames must be unique on \code{by}.}
 
 \item{allow_both_NA}{Logical. If \code{TRUE} a missing value in both data frames is
 considered as equal}
 
 \item{coerce}{Logical. If \code{FALSE} and columns from the input tables have
 differing classes, the function throws an error.}
+
+\item{table_id}{A character vector of length 2 providing custom identifiers for
+\code{table_a} and \code{table_b} respectively. These identifiers are used in the
+output instead of the default "a" and "b".}
 }
 \value{
 \describe{

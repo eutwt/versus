@@ -2,19 +2,21 @@ fsubset <- function(x, i, j, check = FALSE) {
   ss(x, i, j, check = check)
 }
 
-assert_table_is_a_or_b <- function(table, call = caller_env()) {
+check_table_arg <- function(table, comparison, call = caller_env()) {
   if (identical(table, quo())) {
     cli_abort("`table` is absent but must be supplied.", call = call)
   }
+  table_id <- comparison$tables$table
   table_expr <- quo_squash(table)
   table_chr <- shorten(deparse(table_expr), 30)
   top_msg <- "Problem with argument `table = {table_chr}`"
-  if (!is_character(table_expr)) {
-    info <- '`table` must be a single character value: "a" or "b"'
+  a_or_b <- paste0('"', table_id[1], '" or "', table_id[2], '"')
+  if (!is_string(table_expr)) {
+    info <- paste0("`table` must be a single character value: ", a_or_b)
     cli_abort(c(top_msg, i = info), call = call)
   }
-  if (!(identical(table_expr, "a") | identical(table_expr, "b"))) {
-    info <- '`table` must be either "a" or "b"'
+  if (!(identical(table_expr, table_id[1]) || identical(table_expr, table_id[2]))) {
+    info <- paste0("`table` must be either ", a_or_b)
     cli_abort(c(top_msg, i = info), call = call)
   }
 }
@@ -45,10 +47,9 @@ is_ptype_compatible <- function(...) {
   !incompatible
 }
 
-table_init <- function(comparison, cols = c("intersection", "by"), tbl = c("a", "b")) {
-  # simulate a data frame with the same classes as table_[tbl]
+table_init <- function(comparison, cols = c("intersection", "by"), tbl = 1) {
+  # simulate a data frame with the same classes as an input table
   cols <- arg_match(cols)
-  tbl <- arg_match(tbl)
   fsubset(comparison$input$value[[tbl]], integer(0), comparison[[cols]]$column)
 }
 
