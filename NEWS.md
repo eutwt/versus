@@ -1,4 +1,4 @@
-# versus (development version)
+# versus 0.3.1
 
 * New `table_id` argument in `compare()` allows custom table identifiers.
   By default, outputs identify tables as "a" and "b". You can now provide
