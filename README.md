@@ -66,10 +66,10 @@ Use `compare()` to create a comparison of two tables.
 
 A comparison contains:
 
-- `compare()$intersection`: columns in both tables and rows with
-  differing values
-- `compare()$unmatched_cols`: columns in only one table
-- `compare()$unmatched_rows`: rows in only one table
+-   `compare()$intersection`: columns in both tables and rows with
+    differing values
+-   `compare()$unmatched_cols`: columns in only one table
+-   `compare()$unmatched_rows`: rows in only one table
 
 ``` r
 comparison <- compare(example_df_a, example_df_b, by = car)
