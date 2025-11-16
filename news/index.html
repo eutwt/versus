@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">versus</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -32,11 +32,11 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/eutwt/versus/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/eutwt/versus/blob/v0.3.1/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="development version" id="versus-development-version">versus (development version)<a class="anchor" aria-label="anchor" href="#versus-development-version"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.3.1" id="versus-031">versus 0.3.1<a class="anchor" aria-label="anchor" href="#versus-031"></a></h2><p class="text-muted">CRAN release: 2025-11-15</p>
 <ul><li><p>New <code>table_id</code> argument in <code><a href="../reference/compare.html">compare()</a></code> allows custom table identifiers. By default, outputs identify tables as “a” and “b”. You can now provide meaningful names e.g. <code>compare(..., table_id = c("original", "updated"))</code>, which are reflected in the output of <code><a href="../reference/compare.html">compare()</a></code> and related functions. <a href="https://github.com/elipousson" class="external-link">@elipousson</a></p></li>
 <li><p>In the output of <code><a href="../reference/compare.html">compare()</a></code> with no <code>table_id</code> specified, the table summary <code>compare()$tables</code> uses “a” and “b” as identifiers for the <code>table</code> column rather than “table_a” and “table_b” as used in prior versions. This is for consistency with the case when custom ids are provided using the new <code>table_id</code> argument, so that <code>compare()$tables$table</code> always matches the <code>table_id</code> argument.</p></li>
 <li><p><code><a href="../reference/weave_diffs.html">weave_diffs_wide()</a></code> gains a <code>suffix</code> argument so column names in the wide output can use custom suffixes instead of <code>_{table_id}</code>. The default keeps the behaviour of prior versions. <a href="https://github.com/elipousson" class="external-link">@elipousson</a></p></li>

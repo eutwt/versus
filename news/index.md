@@ -1,6 +1,8 @@
 # Changelog
 
-## versus (development version)
+## versus 0.3.1
+
+CRAN release: 2025-11-15
 
 - New `table_id` argument in
   [`compare()`](https://eutwt.github.io/versus/reference/compare.md)
