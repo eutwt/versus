@@ -3,7 +3,7 @@ pkgdown: 2.2.0
 pkgdown_sha: ~
 articles:
   articles/Benchmark: Benchmark.html
-last_built: 2025-11-16T20:00Z
+last_built: 2025-11-16T20:05Z
 urls:
   reference: https://eutwt.github.io/versus/reference
   article: https://eutwt.github.io/versus/articles
